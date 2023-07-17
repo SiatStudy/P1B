@@ -11,23 +11,23 @@ import lombok.Setter;
 public class Member extends BaseTimeEntity{
     @Id
     @GeneratedValue
-    private String MEM_ID;
+    private String MemId;
 
     @Column(nullable = false)
-    private String MEM_USERID;
+    private String MemUserid;
 
     @Column(nullable = false)
-    private String MEM_NAME;
+    private String MemName;
 
     @Column(nullable = false)
-    private String MEM_PASSWD;
+    private String MemPasswd;
 
     @Column(nullable = false)
-    private String MEM_EMAIL;
+    private String MemEmail;
 
     @Column(nullable = false)
-    private String RESIGNED;
+    private String Resigned;
 
     @OneToOne
-    private Email VR_ID;
+    private Email VrId;
 }

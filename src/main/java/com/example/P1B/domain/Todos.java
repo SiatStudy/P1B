@@ -17,22 +17,22 @@ import java.time.LocalDateTime;
 public class Todos {
     @Id
     @GeneratedValue
-    private String TD_ID;
+    private String TdId;
 
-    private String TD_TITLE;
+    private String TdTitle;
 
-    private String TD_CONTENT;
+    private String TdContent;
 
-    private LocalDateTime TD_START_DATE;
+    private LocalDateTime TdStartDate;
 
-    private LocalDateTime TD_YD_DATE;
+    private LocalDateTime TdYdDate;
 
-    private LocalDateTime TD_END_DATE;
+    private LocalDateTime TdEndDate;
 
-    private LocalDateTime TD_UDT_DATE;
+    private LocalDateTime TdUdtDate;
 
-    private int TD_STATUS;
+    private int TdStatus;
 
     @ManyToOne
-    private Member MEM_ID;
+    private Member MemId;
 }

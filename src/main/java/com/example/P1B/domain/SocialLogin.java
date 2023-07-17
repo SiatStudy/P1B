@@ -17,18 +17,18 @@ import java.time.LocalDateTime;
 public class SocialLogin {
     @Id
     @GeneratedValue
-    private String SL_ID;
+    private String SlId;
 
-    private String SL_USERID;
+    private String SlUserid;
 
-    private String SL_NICKNAME;
+    private String SlNickname;
 
-    private int SL_PLATFORM;
+    private int SlPlatform;
 
-    private String SL_ACCESSTOKEN;
+    private String SlAccesstoken;
 
-    private LocalDateTime SL_EXPIRES;
+    private LocalDateTime SlExpires;
 
     @ManyToOne
-    private Member MEM_ID;
+    private Member MemId;
 }
