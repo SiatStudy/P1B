@@ -1,16 +1,16 @@
 package com.example.P1B.repository;
 
 import com.example.P1B.domain.Member;
-import jakarta.persistence.EntityManager;
-import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
-@RequiredArgsConstructor
-public class MemberRepository {
-    private final EntityManager em;
+import java.util.Optional;
 
-    public Member find(Long id){
-        return em.find(Member.class, id);
-    }
+@Repository
+public interface MemberRepository extends JpaRepository<Member, Long> {
+
+    // 이메일 인증
+    Optional<Member> findByEmail(String email);
+
+    Member findByMemberId(String memId);
 }
