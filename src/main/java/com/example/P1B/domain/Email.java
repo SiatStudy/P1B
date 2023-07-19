@@ -17,16 +17,16 @@ import java.time.LocalDateTime;
 public class Email {
     @Id
     @GeneratedValue
-    private String VR_ID;
+    private String VrId;
 
-    private int VR_AUTH_CODE;
+    private int VrAuthCode;
 
-    private int VR_STATUS;
+    private int VrStatus;
 
-    private LocalDateTime VR_CREATE;
+    private LocalDateTime VrCreate;
 
-    private LocalDateTime VR_EXPIRE;
+    private LocalDateTime VrExpire;
 
     @OneToOne
-    private Member MEM_ID;
+    private Member MemId;
 }
