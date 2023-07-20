@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mariadb://localhost:3306/TODOS
+    url: jdbc:mariadb://localhost:3306/todos
     username: TODOS
     password: TODOS
     driver-class-name: org.mariadb.jdbc.Driver
@@ -12,7 +12,7 @@ spring:
   properties:
     hibernate:
       # sql 문구를 보여주기 위한 설정
-      show_sql: true
+      show_sql: false
       # sql 문구를 좀 더 이쁘게 보여주기 위한 설정
       format_sql: true
 logging.level:

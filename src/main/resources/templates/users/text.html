@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인한 회원 정보</title>
+</head>
+<body>
+    <p th:text="${'회원 로그인 아이디 : ' + member.memUserid}"></p>
+    <p th:text="${'회원 이름 : ' + member.memName}"></p>
+    <p th:text="${'회원 비밀번호 : ' + member.memPasswd}"></p>
+    <p th:text="${'회원 이메일 : ' + member.memEmail}"></p>
+</body>
+</html>

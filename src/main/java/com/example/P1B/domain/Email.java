@@ -1,32 +1,43 @@
 package com.example.P1B.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
-@Entity
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "EMAIL_VERFICATION")
+@Entity
 public class Email {
-    @Id
-    @GeneratedValue
-    private String VrId;
 
-    private int VrAuthCode;
+    // 이메일 인증 고유 식별 ID
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "VR_ID", columnDefinition = "VARCHAR(36)")
+    private UUID vrId;
 
-    private int VrStatus;
+    // 이메일 인증 코드
+    private int vrAuthCode;
 
-    private LocalDateTime VrCreate;
+    // 이메일 인증 여부
+    private int vrStatus;
 
-    private LocalDateTime VrExpire;
+    // 이메일 인증 시작 시간
+    private LocalDateTime vrCreate;
 
-    @OneToOne
-    private Member MemId;
+    // 이메일 인증 종료 시간
+    private LocalDateTime vrExpire;
+
+    // 회원 고유 식별 ID
+    @ManyToOne
+    @JoinColumn(name = "MEM_ID")
+    private Member member;
 }

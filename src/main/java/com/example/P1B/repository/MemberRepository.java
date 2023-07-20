@@ -4,13 +4,13 @@ import com.example.P1B.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface MemberRepository extends JpaRepository<Member, UUID> {
 
-    // 이메일 인증
-    Optional<Member> findByEmail(String email);
+    // 회원 아이디
+    Member findByMemUserid(String memUserid);
 
-    Member findByMemberId(String memId);
+
 }

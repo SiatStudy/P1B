@@ -2,7 +2,6 @@ package com.example.P1B.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,12 +27,19 @@ public class MypageController {
 //        model.addAttribute("data2", "hello <b>spring!</b>");
 //        return "/Mypage/MypageInfo";
 //    }
+
     @PatchMapping("/info")
     public String patchUserInfo(){
+
         return "";
     }
+
+
     @DeleteMapping("/info")
     public String DeleteUserInfo(){
+
         return "";
     }
+
+
 }

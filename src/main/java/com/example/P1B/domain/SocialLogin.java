@@ -1,34 +1,47 @@
 package com.example.P1B.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
-@Entity
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "SOCIAL_LOGINS")
+@Entity
 public class SocialLogin {
+
+    //소셜 회원 고유 식별 ID
     @Id
-    @GeneratedValue
-    private String SlId;
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "SL_ID", columnDefinition = "VARCHAR(36)")
+    private UUID slId;
 
-    private String SlUserid;
+    // 소셜 아이디
+    private String slUserid;
 
-    private String SlNickname;
+    // 소셜 닉네임
+    private String slNickname;
 
-    private int SlPlatform;
+    // 소셜 로그인 종류
+    private int slPlatform;
 
-    private String SlAccesstoken;
+    // 소셜 액세스 토큰
+    private String slAccesstoken;
 
-    private LocalDateTime SlExpires;
+    // 소셜 만료 토큰
+    private LocalDateTime slExpires;
 
+    // 회원 고유 식별 ID
     @ManyToOne
-    private Member MemId;
+    @JoinColumn(name = "MEM_ID")
+    private Member member;
 }
