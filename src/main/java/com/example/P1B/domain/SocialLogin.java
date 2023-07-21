@@ -10,12 +10,10 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Entity
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "SOCIAL_LOGINS")
-@Entity
 public class SocialLogin {
 
     //소셜 회원 고유 식별 ID

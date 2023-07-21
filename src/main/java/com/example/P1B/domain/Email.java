@@ -1,9 +1,6 @@
 package com.example.P1B.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -16,6 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Table(name = "EMAIL_VERFICATION")
 @Entity
+@Builder
 public class Email {
 
     // 이메일 인증 고유 식별 ID
@@ -25,15 +23,19 @@ public class Email {
     private UUID vrId;
 
     // 이메일 인증 코드
+    @Column
     private int vrAuthCode;
 
     // 이메일 인증 여부
+    @Column
     private int vrStatus;
 
     // 이메일 인증 시작 시간
+    @Column
     private LocalDateTime vrCreate;
 
     // 이메일 인증 종료 시간
+    @Column
     private LocalDateTime vrExpire;
 
     // 회원 고유 식별 ID

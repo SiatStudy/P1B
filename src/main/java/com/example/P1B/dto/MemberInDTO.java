@@ -4,8 +4,9 @@ import lombok.Data;
 
 @Data
 public class MemberInDTO {
-    private String id;
-    private String pw;
-
-
+    private String memUserid;
+    private String memName;
+    private String memPasswd;
+    private String memEmail;
+    private String role;
 }

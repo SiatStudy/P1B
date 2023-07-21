@@ -5,6 +5,8 @@ import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity // 엔티티 생성시
@@ -15,7 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @ToString
 @Table(name = "MEMBER")
-public class Member extends BaseTimeEntity {
+public class Member {
 
     // 회원 식별자
     @Id
@@ -46,15 +48,29 @@ public class Member extends BaseTimeEntity {
 
     // 회원 탈퇴 여부
     @Column(name = "MEM_RESIGNED", nullable = false)
-    private String resigned;
+    private String resigned = String.valueOf('N');
 
     // 회원 생성일
-    @Column(name = "MEM_CRT_DATE")
+    @Column(name = "MEM_CRT_DATE", updatable = false, nullable = false)
     private LocalDateTime memCrtDate;
 
     // 회원 수정일
-    @Column(name = "MEM_UDT_DATE")
+    @Column(name = "MEM_UDT_DATE", nullable = false)
     private LocalDateTime memUdtDate;
 
+    // Email
+//    @OneToMany(mappedBy = "member")
+//    @Column
+//    private List<Email> vrId = new ArrayList<>();
 
+    // front에서 받아온 유저정보를 담는 객체
+    public Member(String memUserid, String memName, String memPasswd, String memEmail, String role) {
+        this.memUserid = memUserid;
+        this.memName = memName;
+        this.memPasswd = memPasswd;
+        this.memEmail = memEmail;
+        this.role = role;
+        this.memCrtDate = LocalDateTime.now();
+        this.memUdtDate = LocalDateTime.now();
+    }
 }

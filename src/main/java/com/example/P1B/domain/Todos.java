@@ -8,12 +8,10 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Entity
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "TODOS")
-@Entity
 public class Todos {
 
     // 할일 고유 식별 ID
