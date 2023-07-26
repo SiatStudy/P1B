@@ -1,7 +1,8 @@
 package com.example.p1test.config;
 
 import com.example.p1test.domain.Role;
-import com.example.p1test.service.CustomUserDetailsService;
+import com.example.p1test.handler.AuthSuccessHandler;
+import com.example.p1test.service.CustomizeUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -14,11 +15,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private CustomUserDetailsService customUserDetailsService;
+    private CustomizeUserDetailsService customizeUserDetailsService;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(customizeUserDetailsService).passwordEncoder(passwordEncoder());
     }
 
     @Override
@@ -32,13 +33,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .loginPage("/member/login")
                 .permitAll()
-                .defaultSuccessUrl("/", true)
+                .successHandler(new AuthSuccessHandler()) // 성공 핸들러 사용 설정
+                .failureUrl("/member/login?error") // 로그인 실패 시
                 .and()
                 .logout()
                 .logoutUrl("/member/logout")
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
                 .logoutSuccessUrl("/");
+
     }
 
     @Bean
