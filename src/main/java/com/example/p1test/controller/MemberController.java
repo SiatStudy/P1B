@@ -8,7 +8,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -35,14 +34,23 @@ public class MemberController {
         return "login";
     }
 
-
-    @GetMapping("/member/")
-    public String findAll(Model model) {
-        List<MemberDTO> memberDTOList = memberService.findAll();
-        // 어떠한 html로 가져갈 데이터가 있다면 model사용
-        model.addAttribute("memberList", memberDTOList);
-        return "list";
+    @GetMapping("/member/main")
+    public String mainPage(HttpSession session, Model model) {
+        String sessionId = session.getId();
+        model.addAttribute("sessionId", sessionId);
+        return "main";
     }
+
+
+
+
+//    @GetMapping("/member/")
+//    public String findAll(Model model) {
+//        List<MemberDTO> memberDTOList = memberService.findAll();
+//        // 어떠한 html로 가져갈 데이터가 있다면 model사용
+//        model.addAttribute("memberList", memberDTOList);
+//        return "list";
+//    }
 
     @GetMapping("/member/{id}")
     public String findById(@PathVariable Long id, Model model) {
@@ -88,6 +96,7 @@ public class MemberController {
 //            return "no";
 //        }
     }
+
     @PostMapping("/member/email-check")
     public @ResponseBody String emailCheck(@RequestParam("memberEmail") String memberEmail) {
         System.out.println("memberEmail = " + memberEmail);
