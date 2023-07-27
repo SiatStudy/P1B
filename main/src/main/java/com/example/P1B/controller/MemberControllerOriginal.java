@@ -1,7 +1,7 @@
-//package com.example.p1test.controller;
+//package com.example.P1B.controller;
 //
-//import com.example.p1test.dto.MemberDTO;
-//import com.example.p1test.service.MemberService;
+//import com.example.P1B.dto.MemberDTO;
+//import com.example.P1B.service.MemberService;
 //import lombok.RequiredArgsConstructor;
 //import org.springframework.stereotype.Controller;
 //import org.springframework.ui.Model;

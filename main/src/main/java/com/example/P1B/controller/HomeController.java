@@ -1,4 +1,4 @@
-package com.example.p1test.controller;
+package com.example.P1B.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

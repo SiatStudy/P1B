@@ -1,4 +1,4 @@
-package com.example.p1test.domain;
+package com.example.P1B.domain;
 
 public enum Role {
     MEMBER("USER"),

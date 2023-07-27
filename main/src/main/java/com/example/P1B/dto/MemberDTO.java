@@ -1,6 +1,6 @@
-package com.example.p1test.dto;
+package com.example.P1B.dto;
 
-import com.example.p1test.domain.Member;
+import com.example.P1B.domain.Member;
 import lombok.*;
 
 @Getter
