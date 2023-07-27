@@ -10,7 +10,7 @@ import lombok.*;
 @ToString
 public class MemberDTO {
     private Long id;
-    private String memberId;
+    private String username;
     private String memberPassword;
     private String memberName;
     private String memberEmail;
@@ -19,7 +19,7 @@ public class MemberDTO {
     public static MemberDTO toMemberDTO(Member member) {
         MemberDTO memberDTO = new MemberDTO();
         memberDTO.setId(member.getId());
-        memberDTO.setMemberId(member.getMemberId());
+        memberDTO.setUsername(member.getUsername());
         memberDTO.setMemberPassword(member.getMemberPassword());
         memberDTO.setMemberName(member.getMemberName());
         memberDTO.setMemberEmail(member.getMemberEmail());

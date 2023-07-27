@@ -26,7 +26,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/member/join", "/member/email-check", "/member/id-check", "/member/list").permitAll()
+                // findId, findPassword 접근을 위한 코드 추가
+                .antMatchers("/member/join", "/member/email-check", "/member/id-check", "/member/list", "/member/findId", "/member/findPassword","/member/findIdResult","/member/changePassword").permitAll()
                 .antMatchers("/member/**").hasAuthority(Role.MEMBER.getValue())
                 .antMatchers("/guest/**").hasAuthority(Role.ANONYMOUS.getValue())
                 .and()

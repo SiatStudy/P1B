@@ -5,7 +5,7 @@
     <title>아이디 찾기 결과</title>
 </head>
 <body>
-<h1>ID: <span th:text="${foundId}"></span></h1>
-<p><a th:href="@{/login}">로그인 페이지로</a></p>
+<h1 th:text="${resultMessage}"></h1> <!-- 변경된 부분 -->
+<p><a th:href="@{/member/login}">로그인 페이지로</a></p> <!-- 경로 수정 -->
 </body>
 </html>
