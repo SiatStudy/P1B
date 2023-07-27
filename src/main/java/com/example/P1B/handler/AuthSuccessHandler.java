@@ -1,4 +1,4 @@
-package com.example.p1test.handler;
+package com.example.P1B.handler;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;

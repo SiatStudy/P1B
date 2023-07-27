@@ -1,8 +1,8 @@
-package com.example.p1test.config;
+package com.example.P1B.config;
 
-import com.example.p1test.domain.Role;
-import com.example.p1test.handler.AuthSuccessHandler;
-import com.example.p1test.service.CustomizeUserDetailsService;
+import com.example.P1B.domain.Role;
+import com.example.P1B.handler.AuthSuccessHandler;
+import com.example.P1B.service.CustomizeUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;

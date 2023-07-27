@@ -1,7 +1,7 @@
-package com.example.p1test.service;
+package com.example.P1B.service;
 
-import com.example.p1test.domain.Member;
-import com.example.p1test.repository.MemberRepository;
+import com.example.P1B.domain.Member;
+import com.example.P1B.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
