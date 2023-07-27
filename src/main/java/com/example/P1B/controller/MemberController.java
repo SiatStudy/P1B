@@ -1,6 +1,7 @@
 package com.example.P1B.controller;
 
 import com.example.P1B.dto.MemberDTO;
+import com.example.P1B.exception.MemberNotFoundException;
 import com.example.P1B.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -8,11 +9,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
 public class MemberController {
-    // 생성자 주입
+
     private final MemberService memberService;
 
     // 회원가입 페이지 출력 요청
@@ -41,16 +43,6 @@ public class MemberController {
         return "main";
     }
 
-
-
-
-//    @GetMapping("/member/")
-//    public String findAll(Model model) {
-//        List<MemberDTO> memberDTOList = memberService.findAll();
-//        // 어떠한 html로 가져갈 데이터가 있다면 model사용
-//        model.addAttribute("memberList", memberDTOList);
-//        return "list";
-//    }
 
     @GetMapping("/member/{id}")
     public String findById(@PathVariable Long id, Model model) {
@@ -86,9 +78,9 @@ public class MemberController {
     }
 
     @PostMapping("/member/id-check")
-    public @ResponseBody String idCheck(@RequestParam("memberId") String memberId) {
-        System.out.println("memberId = " + memberId);
-        String checkResult = memberService.idCheck(memberId);
+    public @ResponseBody String idCheck(@RequestParam("username") String username) {
+        System.out.println("username = " + username);
+        String checkResult = memberService.idCheck(username);
         return checkResult;
 //        if (checkResult != null) {
 //            return "ok";
@@ -109,37 +101,72 @@ public class MemberController {
 //        }
     }
 
-    @GetMapping("/member/find-id")
+    @GetMapping("/member/findId")
     public String findIdForm() {
         return "findId";
     }
 
-    @PostMapping("/member/find-id")
+//    @PostMapping("/member/findId")
+//    public String findId(@RequestParam("memberEmail") String memberEmail, Model model) {
+//        // 서비스 메소드 호출
+//        String username = memberService.findIdByEmail(memberEmail);
+//
+//        if (username != null) {
+//            // username이 있는 경우 결과 메시지를 설정합니다.
+//            String message = "찾으신 아이디는: " + username;
+//            model.addAttribute("resultMessage", message);
+//        } else {
+//            // username이 없는 경우 결과 메시지를 설정합니다.
+//            String message = "해당 아이디를 찾을 수 없습니다.";
+//            model.addAttribute("resultMessage", message);
+//        }
+//
+//        return "findIdResult";
+//    }
+
+    @PostMapping("/member/findId")
     public String findId(@RequestParam("memberEmail") String memberEmail, Model model) {
-        String memberId = memberService.findIdByEmail(memberEmail);
-        model.addAttribute("foundId", memberId);
+        // 서비스 메소드 호출
+        Optional<String> optionalUsername = memberService.findIdByEmail(memberEmail);
+
+        if (optionalUsername.isPresent()) {
+            String username = optionalUsername.get();
+            String message = "찾으신 아이디는: " + username;
+            System.out.println("id : " + username);
+            System.out.println("find Id 값 : " + message);
+            model.addAttribute("resultMessage", message);
+        } else {
+            String message = "해당 아이디를 찾을 수 없습니다.";
+            System.out.println("find Id 값 : " + message);
+            model.addAttribute("resultMessage", message);
+        }
+        System.out.println("id : " + optionalUsername);
+
         return "findIdResult";
     }
 
-    @GetMapping("/member/find-password")
+    @GetMapping("/member/findPassword")
     public String findPasswordForm() {
         return "findPassword";
     }
 
-    @PostMapping("/member/find-password")
-    public String findPassword(@RequestParam("memberId") String memberId, @RequestParam("memberEmail") String memberEmail, Model model) {
-        boolean isFound = memberService.checkMemberIdAndEmail(memberId, memberEmail);
-        if (isFound) {
-            model.addAttribute("memberId", memberId);
+    @PostMapping("/member/findPassword")
+    public String findPassword(@RequestParam("username") String username, @RequestParam("memberEmail") String memberEmail, Model model) {
+        try {
+            //서비스 메소드 호출 후, 새 비밀번호 변경 페이지로 이동
+            String result = memberService.findMemberByUsernameAndEmail(username, memberEmail);
+            model.addAttribute("username", result);
             return "changePassword";
-        } else {
+        } catch (MemberNotFoundException e) {
+            // 이메일이나 아이디가 존재하지 않을 경우 에러 메시지를 반환
+            model.addAttribute("errorMessage", e.getMessage());
             return "findPassword";
         }
     }
 
-    @PostMapping("/member/change-password")
-    public String changePassword(@RequestParam("memberId") String memberId, @RequestParam("newPassword") String newPassword) {
-        memberService.changePassword(memberId, newPassword);
-        return "passwordChanged";
+    @PostMapping("/member/changePassword")
+    public String changePassword(@RequestParam("username") String username, @RequestParam("newPassword") String newPassword) {
+        memberService.changePassword(username, newPassword);
+        return "redirect:/"; // index.html로 리다이렉트
     }
 }
