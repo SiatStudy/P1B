@@ -40,9 +40,8 @@ public class TodosController {
 
     @GetMapping("/{year}")
     public String findTodos(@PathVariable("year") int year, @AuthenticationPrincipal CustomizeUserDetails customizeUserDetails, Model model){
-        System.out.println("**************** year : " + year + "**********************");
         List<Todos> todosList = todosService.findTodoList(year, customizeUserDetails.getMember());
-        System.out.println("************** todos :" + todosList + "******************");
+        model.addAttribute("todoList", todosList);
         return "todoslist";
     }
 }
