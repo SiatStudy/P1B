@@ -20,6 +20,9 @@ spring:
       show_sql: false
       # sql 문구를 좀 더 이쁘게 보여주기 위한 설정
       format_sql: true
+  session:
+    servlet:
+      session-name: SESSION_NAME
 logging.level:
   # hibernate 가 남기는 모든 로그가 debug모드로 설정
   # jpa hibernate가 생성하는 sql이 로거를 통해서 찍히도록 하는 설정

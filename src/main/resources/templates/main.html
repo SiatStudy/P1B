@@ -6,7 +6,15 @@
 </head>
 <body>
 세션 값 확인: <p th:text="${sessionId}"></p>
-<a th:href="@{/member/update}">내 정보 수정하기</a>
-<a th:href="@{/member/logout}">로그아웃</a>
+<a th:href="@{/member/update}">Thymeleaf) 내 정보 수정하기</a>
+<a th:href="@{/member/logout}">Thymeleaf) 로그아웃</a>
+
+<hr/>
+
+<a href="/member/update">내 정보 수정하기</a>
+<a href="/todos/item">할일 추가하기</a>
+<a href="/member/logout">로그아웃</a>
+<a href="/todos/2023">23년도 불러오기</a>
+<a href="/todos/2024">24년도 불러오기</a>
 </body>
 </html>

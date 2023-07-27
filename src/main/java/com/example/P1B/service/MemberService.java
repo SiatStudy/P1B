@@ -1,8 +1,10 @@
 package com.example.P1B.service;
 
+import com.example.P1B.domain.Email;
 import com.example.P1B.domain.Member;
 import com.example.P1B.dto.MemberDTO;
 import com.example.P1B.exception.MemberNotFoundException;
+import com.example.P1B.repository.EmailRepository;
 import com.example.P1B.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final EmailRepository emailRepository;
 
     @Autowired
     private final BCryptPasswordEncoder passwordEncoder; // 빈으로 주입
@@ -27,7 +30,10 @@ public class MemberService {
         Member member = Member.toMember(memberDTO);
         member.setMemberPassword(passwordEncoder.encode(member.getMemberPassword()));
         member.setRole(Member.Role.USER);
+        Email email = new Email();
+        email.setMember(member);
         memberRepository.save(member);
+        emailRepository.save(email);
         // repository의 join메서드 호출 (조건. entity객체를 넘겨줘야 함)
     }
 

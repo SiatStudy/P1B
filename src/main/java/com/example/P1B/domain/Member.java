@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Setter
@@ -33,6 +35,9 @@ public class Member {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @OneToMany(mappedBy = "member")
+    private List<Email> vrid = new ArrayList<>();
 
     public enum Role{
         USER, ANONYMOUS
