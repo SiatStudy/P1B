@@ -10,3 +10,4 @@ out
 gradlew
 HELP.md
 src/test
+.gradle
