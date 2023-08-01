@@ -88,7 +88,7 @@
             data: {"memberEmail": email},
             success: function (res) {
                 let emailCheckResult = document.getElementById("email-check-result");
-                if (res === "available") {
+                if (res) {
                     emailCheckResult.style.color = "green";
                     emailCheckResult.innerHTML = "사용 가능한 이메일";
                 } else {
@@ -111,7 +111,7 @@
             data: {"username": username},
             success: function (res) {
                 let idCheckResult = document.getElementById("id-check-result");
-                if (res === "available") {
+                if (res) {
                     idCheckResult.style.color = "green";
                     idCheckResult.innerHTML = "사용 가능한 아이디";
                 } else {

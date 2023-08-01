@@ -86,18 +86,14 @@ public class MemberController {
         return "index";
     }
 
-    @PostMapping("/member/id-check")
-    public @ResponseBody String idCheck(@RequestParam("username") String username) {
-        System.out.println("username = " + username);
-        String checkResult = memberService.idCheck(username);
-        return checkResult;
+    @PostMapping("/members/idCheck")
+    public @ResponseBody boolean idCheck(@RequestBody String username) {
+        return memberService.idCheck(username);
     }
 
-    @PostMapping("/member/email-check")
-    public @ResponseBody String emailCheck(@RequestParam("memberEmail") String memberEmail) {
-        System.out.println("memberEmail = " + memberEmail);
-        String checkResult = memberService.emailCheck(memberEmail);
-        return checkResult;
+    @PostMapping("/members/emailCheck")
+    public @ResponseBody boolean emailCheck(@RequestBody String memberEmail) {
+        return memberService.emailCheck(memberEmail);
     }
 
     @GetMapping("/login/search/id")
