@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Todos List</title>
+</head>
+<body>
+<h1>Todos List for Year: <span th:text="${year}"></span></h1>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Content</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+    </tr>
+    <tr th:each="todo : ${todoList}">
+        <td th:text="${todo.tdid}"></td>
+        <td th:text="${todo.tdtitle}"></td>
+        <td th:text="${todo.tdcontent}"></td>
+        <td th:text="${todo.tdstartdate}"></td>
+        <td th:text="${todo.tdenddate}"></td>
+    </tr>
+</table>
+<button onclick="deleteItem(1)">1번 삭제하기</button>
+<button onclick="deleteItem(2)">2번 삭제하기</button>
+<button onclick="deleteItem(3)">3번 삭제하기</button>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    const deleteItem = async (item) => {
+        try {
+            console.log(item);
+            const serverUrl = '/todos/item/' + item;
+
+            console.log(serverUrl);
+
+            // DELETE 요청 보내기 (비동기 처리)
+            const response = await axios.delete(serverUrl);
+
+            console.log('삭제 성공:', response.data);
+            // 삭제 성공 시 처리할 로직을 작성합니다.
+
+        } catch (error) {
+            console.error('삭제 실패:', error);
+            // 삭제 실패 시 처리할 로직을 작성합니다.
+        }
+    };
+</script>
+</body>
+</html>

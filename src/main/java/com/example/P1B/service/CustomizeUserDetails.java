@@ -1,13 +1,17 @@
 package com.example.P1B.service;
 
 import com.example.P1B.domain.Member;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
 
+
+// 작업자 : 장재형
 public class CustomizeUserDetails implements UserDetails {
 
     private final Member member;
@@ -28,8 +32,10 @@ public class CustomizeUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return member.getMemberId();
+        return member.getUsername();
     }
+
+    public Member getMember(){return member;}
 
     @Override
     public boolean isAccountNonExpired() {
@@ -50,4 +56,6 @@ public class CustomizeUserDetails implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+
 }

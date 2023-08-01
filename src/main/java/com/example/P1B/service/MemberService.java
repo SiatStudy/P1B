@@ -1,24 +1,35 @@
 package com.example.P1B.service;
 
+import com.example.P1B.domain.Email;
 import com.example.P1B.domain.Member;
 import com.example.P1B.dto.MemberDTO;
+import com.example.P1B.exception.MemberNotFoundException;
+import com.example.P1B.repository.EmailRepository;
 import com.example.P1B.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+
+@Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final EmailRepository emailRepository;
 
     @Autowired
     private final BCryptPasswordEncoder passwordEncoder; // 빈으로 주입
+
 
     public void join(MemberDTO memberDTO) {
         // 1. dto -> entity 변환
@@ -26,42 +37,30 @@ public class MemberService {
         Member member = Member.toMember(memberDTO);
         member.setMemberPassword(passwordEncoder.encode(member.getMemberPassword()));
         member.setRole(Member.Role.USER);
+
+        Email email = new Email();
+        email.setMember(member);
+
+        // 이메일 인증 시작시간을 현재 시간으로 설정
+        LocalDateTime vrCreate = LocalDateTime.now();
+        email.setVrCreate(vrCreate);
+
+        // 이메일 인증 종료시간을 시작시간 기준 3분 후로 설정
+        LocalDateTime vrExpire = vrCreate.plusMinutes(3);
+        email.setVrExpire(vrExpire);
+
         memberRepository.save(member);
+        emailRepository.save(email);
         // repository의 join메서드 호출 (조건. entity객체를 넘겨줘야 함)
     }
-//
-//    public MemberDTO login(MemberDTO memberDTO) {
-//        /*
-//            1. 회원이 입력한 이메일로 DB에서 조회를 함
-//            2. DB에서 조회한 비밀번호와 사용자가 입력한 비밀번호가 일치하는지 판단
-//         */
-//        Optional<Member> byMemberId = memberRepository.findByMemberId(memberDTO.getMemberId());
-//        if (byMemberId.isPresent()) {
-//            // 조회 결과가 있다(해당 이메일을 가진 회원 정보가 있다)
-//            Member member = byMemberId.get();
-//
-//            if (member.getMemberPassword().equals(memberDTO.getMemberPassword())) {
-//                // 비밀번호 일치
-//                // entity -> dto 변환 후 리턴
-//                MemberDTO dto = MemberDTO.toMemberDTO(member);
-//                return dto;
-//            } else {
-//                // 비밀번호 불일치(로그인실패)
-//                return null;
-//            }
-//        } else {
-//            // 조회 결과가 없다(해당 이메일을 가진 회원이 없다)
-//            return null;
-//        }
-//    }
+
+
 
     public List<MemberDTO> findAll() {
         List<Member> memberList = memberRepository.findAll();
         List<MemberDTO> memberDTOList = new ArrayList<>();
         for (Member member: memberList) {
             memberDTOList.add(MemberDTO.toMemberDTO(member));
-//            MemberDTO memberDTO = MemberDTO.toMemberDTO(member);
-//            memberDTOList.add(memberDTO);
         }
         return memberDTOList;
     }
@@ -69,9 +68,6 @@ public class MemberService {
     public MemberDTO findById(Long id) {
         Optional<Member> optionalMember = memberRepository.findById(id);
         if (optionalMember.isPresent()) {
-//            Member member = optionalMember.get();
-//            MemberDTO memberDTO = MemberDTO.toMemberDTO(member);
-//            return memberDTO;
             return MemberDTO.toMemberDTO(optionalMember.get());
         } else {
             return null;
@@ -80,9 +76,9 @@ public class MemberService {
     }
 
     public MemberDTO updateForm(String myEmail) {
-        Optional<Member> optionalMember = memberRepository.findByMemberId(myEmail);
-        if (optionalMember.isPresent()) {
-            return MemberDTO.toMemberDTO(optionalMember.get());
+        Optional<Member> result = memberRepository.findByUsername(myEmail);
+        if (result.isPresent()) {
+            return MemberDTO.toMemberDTO(result.get());
         } else {
             return null;
         }
@@ -97,40 +93,54 @@ public class MemberService {
     }
 
     // 이메일 체크
-    public String emailCheck(String memberEmail) {
-        Optional<Member> byMemberEmail = memberRepository.findByMemberId(memberEmail);
-        if (byMemberEmail.isPresent()) {
+    public boolean emailCheck(String memberEmail) {
+        Optional<Member> result = memberRepository.findByUsername(memberEmail);
+        if (result.isPresent()) {
             // 조회결과가 있다 -> 사용할 수 없다.
-            return null;
+            return false;
         } else {
             // 조회결과가 없다 -> 사용할 수 있다.
-            return "ok";
+            return true;
         }
     }
 
     // 아이디 체크
-    public String idCheck(String memberId) {
-        Optional<Member> byMemberId = memberRepository.findByMemberId(memberId);
-        if (byMemberId.isPresent()) {
+    public boolean idCheck(String username) {
+        Optional<Member> result = memberRepository.findByUsername(username);
+        if (result.isPresent()) {
             // 조회결과가 있다 -> 사용할 수 없다.
-            return null;
+            return false;
         } else {
             // 조회결과가 없다 -> 사용할 수 있다.
-            return "ok";
+            return true;
         }
     }
 
-    public String findIdByEmail(String memberEmail) {
-        return memberRepository.findByMemberEmail(memberEmail).map(Member::getMemberId).orElse(null);
+
+    public Optional<String> findIdByEmail(String memberEmail) {
+        Optional<Member> memberOptional = memberRepository.findByMemberEmail(memberEmail);
+
+        return memberOptional.map(Member::getUsername);
     }
 
-    public boolean checkMemberIdAndEmail(String memberId, String memberEmail) {
-        return memberRepository.findByMemberIdAndMemberEmail(memberId, memberEmail).isPresent();
-    }
 
-    public void changePassword(String memberId, String newPassword) {
-        Member member = memberRepository.findByMemberId(memberId).orElseThrow();
+    public void changePassword(String username, String newPassword) {
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new MemberNotFoundException("해당 아이디를 찾을 수 없습니다."));
         member.setMemberPassword(passwordEncoder.encode(newPassword));
         memberRepository.save(member);
     }
+
+    public String findMemberByUsernameAndEmail(String username, String memberEmail) {
+        Member member = memberRepository.findByUsernameAndMemberEmail(username, memberEmail); // 수정된 부분
+
+        if (member == null) {
+            throw new MemberNotFoundException("해당하는 아이디 또는 이메일이 존재하지 않습니다.");
+        }
+
+        return member.getUsername(); // 수정된 부분
+    }
+
+
+
 }
