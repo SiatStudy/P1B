@@ -12,7 +12,7 @@ spring:
     hibernate:
       # 애플리케이션 실행 시점에 테이블을 다 지우고,
       # 내가 가진 entity 정보를 보고 다시 테이블 자동 생성
-      ddl-auto: update
+      ddl-auto: create
 
   properties:
     hibernate:
@@ -20,6 +20,16 @@ spring:
       show_sql: false
       # sql 문구를 좀 더 이쁘게 보여주기 위한 설정
       format_sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: siatproject123@gmail.com
+    password: klmjqvkijufjgeru
+    smtp:
+      auth: true
+      timeout: 5000
+
+
 logging.level:
   # hibernate 가 남기는 모든 로그가 debug모드로 설정
   # jpa hibernate가 생성하는 sql이 로거를 통해서 찍히도록 하는 설정

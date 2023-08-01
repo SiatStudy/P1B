@@ -17,6 +17,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private CustomizeUserDetailsService customizeUserDetailsService;
 
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(customizeUserDetailsService).passwordEncoder(passwordEncoder());
@@ -26,24 +27,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                // findId, findPassword 접근을 위한 코드 추가
-                .antMatchers("/member/join", "/member/email-check", "/member/id-check", "/member/list", "/member/findId", "/member/findPassword","/member/findIdResult","/member/changePassword").permitAll()
-                .antMatchers("/member/**").hasAuthority(Role.MEMBER.getValue())
-                .antMatchers("/guest/**").hasAuthority(Role.ANONYMOUS.getValue())
+                .antMatchers("/users/signup", "/member/email-check", "/member/id-check", "/member/list", "/login/search/id",
+                        "/login/search/password","/member/findIdResult","/member/changePassword").permitAll()
+                .antMatchers("/member/").hasAuthority(Role.MEMBER.getValue())
+                .antMatchers("/guest/").hasAuthority(Role.ANONYMOUS.getValue())
                 .and()
                 .formLogin()
-                .loginPage("/member/login")
+                .loginPage("/login/login")
                 .permitAll()
                 .successHandler(new AuthSuccessHandler()) // 성공 핸들러 사용 설정
-                .failureUrl("/member/login?error") // 로그인 실패 시
+                .failureUrl("/login/login?error") // 로그인 실패 시
                 .and()
                 .logout()
                 .logoutUrl("/member/logout")
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
-                .logoutSuccessUrl("/");
-
+                .logoutSuccessUrl("/")
+                .and()
+                .anonymous().authorities(Role.ANONYMOUS.getValue()); // 로그인하지 않은 사용자는 ANONYMOUS 공인
     }
+
+
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {

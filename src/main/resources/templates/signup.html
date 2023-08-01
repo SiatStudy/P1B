@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<!-- action속성: form에 작성한 데이터를 어디로 보낼지 지정 -->
+<form th:action="@{/users/signup}" method="post">
+    <!-- name속성: 서버로 전송할 때 변수이름의 역할 -->
+    <label>아이디</label>
+    <input type="text" name="username" id="username" onblur="idCheck()"> <br>
+    <p id="id-check-result"></p>
+    <label>비밀번호</label>
+    <input type="password" name="memberPassword" id="password" required> <br>
+    <label>비밀번호 확인</label>
+    <input type="password" name="passwordConfirm" id="passwordConfirm" required> <br>
+    <div id="passwordError" style="display:none; color: red;">비밀번호가 일치하지 않습니다.</div>
+
+    <label>이름</label>
+    <input type="text" name="memberName"> <br>
+
+    <label>이메일</label>
+    <input type="email" name="memberEmail" id="memberEmail" onblur="emailCheck()">
+    <button id="email-verify-button" type="button" onclick="requestEmailVerification()">이메일 인증</button> <br>
+    <p id="email-check-result"></p>
+
+    <label>이메일 인증 코드 입력</label>
+    <input type="text" id="verification-code">
+    <button type="button" onclick="checkEmailVerification()">인증 확인</button> <br>
+
+
+
+    <input type="submit" value="회원가입" id="joinButton" disabled>
+</form>
+</body>
+<script>
+
+    let emailVerificationCode = "";
+
+    const requestEmailVerification = () => {
+        const email = document.getElementById("memberEmail").value;
+
+        // 이메일 인증 코드 생성 (예시: 랜덤 6자리 숫자 생성)
+        emailVerificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+        // 서버에 이메일 전송 요청
+        $.ajax({
+            type: "POST",
+            url: "/mail/send",
+            data: {
+                address: email,
+                title: "이메일 인증 코드",
+                content: `회원 가입을 위한 인증 코드는 ${emailVerificationCode} 입니다.`,
+            },
+            success: function () {
+                alert("인증 코드가 이메일로 전송되었습니다.");
+            },
+            error: function (err) {
+                console.log("에러발생", err);
+            },
+        });
+    };
+
+    const checkEmailVerification = () => {
+        const inputCode = document.getElementById("verification-code").value;
+        if (inputCode === emailVerificationCode) {
+            alert("인증이 성공적으로 완료되었습니다.");
+            document.getElementById("joinButton").disabled = false;
+            return true;
+        } else {
+            alert("인증 코드가 일치하지 않습니다.");
+            document.getElementById("joinButton").disabled = true;
+            return false;
+        }
+    };
+
+
+
+
+    const emailCheck = () => {
+        const email = document.getElementById("memberEmail").value;
+
+        $.ajax({
+            type: "post",
+            url: "/member/email-check",
+            data: {"memberEmail": email},
+            success: function (res) {
+                let emailCheckResult = document.getElementById("email-check-result");
+                if (res === "available") {
+                    emailCheckResult.style.color = "green";
+                    emailCheckResult.innerHTML = "사용 가능한 이메일";
+                } else {
+                    emailCheckResult.style.color = "red";
+                    emailCheckResult.innerHTML = "이미 사용 중인 이메일";
+                }
+            },
+            error: function (err) {
+                console.log("에러발생", err);
+            },
+        });
+    };
+
+    const idCheck = () => {
+        const username = document.getElementById("username").value;
+
+        $.ajax({
+            type: "post",
+            url: "/member/id-check",
+            data: {"username": username},
+            success: function (res) {
+                let idCheckResult = document.getElementById("id-check-result");
+                if (res === "available") {
+                    idCheckResult.style.color = "green";
+                    idCheckResult.innerHTML = "사용 가능한 아이디";
+                } else {
+                    idCheckResult.style.color = "red";
+                    idCheckResult.innerHTML = "이미 사용 중인 아이디";
+                }
+            },
+            error: function (err) {
+                console.log("에러발생", err);
+            },
+        });
+    };
+
+    document.getElementById('passwordConfirm').addEventListener('blur', checkPasswordsMatch);
+
+    const checkPasswordsMatch = () => {
+        let password = document.getElementById('password').value;
+        let passwordConfirm = document.getElementById('passwordConfirm').value;
+
+        if (password !== passwordConfirm) {
+            document.getElementById('passwordError').style.display = 'block';
+        } else {
+            document.getElementById('passwordError').style.display = 'none';
+        }
+    };
+
+    document.getElementById('joinButton').addEventListener('click', handleFormSubmit);
+
+    const handleFormSubmit = (event) => {
+        event.preventDefault(); // page reload 방지
+
+        const password = document.getElementById('password').value;
+        const passwordConfirm = document.getElementById('passwordConfirm').value;
+
+        // 이메일 인증 코드 확인
+        if (!checkEmailVerification()) {
+            alert('이메일 인증을 완료해주세요');
+            return;
+        }
+
+        if (password !== passwordConfirm) {
+            document.getElementById('passwordError').style.display = 'block';
+            event.preventDefault();
+        } else {
+            document.getElementById('passwordError').style.display = 'none';
+        }
+    };
+</script>
+</html>

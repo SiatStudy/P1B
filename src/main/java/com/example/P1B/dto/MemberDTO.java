@@ -14,6 +14,7 @@ public class MemberDTO {
     private String memberPassword;
     private String memberName;
     private String memberEmail;
+    private Member member;
     private Member.Role role;
 
     public static MemberDTO toMemberDTO(Member member) {
@@ -23,6 +24,7 @@ public class MemberDTO {
         memberDTO.setMemberPassword(member.getMemberPassword());
         memberDTO.setMemberName(member.getMemberName());
         memberDTO.setMemberEmail(member.getMemberEmail());
+        memberDTO.setMember(member);
         return memberDTO;
     }
 }
