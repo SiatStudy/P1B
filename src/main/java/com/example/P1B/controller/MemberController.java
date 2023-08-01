@@ -86,12 +86,12 @@ public class MemberController {
         return "index";
     }
 
-    @PostMapping("/members/idCheck")
+    @PostMapping("/login/duple/id")
     public @ResponseBody boolean idCheck(@RequestBody String username) {
-        return memberService.idCheck(username);
+        return !memberService.idCheck(username);
     }
 
-    @PostMapping("/members/emailCheck")
+    @PostMapping("/login/duple/email")
     public @ResponseBody boolean emailCheck(@RequestBody String memberEmail) {
         return memberService.emailCheck(memberEmail);
     }

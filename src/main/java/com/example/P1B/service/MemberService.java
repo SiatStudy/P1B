@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-// 작업자 : 장재형
 
 @Slf4j
 @Service
@@ -62,8 +61,6 @@ public class MemberService {
         List<MemberDTO> memberDTOList = new ArrayList<>();
         for (Member member: memberList) {
             memberDTOList.add(MemberDTO.toMemberDTO(member));
-//            MemberDTO memberDTO = MemberDTO.toMemberDTO(member);
-//            memberDTOList.add(memberDTO);
         }
         return memberDTOList;
     }
@@ -71,9 +68,6 @@ public class MemberService {
     public MemberDTO findById(Long id) {
         Optional<Member> optionalMember = memberRepository.findById(id);
         if (optionalMember.isPresent()) {
-//            Member member = optionalMember.get();
-//            MemberDTO memberDTO = MemberDTO.toMemberDTO(member);
-//            return memberDTO;
             return MemberDTO.toMemberDTO(optionalMember.get());
         } else {
             return null;
