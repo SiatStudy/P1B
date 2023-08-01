@@ -12,3 +12,8 @@ HELP.md
 src/test
 src/main/resources/application.yml
 src/main/resources/application.yml
+.gradle
+build
+build.gradle
+.gradle
+build.gradle

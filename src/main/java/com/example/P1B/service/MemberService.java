@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-// 작업자 : 장재형
 
 @Slf4j
 @Service
@@ -63,8 +61,6 @@ public class MemberService {
         List<MemberDTO> memberDTOList = new ArrayList<>();
         for (Member member: memberList) {
             memberDTOList.add(MemberDTO.toMemberDTO(member));
-//            MemberDTO memberDTO = MemberDTO.toMemberDTO(member);
-//            memberDTOList.add(memberDTO);
         }
         return memberDTOList;
     }
@@ -72,9 +68,6 @@ public class MemberService {
     public MemberDTO findById(Long id) {
         Optional<Member> optionalMember = memberRepository.findById(id);
         if (optionalMember.isPresent()) {
-//            Member member = optionalMember.get();
-//            MemberDTO memberDTO = MemberDTO.toMemberDTO(member);
-//            return memberDTO;
             return MemberDTO.toMemberDTO(optionalMember.get());
         } else {
             return null;
@@ -100,26 +93,26 @@ public class MemberService {
     }
 
     // 이메일 체크
-    public String emailCheck(String memberEmail) {
+    public boolean emailCheck(String memberEmail) {
         Optional<Member> result = memberRepository.findByUsername(memberEmail);
         if (result.isPresent()) {
             // 조회결과가 있다 -> 사용할 수 없다.
-            return null;
+            return false;
         } else {
             // 조회결과가 없다 -> 사용할 수 있다.
-            return "ok";
+            return true;
         }
     }
 
     // 아이디 체크
-    public String idCheck(String username) {
+    public boolean idCheck(String username) {
         Optional<Member> result = memberRepository.findByUsername(username);
         if (result.isPresent()) {
             // 조회결과가 있다 -> 사용할 수 없다.
-            return null;
+            return false;
         } else {
             // 조회결과가 없다 -> 사용할 수 있다.
-            return "ok";
+            return true;
         }
     }
 
