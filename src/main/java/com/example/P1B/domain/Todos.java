@@ -47,7 +47,7 @@ public class Todos {
 
     // 회원 고유 식별 ID
     @ManyToOne
-    @JoinColumn(name="memberid")
+    @JoinColumn(name="memid")
     private Member member;
 
     public Todos(String tdtitle, String tdcontent, LocalDateTime tdstartdate, int tdstartyeardate, LocalDateTime tdenddate) {

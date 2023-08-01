@@ -31,4 +31,9 @@ public class TodosService {
         List<Todos> todosList = todosRepository.findByTdstartyeardateAndMember(tdyddate, member);
         return todosList;
     }
+
+    @Transactional
+    public void deleteTodos(Long tdid){
+        todosRepository.deleteById(tdid);
+    }
 }
