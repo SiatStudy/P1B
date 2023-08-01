@@ -22,5 +22,29 @@
         <td th:text="${todo.tdenddate}"></td>
     </tr>
 </table>
+<button onclick="deleteItem(1)">1번 삭제하기</button>
+<button onclick="deleteItem(2)">2번 삭제하기</button>
+<button onclick="deleteItem(3)">3번 삭제하기</button>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    const deleteItem = async (item) => {
+        try {
+            console.log(item);
+            const serverUrl = '/todos/item/' + item;
+
+            console.log(serverUrl);
+
+            // DELETE 요청 보내기 (비동기 처리)
+            const response = await axios.delete(serverUrl);
+
+            console.log('삭제 성공:', response.data);
+            // 삭제 성공 시 처리할 로직을 작성합니다.
+
+        } catch (error) {
+            console.error('삭제 실패:', error);
+            // 삭제 실패 시 처리할 로직을 작성합니다.
+        }
+    };
+</script>
 </body>
 </html>

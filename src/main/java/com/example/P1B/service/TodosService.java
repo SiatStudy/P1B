@@ -2,6 +2,7 @@ package com.example.P1B.service;
 
 import com.example.P1B.domain.Member;
 import com.example.P1B.domain.Todos;
+import com.example.P1B.dto.TodosOutDTO;
 import com.example.P1B.repository.TodosRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -10,8 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
-// 작업자 : 이건주
 @Service
 @RequiredArgsConstructor
 public class TodosService {
@@ -31,5 +30,10 @@ public class TodosService {
 //         */
         List<Todos> todosList = todosRepository.findByTdstartyeardateAndMember(tdyddate, member);
         return todosList;
+    }
+
+    @Transactional
+    public void deleteTodos(Long tdid){
+        todosRepository.deleteById(tdid);
     }
 }
