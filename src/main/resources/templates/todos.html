@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>할일 추가 페이지</h1>
+    <form action="result" th:action="@{${action}}" th:object="${dto}" method="post">
+        할일제목 : <input type="text" th:field="*{tdTitle}"/><br/>
+        할일내용 : <input type="text" th:field="*{tdContent}"/><br/>
+        시작시간 : <input type="text" th:field="*{tdStartDate}"><br/>
+        완료시간 : <input type="text" th:field="*{tdEndDate}"/><br/>
+        <button type="submit">입력</button>
+    </form>
+</body>
+</html>

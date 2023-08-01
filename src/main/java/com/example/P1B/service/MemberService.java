@@ -1,25 +1,37 @@
 package com.example.P1B.service;
 
+import com.example.P1B.domain.Email;
 import com.example.P1B.domain.Member;
 import com.example.P1B.dto.MemberDTO;
 import com.example.P1B.exception.MemberNotFoundException;
+import com.example.P1B.repository.EmailRepository;
 import com.example.P1B.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+// 작업자 : 장재형
+
+@Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final EmailRepository emailRepository;
 
     @Autowired
     private final BCryptPasswordEncoder passwordEncoder; // 빈으로 주입
+
 
     public void join(MemberDTO memberDTO) {
         // 1. dto -> entity 변환
@@ -27,9 +39,24 @@ public class MemberService {
         Member member = Member.toMember(memberDTO);
         member.setMemberPassword(passwordEncoder.encode(member.getMemberPassword()));
         member.setRole(Member.Role.USER);
+
+        Email email = new Email();
+        email.setMember(member);
+
+        // 이메일 인증 시작시간을 현재 시간으로 설정
+        LocalDateTime vrCreate = LocalDateTime.now();
+        email.setVrCreate(vrCreate);
+
+        // 이메일 인증 종료시간을 시작시간 기준 3분 후로 설정
+        LocalDateTime vrExpire = vrCreate.plusMinutes(3);
+        email.setVrExpire(vrExpire);
+
         memberRepository.save(member);
+        emailRepository.save(email);
         // repository의 join메서드 호출 (조건. entity객체를 넘겨줘야 함)
     }
+
+
 
     public List<MemberDTO> findAll() {
         List<Member> memberList = memberRepository.findAll();
@@ -96,9 +123,6 @@ public class MemberService {
         }
     }
 
-//    public String findIdByEmail(String memberEmail) {
-//        return memberRepository.findByMemberEmail(memberEmail).map(Member::getUsername).orElse(null);
-//    }
 
     public Optional<String> findIdByEmail(String memberEmail) {
         Optional<Member> memberOptional = memberRepository.findByMemberEmail(memberEmail);
@@ -110,7 +134,7 @@ public class MemberService {
     public void changePassword(String username, String newPassword) {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new MemberNotFoundException("해당 아이디를 찾을 수 없습니다."));
-        member.setMemberPassword(newPassword);
+        member.setMemberPassword(passwordEncoder.encode(newPassword));
         memberRepository.save(member);
     }
 
@@ -123,5 +147,7 @@ public class MemberService {
 
         return member.getUsername(); // 수정된 부분
     }
+
+
 
 }

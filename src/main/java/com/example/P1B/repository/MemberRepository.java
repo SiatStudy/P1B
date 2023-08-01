@@ -6,6 +6,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+// 작업자 : 장재형
+
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
     // 아이디로 회원 정보 조회
