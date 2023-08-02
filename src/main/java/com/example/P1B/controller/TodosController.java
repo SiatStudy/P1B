@@ -2,11 +2,9 @@ package com.example.P1B.controller;
 
 import com.example.P1B.domain.Todos;
 import com.example.P1B.dto.TodosInDTO;
-import com.example.P1B.dto.TodosOutDTO;
 import com.example.P1B.service.CustomizeUserDetails;
 import com.example.P1B.service.TodosService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +14,7 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/todos")
+@RequestMapping("/api/todos")
 public class TodosController {
 
     private final TodosService todosService;

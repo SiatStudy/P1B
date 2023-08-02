@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Controller
+@RequestMapping("/api/mail")
 public class MailController {
 
     private final EmailService emailService;
@@ -20,7 +21,7 @@ public class MailController {
         this.emailService = emailService;
     }
 
-    @GetMapping("/mail/send")
+    @GetMapping("/send")
     public String main() {
         return "SendMail.html";
     }
@@ -31,24 +32,30 @@ public class MailController {
 //        System.out.println("메일 전송 완료");
 //        return "resultMail.html";
 //    }
-    @PostMapping("/mail/send")
-    public @ResponseBody ResponseEntity<Map<String, String>> sendMail(@Validated
+    @PostMapping("/send")
+    public @ResponseBody ResponseEntity<Map<String, Boolean>> sendMail(@Validated
                                            @RequestBody MailDTO mailDto) {
         System.out.println("sendMail 실행 확인");
         System.out.println("address : " + mailDto.getAddress());
         System.out.println("title : " + mailDto.getTitle());
         System.out.println("content : " + mailDto.getContent());
+
+        Map<String, Boolean> map1 = new HashMap<>();
         try {
+            map1.put("result", true);
             emailService.sendSimpleMessage(mailDto);
         }catch (Exception e){
+            map1.put("result", false);
             e.printStackTrace();
         }
 
-        Map<String, String> map1 = new HashMap<>();
-
-        map1.put("result", "success");
+//        테스트용 코드
+//        map1.put("result", "true");
+//        map1.put("address", mailDto.getAddress());
+//        map1.put("title", mailDto.getTitle());
+//        map1.put("content", mailDto.getContent());
         // return Json to browser
-        ResponseEntity<Map<String, String>> entity =
+        ResponseEntity<Map<String, Boolean>> entity =
                 new ResponseEntity<>(map1, HttpStatus.OK);
         return entity;
 //        return mailDto;
