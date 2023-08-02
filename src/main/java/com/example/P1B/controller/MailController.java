@@ -5,9 +5,11 @@ import com.example.P1B.service.EmailService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class MailController {
@@ -30,16 +32,26 @@ public class MailController {
 //        return "resultMail.html";
 //    }
     @PostMapping("/mail/send")
-    public ResponseEntity<String> sendMail(@RequestParam("address") String address,
-                                           @RequestParam("title") String title,
-                                           @RequestParam("content") String content) {
-        MailDTO mailDto = new MailDTO();
-        mailDto.setAddress(address);
-        mailDto.setTitle(title);
-        mailDto.setContent(content);
+    public @ResponseBody ResponseEntity<Map<String, String>> sendMail(@Validated
+                                           @RequestBody MailDTO mailDto) {
+        System.out.println("sendMail 실행 확인");
+        System.out.println("address : " + mailDto.getAddress());
+        System.out.println("title : " + mailDto.getTitle());
+        System.out.println("content : " + mailDto.getContent());
+        try {
+            emailService.sendSimpleMessage(mailDto);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
-        emailService.sendSimpleMessage(mailDto);
-        return new ResponseEntity<>("메일 전송이 완료되었습니다.", HttpStatus.OK);
+        Map<String, String> map1 = new HashMap<>();
+
+        map1.put("result", "success");
+        // return Json to browser
+        ResponseEntity<Map<String, String>> entity =
+                new ResponseEntity<>(map1, HttpStatus.OK);
+        return entity;
+//        return mailDto;
     }
 
 }
