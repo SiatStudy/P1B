@@ -116,10 +116,10 @@
             .catch(err => console.log("에러발생", err));
     };
 
-        const requestEmailVerification = () => {
+    const requestEmailVerification = () => {
         selectors.verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
 
-        fetch("/mail/send", {
+        fetch("/api/mail/send", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -130,10 +130,11 @@
                 content: `회원 가입을 위한 인증 코드는 ${selectors.verificationCode} 입니다.`,
             })
         }).then(response => response.json())
-            .then(data => console.dir(data))
+            .then(data => console.log(data))
             .catch(err => console.error("에러발생", err));
         // .then(() => alert("인증 코드가 이메일로 전송되었습니다."))
     };
+
 
     const checkEmailVerification = () => {
         const inputCode = document.getElementById("verification-code").value;
