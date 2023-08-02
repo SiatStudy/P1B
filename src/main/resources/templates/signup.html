@@ -1,70 +1,143 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>회원가입</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
+
 <body>
-<!-- action속성: form에 작성한 데이터를 어디로 보낼지 지정 -->
-<form th:action="@{/users/signup}" method="post" id="signup-form" onsubmit="return handleFormSubmit(event)">
+<form th:action="@{/users/signup}" method="post" id="signupForm" onsubmit="return handleFormSubmit(event)">
+    <div>
+        <label for="username">아이디</label>
+        <input type="text" name="username" id="username">
+        <p id="idCheckResult"></p>
+    </div>
 
-    <!-- name속성: 서버로 전송할 때 변수이름의 역할 -->
-    <label>아이디</label>
-    <input type="text" name="username" id="username" onblur="idCheck()"> <br>
-    <p id="idCheckResult"></p>
-    <label>비밀번호</label>
-    <input type="password" name="memberPassword" id="password" required> <br>
-    <label>비밀번호 확인</label>
-    <input type="password" name="passwordConfirm" id="passwordConfirm" required> <br>
-    <div id="passwordError" style="display:none; color: red;">비밀번호가 일치하지 않습니다.</div>
+    <div>
+        <label for="password">비밀번호</label>
+        <input type="password" name="memberPassword" id="password">
+    </div>
 
-    <label>이름</label>
-    <input type="text" name="memberName"> <br>
+    <div>
+        <label for="passwordConfirm">비밀번호 확인</label>
+        <input type="password" name="passwordConfirm" id="passwordConfirm">
+        <div id="passwordError" style="display:none; color: red;">비밀번호가 일치하지 않습니다.</div>
+    </div>
 
-    <label>이메일</label>
-    <input type="email" name="memberEmail" id="memberEmail" onblur="emailCheck()">
-    <button id="email-verify-button" type="button" onclick="requestEmailVerification()">이메일 인증</button> <br>
-    <p id="emailCheckResult"></p>
+    <div>
+        <label for="memberName">이름</label>
+        <input type="text" name="memberName" id="memberName">
+    </div>
 
-    <label>이메일 인증 코드 입력</label>
-    <input type="text" id="verification-code">
-    <button type="button" onclick="checkEmailVerification()">인증 확인</button> <br>
+    <div>
+        <label for="memberEmail">이메일</label>
+        <input type="email" name="memberEmail" id="memberEmail">
+        <button id="emailVerifyButton" type="button">이메일 인증</button>
+        <p id="emailCheckResult"></p>
+    </div>
 
-    <input type="submit" value="회원가입" id="joinButton" disabled>
+    <div>
+        <label for="verification-code">이메일 인증 코드 입력</label>
+        <input type="text" id="verification-code">
+        <button type="button" id="verificationButton">인증 확인</button>
+    </div>
+
+    <div>
+        <input type="submit" value="회원가입" id="joinButton" disabled>
+    </div>
 </form>
 </body>
-
 <script>
-    let emailVerificationCode = "";
+    const selectors = {
+        verificationCode: "",
+        idCheckResult: document.getElementById("idCheckResult"),
+        emailCheckResult: document.getElementById("emailCheckResult"),
+        username: document.getElementById("username"),
+        email: document.getElementById("memberEmail"),
+    }
+    const utils = {
+        showError: (elem, message) => {
+            elem.style.color = "red";
+            elem.innerHTML = message;
+        },
+        showSuccess: (elem, message) => {
+            elem.style.color = "green";
+            elem.innerHTML = message;
+        }
+    }
+    const signupHandlers = {
+        email: {
+            isValid: false,
+            message: "사용 가능한 이메일"
+        },
+        username: {
+            isValid: false,
+            message: "사용 가능한 아이디"
+        }, passwordMatch: {
+            isValid: false,
+            message: "비밀번호가 일치하지 않습니다."
+        },
+    };
+    const idCheck = () => {
+        checkDuplicate("/login/duple/id",
+            selectors.username.value,
+            selectors.idCheckResult,
+            "username");
+    };
 
-    const requestEmailVerification = () => {
-        const email = document.getElementById("memberEmail").value;
+    const emailCheck = () => {
+        checkDuplicate("/login/duple/email",
+            selectors.email.value,
+            selectors.emailCheckResult,
+            "email");
+    };
 
-        // 이메일 인증 코드 생성 (예시: 랜덤 6자리 숫자 생성)
-        emailVerificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+    const checkDuplicate = (url, value, resultElem, field) => {
+        fetch(url,
+            {
+                method: 'POST',
+                body: value,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(res => res.text())
+            .then(res => {
+                const fieldName = field === 'username' ? '아이디' : '이메일';
+                if (res === "true") {
+                    utils.showError(resultElem, "이미 사용 중인 " + fieldName);
+                    signupHandlers[field].isValid = false;
+                } else {
+                    utils.showSuccess(resultElem, "사용 가능한 " + fieldName);
+                    signupHandlers[field].isValid = true;
+                }
+            })
+            .catch(err => console.log("에러발생", err));
+    };
 
-        // 서버에 이메일 전송 요청
-        $.ajax({
-            type: "POST",
-            url: "/mail/send",
-            data: {
-                address: email,
+        const requestEmailVerification = () => {
+        selectors.verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+        fetch("/mail/send", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                address: selectors.email.value,
                 title: "이메일 인증 코드",
-                content: `회원 가입을 위한 인증 코드는 ${emailVerificationCode} 입니다.`,
-            },
-            success: function () {
-                alert("인증 코드가 이메일로 전송되었습니다.");
-            },
-            error: function (err) {
-                console.log("에러발생", err);
-            },
-        });
+                content: `회원 가입을 위한 인증 코드는 ${selectors.verificationCode} 입니다.`,
+            })
+        }).then(response => response.json())
+            .then(data => console.dir(data))
+            .catch(err => console.error("에러발생", err));
+        // .then(() => alert("인증 코드가 이메일로 전송되었습니다."))
     };
 
     const checkEmailVerification = () => {
         const inputCode = document.getElementById("verification-code").value;
-        if (inputCode === emailVerificationCode) {
+        if (inputCode === selectors.verificationCode) {
             alert("인증이 성공적으로 완료되었습니다.");
             document.getElementById("joinButton").disabled = false;
             return true;
@@ -75,103 +148,48 @@
         }
     };
 
-    const emailCheck = () => {
-        const email = document.getElementById("memberEmail").value;
-
-        fetch('/login/duple/email', {
-            method: 'POST',
-            body: JSON.stringify(email),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(res => res.json())
-            .then(res => {
-                let emailCheckResult = document.getElementById("emailCheckResult");
-                if (res) {
-                    emailCheckResult.style.color = "green";
-                    emailCheckResult.innerHTML = "사용 가능한 이메일";
-                } else {
-                    emailCheckResult.style.color = "red";
-                    emailCheckResult.innerHTML = "이미 사용 중인 이메일";
-                }
-            })
-            .catch(err => console.log("에러발생", err));
-    };
-
-    const idCheck = () => {
-        const username = document.getElementById("username").value;
-
-        fetch('/login/duple/id', {
-            method: 'POST',
-            body: JSON.stringify(username),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(res => res.json())
-            .then(res => {
-                let idCheckResult = document.getElementById("idCheckResult");
-                if (res) {
-                    idCheckResult.style.color = "green";
-                    idCheckResult.innerHTML = "사용 가능한 아이디";
-                } else {
-                    idCheckResult.style.color = "red";
-                    idCheckResult.innerHTML = "이미 사용 중인 아이디";
-                }
-            })
-            .catch(err => console.log("에러발생", err));
-    };
-
-    document.getElementById('passwordConfirm').addEventListener('blur', checkPasswordsMatch);
-
     const checkPasswordsMatch = () => {
-        let password = document.getElementById('password').value;
-        let passwordConfirm = document.getElementById('passwordConfirm').value;
-
-        if (password !== passwordConfirm) {
-            document.getElementById("joinButton").disabled = true;
-            document.getElementById("passwordError").style.display = "block";
-        } else {
-            document.getElementById("joinButton").disabled = false;
-            document.getElementById("passwordError").style.display = "none";
-        }
-    };
-
-    document.getElementById('joinButton').addEventListener('click', handleFormSubmit);
-
-    const handleFormSubmit = (event) => {
-        event.preventDefault(); // page reload 방지
-
         const password = document.getElementById('password').value;
         const passwordConfirm = document.getElementById('passwordConfirm').value;
 
-        // 이메일 인증 코드 확인
+        if (password !== passwordConfirm) {
+            document.getElementById("joinButton").disabled = true;
+
+            utils.showError(document.getElementById("passwordError"), signupHandlers.passwordMatch.message)
+        } else {
+            document.getElementById("joinButton").disabled = false;
+
+            signupHandlers.passwordMatch.isValid = true;
+        }
+    };
+
+    const handleFormSubmit = (event) => {
+        event.preventDefault();
+        if (!selectors.username.value || !selectors.email.value || !document.getElementById('password').value || !document.getElementById('passwordConfirm').value) {
+            alert('필수 입력란을 모두 채워주세요');
+            return;
+        }
+
         if (!checkEmailVerification()) {
             alert('이메일 인증을 완료해주세요');
             return;
         }
 
-        if (password !== passwordConfirm) {
-            document.getElementById('passwordError').style.display = 'block';
-            event.preventDefault();
-        } else {
-            // 아이디 중복체크와 이메일 중복체크 결과를 변수에 담습니다.
-            const idCheckResult = document.getElementById('idCheckResult').innerHTML;
-            const emailCheckResult = document.getElementById('emailCheckResult').innerHTML;
-
-            // 아이디 중복 체크 결과가 "사용 가능한 아이디"가 아니거나, 이메일 중복 체크 결과가 "사용 가능한 이메일"이 아니면 폼 전송이 이루어지지 않습니다.
-            if (idCheckResult !== '사용 가능한 아이디' || emailCheckResult !== '사용 가능한 이메일') {
-                alert('아이디와 이메일 중복체크를 확인해주세요.');
-                return;
-            }
-
-            document.getElementById('passwordError').style.display = 'none';
-            document.getElementById("signup-form").submit();
+        if (!signupHandlers.username.isValid || !signupHandlers.email.isValid || !signupHandlers.passwordMatch.isValid) {
+            alert('모든 검증 과정이 성공적으로 완료된 후 회원가입이 가능합니다');
+            return;
         }
+
+        document.getElementById("signupForm").submit();
     };
+
+    document.getElementById('username').addEventListener('blur', idCheck);
+    document.getElementById('memberEmail').addEventListener('blur', emailCheck);
+    document.getElementById('passwordConfirm').addEventListener('blur', checkPasswordsMatch);
+    document.getElementById('emailVerifyButton').addEventListener('click', requestEmailVerification);
+    document.getElementById('verificationButton').addEventListener('click', checkEmailVerification);
+    document.getElementById('joinButton').addEventListener('click', handleFormSubmit);
+
 </script>
 
-
 </html>
-

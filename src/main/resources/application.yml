@@ -1,0 +1,31 @@
+spring:
+  data:
+    jpa:
+      repositories:
+        enabled: true
+  datasource:
+    url: jdbc:mariadb://localhost:3306/todos
+    username: TODOS
+    password: TODOS
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    hibernate:
+      # 애플리케이션 실행 시점에 테이블을 다 지우고,
+      # 내가 가진 entity 정보를 보고 다시 테이블 자동 생성
+      ddl-auto: update
+
+  properties:
+    hibernate:
+      # sql 문구를 보여주기 위한 설정
+      show_sql: false
+      # sql 문구를 좀 더 이쁘게 보여주기 위한 설정
+      format_sql: true
+logging.level:
+  # hibernate 가 남기는 모든 로그가 debug모드로 설정
+  # jpa hibernate가 생성하는 sql이 로거를 통해서 찍히도록 하는 설정
+  org.hibernate.SQL: debug
+  #  쿼리 파라미터 출력 시 사용하는 옵션
+  org.hibernate.orm.jdbc.bind: trace
+
+spring.data.web.pageable.default-page-size: 20 # 기본 페이지 사이즈
+spring.data.web.pageable.max-page-size: 2000 # 최대 페이지 사이즈
