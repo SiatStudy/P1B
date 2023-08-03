@@ -27,9 +27,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/users/signup", "/member/emailCheck", "/member/idCheck", "/member/list", "/login/search/id",
-                        "/login/search/password","/member/findIdResult","/member/changePassword").permitAll()
-                .antMatchers("/member/").hasAuthority(Role.MEMBER.getValue())
+                .antMatchers("/users/signup", "/users/emailCheck", "/users/idCheck", "/users/list", "/login/search/id",
+                        "/login/search/password","/users/findIdResult","/users/changePassword").permitAll()
+                .antMatchers("/users/").hasAuthority(Role.USER.getValue())
                 .antMatchers("/guest/").hasAuthority(Role.ANONYMOUS.getValue())
                 .and()
                 .formLogin()
@@ -39,15 +39,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureUrl("/login/login?error") // 로그인 실패 시
                 .and()
                 .logout()
-                .logoutUrl("/member/logout")
+                .logoutUrl("/users/logout")
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
                 .logoutSuccessUrl("/")
                 .and()
                 .anonymous().authorities(Role.ANONYMOUS.getValue()); // 로그인하지 않은 사용자는 ANONYMOUS 공인
     }
-
-
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {

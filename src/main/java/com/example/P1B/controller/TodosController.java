@@ -29,13 +29,13 @@ public class TodosController {
     @PostMapping("/item")
     public String Todos(TodosInDTO dto, @AuthenticationPrincipal CustomizeUserDetails customizeUserDetails){
         dto.setTdStartYear(dto.getTdStartDate().getYear());
-        todosService.addTodos(dto.getTdTitle(), dto.getTdContent(), dto.getTdEndDate(), dto.getTdStartDate(), dto.getTdStartYear(), customizeUserDetails.getMember());
+        todosService.addTodos(dto.getTdTitle(), dto.getTdContent(), dto.getTdEndDate(), dto.getTdStartDate(), dto.getTdStartYear(), customizeUserDetails.getUser());
         return "main";
     }
 
     @GetMapping("/{year}")
     public String findTodos(@PathVariable("year") int year, @AuthenticationPrincipal CustomizeUserDetails customizeUserDetails, Model model){
-        List<Todos> todosList = todosService.findTodoList(year, customizeUserDetails.getMember());
+        List<Todos> todosList = todosService.findTodoList(year, customizeUserDetails.getUser());
         model.addAttribute("todoList", todosList);
         return "todoslist";
     }

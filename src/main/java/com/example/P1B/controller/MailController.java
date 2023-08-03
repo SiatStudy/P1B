@@ -26,12 +26,6 @@ public class MailController {
         return "SendMail.html";
     }
 
-    //    @PostMapping("/mail/send")
-//    public String sendMail(MailDTO mailDto) {
-//        emailService.sendSimpleMessage(mailDto);
-//        System.out.println("메일 전송 완료");
-//        return "resultMail.html";
-//    }
     @PostMapping("/send")
     public @ResponseBody ResponseEntity<Map<String, Boolean>> sendMail(@Validated
                                            @RequestBody MailDTO mailDto) {
