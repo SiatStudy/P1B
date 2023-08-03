@@ -6,7 +6,9 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -35,7 +37,16 @@ public class Member {
     private String memberEmail;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "MEM_ROLE")
     private Role role;
+
+    @Column(name = "MEM_CRT_DATE", nullable = false, updatable = false)
+    @CreatedDate // Entity 생성 시
+    private LocalDateTime memCrtDate = LocalDateTime.now();
+
+    @Column(name = "MEM_UDT_DATE")
+    private LocalDateTime memUdtDate;
+
 
     @OneToMany(mappedBy = "member")
     private List<Email> vrid = new ArrayList<>();

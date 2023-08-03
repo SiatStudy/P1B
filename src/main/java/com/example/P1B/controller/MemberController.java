@@ -93,7 +93,7 @@ public class MemberController {
 
     @PostMapping("/login/duple/email")
     public @ResponseBody boolean emailCheck(@RequestBody String memberEmail) {
-        return memberService.emailCheck(memberEmail);
+        return !memberService.emailCheck(memberEmail);
     }
 
     @GetMapping("/login/search/id")

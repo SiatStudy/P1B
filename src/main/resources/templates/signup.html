@@ -22,12 +22,13 @@
     <div>
         <label for="passwordConfirm">비밀번호 확인</label>
         <input type="password" name="passwordConfirm" id="passwordConfirm">
-        <div id="passwordError" style="display:none; color: red;">비밀번호가 일치하지 않습니다.</div>
+        <p id="passwordCheckResult"></p>
     </div>
 
     <div>
         <label for="memberName">이름</label>
         <input type="text" name="memberName" id="memberName">
+        <p id="memberNameCheckResult"></p>
     </div>
 
     <div>
@@ -52,9 +53,12 @@
     const selectors = {
         verificationCode: "",
         idCheckResult: document.getElementById("idCheckResult"),
+        memberNameCheckResult: document.getElementById("memberNameCheckResult"),
+        passwordCheckResult: document.getElementById("passwordCheckResult"),
         emailCheckResult: document.getElementById("emailCheckResult"),
         username: document.getElementById("username"),
         email: document.getElementById("memberEmail"),
+        memberName: document.getElementById('memberName'),
     }
     const utils = {
         showError: (elem, message) => {
@@ -67,6 +71,10 @@
         }
     }
     const signupHandlers = {
+        memberName: {
+            isValid: false,
+            message: "사용 가능한 닉네임"
+        },
         email: {
             isValid: false,
             message: "사용 가능한 이메일"
@@ -74,47 +82,167 @@
         username: {
             isValid: false,
             message: "사용 가능한 아이디"
-        }, passwordMatch: {
+        },
+        passwordMatch: {
             isValid: false,
             message: "비밀번호가 일치하지 않습니다."
         },
     };
-    const idCheck = () => {
-        checkDuplicate("/login/duple/id",
-            selectors.username.value,
-            selectors.idCheckResult,
-            "username");
+
+    // 아이디 유효성 검증 로직
+    const usernameCheck = () => {
+        const pattern = /^[A-Za-z0-9]{3,8}$/;
+        const isValid = pattern.test(selectors.username.value);
+        const length = selectors.username.value.length;
+
+        if (length === 0) {
+            utils.showError(idCheckResult, "아이디를 입력해주세요.");
+            signupHandlers.username.isValid = false;
+            signupHandlers.username.message = "아이디를 입력해주세요.";
+        } else if (length < 3 || length > 8) {
+            utils.showError(idCheckResult, "3~8 글자를 입력해야 합니다.");
+            signupHandlers.username.isValid = false;
+            signupHandlers.username.message = "3~8 글자를 입력해야 합니다.";
+        } else if (!isValid) {
+            utils.showError(idCheckResult, "영문과 숫자로 이루어진 8자리 이하의 조합이여야 합니다.");
+            signupHandlers.username.isValid = false;
+            signupHandlers.username.message = "영문과 숫자로 이루어진 8자리 이하의 조합이여야 합니다.";
+        } else {
+            checkDuplicate("/login/duple/id", selectors.username.value, idCheckResult, "username")
+                .then((isValid) => {
+                    signupHandlers.username.isValid = isValid.isValid;
+                    signupHandlers.username.message = isValid.message;
+                })
+                .catch((error) => {
+                    console.error("아이디 중복 검사 에러 발생: ", error);
+                    signupHandlers.username.isValid = false;
+                    signupHandlers.username.message = "아이디 중복 검사 오류가 발생했습니다.";
+                });
+        }
     };
 
+    // 비밀번호 유효성 검증 로직
+    const checkPasswordsMatch = () => {
+        const password = document.getElementById('password').value;
+        const passwordConfirm = document.getElementById('passwordConfirm').value;
+        const pattern = /^(?=.*[a-zA-Z])(?=.*[!@#$%^&*()-+=])(?=.*[0-9]).{4,16}$/;
+        const isValid = pattern.test(password);
+
+        if (password.includes(" ")) {
+            utils.showError(passwordCheckResult, "공백이 허용되지 않습니다.");
+            signupHandlers.passwordMatch.isValid = false;
+            signupHandlers.passwordMatch.message = "공백이 허용되지 않습니다.";
+        } else if (password.length < 4 || password.length > 16) {
+            utils.showError(passwordCheckResult, "4~16 글자를 입력해야 합니다.");
+            signupHandlers.passwordMatch.isValid = false;
+            signupHandlers.passwordMatch.message = "4~16 글자를 입력해야 합니다.";
+        } else if (!isValid) {
+            utils.showError(passwordCheckResult, "비밀번호는 영어와 숫자로 이루어져야 하며, 특수문자가 포함되어야 합니다.");
+            signupHandlers.passwordMatch.isValid = false;
+            signupHandlers.passwordMatch.message = "비밀번호는 영어와 숫자로 이루어져야 하며, 특수문자가 포함되어야 합니다.";
+        } else if (password !== passwordConfirm) {
+            utils.showError(passwordCheckResult, "비밀번호가 일치하지 않습니다.");
+            signupHandlers.passwordMatch.isValid = false;
+            signupHandlers.passwordMatch.message = "비밀번호가 일치하지 않습니다.";
+        } else {
+            utils.showSuccess(passwordCheckResult, "비밀번호가 일치합니다.");
+            signupHandlers.passwordMatch.isValid = true;
+            signupHandlers.passwordMatch.message = "";
+        }
+    };
+
+    // 닉네임 유효성 검증 로직
+    const nameCheck = () => {
+        const pattern = /^[a-zA-Z가-힣]{3,16}$/;
+        const isValid = pattern.test(selectors.memberName.value);
+        const length = selectors.memberName.value.length;
+
+        if (length === 0) {
+            utils.showError(memberNameCheckResult, "닉네임을 입력해주세요.");
+            signupHandlers.memberName.isValid = false;
+            signupHandlers.memberName.message = "닉네임을 입력해주세요.";
+        } else if (length < 3 || length > 16) {
+            utils.showError(memberNameCheckResult, "3~16 글자를 입력해야 합니다.");
+            signupHandlers.memberName.isValid = false;
+            signupHandlers.memberName.message = "3~16 글자를 입력해야 합니다.";
+        } else if (!isValid) {
+            utils.showError(memberNameCheckResult, "닉네임은 숫자로 이루어질 수 없으며, 15글자 이하여야 합니다.");
+            signupHandlers.memberName.isValid = false;
+            signupHandlers.memberName.message = "닉네임은 숫자로 이루어질 수 없으며, 15글자 이하여야 합니다.";
+        } else {
+            utils.showSuccess(selectors.memberNameCheckResult, "사용 가능한 닉네임입니다.");
+            signupHandlers.memberName.isValid = true;
+            signupHandlers.memberName.message = "";
+        }
+    };
+
+    // 이메일 유효성 검증 로직
     const emailCheck = () => {
-        checkDuplicate("/login/duple/email",
-            selectors.email.value,
-            selectors.emailCheckResult,
-            "email");
+        const pattern = /^[A-Za-z0-9]{3,62}@[A-Za-z0-9]{3,62}\.[A-Za-z0-9]{2,6}$/;
+        const isValid = pattern.test(selectors.email.value);
+
+        if (selectors.email.value.includes(" ")) {
+            utils.showError(emailCheckResult, "공백이 허용되지 않습니다.");
+            signupHandlers.email.isValid = false;
+            signupHandlers.email.message = "공백이 허용되지 않습니다.";
+        } else if (selectors.email.value.length < 7 || selectors.email.value.length > 128) {
+            utils.showError(emailCheckResult, "이메일은 128글자 이하로 입력해야 합니다.");
+            signupHandlers.email.isValid = false;
+            signupHandlers.email.message = "이메일은 128글자 이하로 입력해야 합니다.";
+        } else if (!isValid) {
+            utils.showError(emailCheckResult, "이메일 형식이 올바르지 않습니다.");
+            signupHandlers.email.isValid = false;
+            signupHandlers.email.message = "이메일 형식이 올바르지 않습니다.";
+        } else {
+            checkDuplicate("/login/duple/email", selectors.email.value, emailCheckResult, "email")
+                .then((isValid) => {
+                    signupHandlers.email.isValid = isValid.isValid;
+                    signupHandlers.email.message = isValid.message;
+                })
+                .catch((error) => {
+                    console.error("이메일 중복 검사 에러 발생: ", error);
+                    signupHandlers.email.isValid = false;
+                    signupHandlers.email.message = "이메일 중복 검사 오류가 발생했습니다.";
+                });
+        }
     };
 
+    /**
+     * 중복 체크 코드(id, email)
+     */
     const checkDuplicate = (url, value, resultElem, field) => {
-        fetch(url,
-            {
-                method: 'POST',
-                body: value,
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(res => res.text())
-            .then(res => {
-                const fieldName = field === 'username' ? '아이디' : '이메일';
-                if (res === "true") {
-                    utils.showError(resultElem, "이미 사용 중인 " + fieldName);
-                    signupHandlers[field].isValid = false;
-                } else {
-                    utils.showSuccess(resultElem, "사용 가능한 " + fieldName);
-                    signupHandlers[field].isValid = true;
-                }
-            })
-            .catch(err => console.log("에러발생", err));
+        return new Promise((resolve, reject) => {
+            fetch(url,
+                {
+                    method: 'POST',
+                    body: value,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(res => res.text())
+                .then(res => {
+                    const fieldName = field === 'username' ? '아이디' : '이메일';
+
+                    if (res === "true") {
+                        utils.showError(resultElem, "이미 사용 중인 " + fieldName);
+                        resolve({field: field, isValid: false, message: "이미 사용 중입니다."});
+                    } else {
+                        utils.showSuccess(resultElem, "사용 가능한 " + fieldName);
+                        resolve({field: field, isValid: true, message: ""});
+                    }
+                })
+                .catch(err => {
+                    console.log("오류발생", err);
+                    reject({field: field, message: err});
+                });
+        });
     };
+
+
+    /**
+     * 이메일 전송 관련 코드
+     */
 
     const requestEmailVerification = () => {
         selectors.verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
@@ -131,11 +259,15 @@
             })
         }).then(response => response.json())
             .then(data => console.log(data))
-            .catch(err => console.error("에러발생", err));
-        // .then(() => alert("인증 코드가 이메일로 전송되었습니다."))
+            .catch(err => console.error("에러발생", err))
+          // .then(() => alert("인증 코드가 이메일로 전송되었습니다."))
     };
 
 
+    /**
+     * 이메일 인증 코드 일치 비교 로직
+     * @returns {boolean}
+     */
     const checkEmailVerification = () => {
         const inputCode = document.getElementById("verification-code").value;
         if (inputCode === selectors.verificationCode) {
@@ -149,44 +281,40 @@
         }
     };
 
-    const checkPasswordsMatch = () => {
-        const password = document.getElementById('password').value;
-        const passwordConfirm = document.getElementById('passwordConfirm').value;
-
-        if (password !== passwordConfirm) {
-            document.getElementById("joinButton").disabled = true;
-
-            utils.showError(document.getElementById("passwordError"), signupHandlers.passwordMatch.message)
-        } else {
-            document.getElementById("joinButton").disabled = false;
-
-            signupHandlers.passwordMatch.isValid = true;
-        }
-    };
-
-    const handleFormSubmit = (event) => {
+    const handleFormSubmit = async (event) => {
         event.preventDefault();
-        if (!selectors.username.value || !selectors.email.value || !document.getElementById('password').value || !document.getElementById('passwordConfirm').value) {
-            alert('필수 입력란을 모두 채워주세요');
-            return;
-        }
+
+        // 유효성 검사 및 중복 체크 수행
+        nameCheck();
+        emailCheck();
+        checkPasswordsMatch();
+        usernameCheck();
+
+        const isValid = Object.values(signupHandlers)
+            .every(handler => handler.isValid);
 
         if (!checkEmailVerification()) {
             alert('이메일 인증을 완료해주세요');
             return;
         }
 
-        if (!signupHandlers.username.isValid || !signupHandlers.email.isValid || !signupHandlers.passwordMatch.isValid) {
-            alert('모든 검증 과정이 성공적으로 완료된 후 회원가입이 가능합니다');
+
+
+        // 모든 검증 항목 성공 시: 회원가입 데이터 서버 호출
+        if (isValid) {
+            document.getElementById("signupForm").submit();
+        } else {
+            alert("모든 검증 과정이 성공적으로 완료된 후 회원가입이 가능합니다.");
             return;
         }
 
         document.getElementById("signupForm").submit();
     };
 
-    document.getElementById('username').addEventListener('blur', idCheck);
+    document.getElementById('username').addEventListener('blur', usernameCheck);
     document.getElementById('memberEmail').addEventListener('blur', emailCheck);
     document.getElementById('passwordConfirm').addEventListener('blur', checkPasswordsMatch);
+    document.getElementById('memberName').addEventListener('blur',nameCheck);
     document.getElementById('emailVerifyButton').addEventListener('click', requestEmailVerification);
     document.getElementById('verificationButton').addEventListener('click', checkEmailVerification);
     document.getElementById('joinButton').addEventListener('click', handleFormSubmit);
