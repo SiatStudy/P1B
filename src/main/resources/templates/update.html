@@ -5,7 +5,7 @@
     <title>update</title>
 </head>
 <body>
-<form th:action="@{/member/update}" method="post">
+<form th:action="@{/users/update}" method="post">
     <input type="hidden" th:value="${updateMember.id}" name="id"><br>
     이메일: <input type="text" th:value="${updateMember.memberEmail}" name="memberEmail" readonly> <br>
     이름: <input type="text" th:value="${updateMember.memberName}" name="memberName"> <br>
