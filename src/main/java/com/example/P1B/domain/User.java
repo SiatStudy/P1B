@@ -1,6 +1,6 @@
 package com.example.P1B.domain;
 
-import com.example.P1B.dto.MemberDTO;
+import com.example.P1B.dto.UserDTO;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -8,14 +8,13 @@ import org.springframework.data.annotation.CreatedDate;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
 @Setter
 @Getter
 @Table(name = "member")
-public class Member {
+public class User {
     @Id // pk 지정
     @GeneratedValue(strategy = GenerationType.IDENTITY) // auto_increment
     @Column(name = "MEM_ID")
@@ -27,14 +26,14 @@ public class Member {
 
     // 비밀번호 값
     @Column(name = "MEM_PASSWD")
-    private String memberPassword;
+    private String userPassword;
 
     // 이름(닉네임)
     @Column(name = "MEM_NAME")
-    private String memberName;
+    private String userNickName;
 
     @Column(unique = true, name = "MEM_EMAIL") // unique 제약조건 추가
-    private String memberEmail;
+    private String userEmail;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "MEM_ROLE")
@@ -48,7 +47,7 @@ public class Member {
     private LocalDateTime memUdtDate;
 
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "user")
     private List<Email> vrid = new ArrayList<>();
 
     public enum Role{
@@ -56,22 +55,22 @@ public class Member {
     }
 
 
-    public static Member toMember(MemberDTO memberDTO) {
-        Member member = new Member();
-        member.setUsername(memberDTO.getUsername());
-        member.setMemberPassword(memberDTO.getMemberPassword());
-        member.setMemberName(memberDTO.getMemberName());
-        member.setMemberEmail(memberDTO.getMemberEmail());
-        return member;
+    public static User toUser(UserDTO userDTO) {
+        User user = new User();
+        user.setUsername(userDTO.getUsername());
+        user.setUserPassword(userDTO.getUserPassword());
+        user.setUserNickName(userDTO.getUserNickName());
+        user.setUserEmail(userDTO.getUserEmail());
+        return user;
     }
 
-    public static Member toUpdateMember(MemberDTO memberDTO) {
-        Member member = new Member();
-        member.setId(memberDTO.getId());
-        member.setUsername(memberDTO.getUsername());
-        member.setMemberPassword(memberDTO.getMemberPassword());
-        member.setMemberName(memberDTO.getMemberName());
-        member.setMemberEmail(memberDTO.getMemberEmail());
-        return member;
+    public static User toUpdateUser(UserDTO userDTO) {
+        User user = new User();
+        user.setId(userDTO.getId());
+        user.setUsername(userDTO.getUsername());
+        user.setUserPassword(userDTO.getUserPassword());
+        user.setUserNickName(userDTO.getUserNickName());
+        user.setUserEmail(userDTO.getUserEmail());
+        return user;
     }
 }

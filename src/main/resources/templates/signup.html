@@ -16,7 +16,7 @@
 
     <div>
         <label for="password">비밀번호</label>
-        <input type="password" name="memberPassword" id="password">
+        <input type="password" name="userPassword" id="password">
     </div>
 
     <div>
@@ -26,14 +26,14 @@
     </div>
 
     <div>
-        <label for="memberName">이름</label>
-        <input type="text" name="memberName" id="memberName">
-        <p id="memberNameCheckResult"></p>
+        <label for="userNickName">이름</label>
+        <input type="text" name="userNickName" id="userNickName">
+        <p id="userNickNameCheckResult"></p>
     </div>
 
     <div>
-        <label for="memberEmail">이메일</label>
-        <input type="email" name="memberEmail" id="memberEmail">
+        <label for="userEmail">이메일</label>
+        <input type="email" name="userEmail" id="userEmail">
         <button id="emailVerifyButton" type="button">이메일 인증</button>
         <p id="emailCheckResult"></p>
     </div>
@@ -45,7 +45,7 @@
     </div>
 
     <div>
-        <input type="submit" value="회원가입" id="joinButton" disabled>
+        <input type="submit" value="회원가입" id="signUpButton" disabled>
     </div>
 </form>
 </body>
@@ -53,12 +53,12 @@
     const selectors = {
         verificationCode: "",
         idCheckResult: document.getElementById("idCheckResult"),
-        memberNameCheckResult: document.getElementById("memberNameCheckResult"),
+        userNickNameCheckResult: document.getElementById("userNickNameCheckResult"),
         passwordCheckResult: document.getElementById("passwordCheckResult"),
         emailCheckResult: document.getElementById("emailCheckResult"),
         username: document.getElementById("username"),
-        email: document.getElementById("memberEmail"),
-        memberName: document.getElementById('memberName'),
+        email: document.getElementById("userEmail"),
+        userNickName: document.getElementById('userNickName'),
     }
     const utils = {
         showError: (elem, message) => {
@@ -71,7 +71,7 @@
         }
     }
     const signupHandlers = {
-        memberName: {
+        userNickName: {
             isValid: false,
             message: "사용 가능한 닉네임"
         },
@@ -154,25 +154,25 @@
     // 닉네임 유효성 검증 로직
     const nameCheck = () => {
         const pattern = /^[a-zA-Z가-힣]{3,16}$/;
-        const isValid = pattern.test(selectors.memberName.value);
-        const length = selectors.memberName.value.length;
+        const isValid = pattern.test(selectors.userNickName.value);
+        const length = selectors.userNickName.value.length;
 
         if (length === 0) {
-            utils.showError(memberNameCheckResult, "닉네임을 입력해주세요.");
-            signupHandlers.memberName.isValid = false;
-            signupHandlers.memberName.message = "닉네임을 입력해주세요.";
+            utils.showError(userNickNameCheckResult, "닉네임을 입력해주세요.");
+            signupHandlers.userNickName.isValid = false;
+            signupHandlers.userNickName.message = "닉네임을 입력해주세요.";
         } else if (length < 3 || length > 16) {
-            utils.showError(memberNameCheckResult, "3~16 글자를 입력해야 합니다.");
-            signupHandlers.memberName.isValid = false;
-            signupHandlers.memberName.message = "3~16 글자를 입력해야 합니다.";
+            utils.showError(userNickNameCheckResult, "3~16 글자를 입력해야 합니다.");
+            signupHandlers.userNickName.isValid = false;
+            signupHandlers.userNickName.message = "3~16 글자를 입력해야 합니다.";
         } else if (!isValid) {
-            utils.showError(memberNameCheckResult, "닉네임은 숫자로 이루어질 수 없으며, 15글자 이하여야 합니다.");
-            signupHandlers.memberName.isValid = false;
-            signupHandlers.memberName.message = "닉네임은 숫자로 이루어질 수 없으며, 15글자 이하여야 합니다.";
+            utils.showError(userNickNameCheckResult, "닉네임은 숫자로 이루어질 수 없으며, 15글자 이하여야 합니다.");
+            signupHandlers.userNickName.isValid = false;
+            signupHandlers.userNickName.message = "닉네임은 숫자로 이루어질 수 없으며, 15글자 이하여야 합니다.";
         } else {
-            utils.showSuccess(selectors.memberNameCheckResult, "사용 가능한 닉네임입니다.");
-            signupHandlers.memberName.isValid = true;
-            signupHandlers.memberName.message = "";
+            utils.showSuccess(selectors.userNickNameCheckResult, "사용 가능한 닉네임입니다.");
+            signupHandlers.userNickName.isValid = true;
+            signupHandlers.userNickName.message = "";
         }
     };
 
@@ -272,11 +272,11 @@
         const inputCode = document.getElementById("verification-code").value;
         if (inputCode === selectors.verificationCode) {
             alert("인증이 성공적으로 완료되었습니다.");
-            document.getElementById("joinButton").disabled = false;
+            document.getElementById("signUpButton").disabled = false;
             return true;
         } else {
             alert("인증 코드가 일치하지 않습니다.");
-            document.getElementById("joinButton").disabled = true;
+            document.getElementById("signUpButton").disabled = true;
             return false;
         }
     };
@@ -312,12 +312,12 @@
     };
 
     document.getElementById('username').addEventListener('blur', usernameCheck);
-    document.getElementById('memberEmail').addEventListener('blur', emailCheck);
+    document.getElementById('userEmail').addEventListener('blur', emailCheck);
     document.getElementById('passwordConfirm').addEventListener('blur', checkPasswordsMatch);
-    document.getElementById('memberName').addEventListener('blur',nameCheck);
+    document.getElementById('userNickName').addEventListener('blur',nameCheck);
     document.getElementById('emailVerifyButton').addEventListener('click', requestEmailVerification);
     document.getElementById('verificationButton').addEventListener('click', checkEmailVerification);
-    document.getElementById('joinButton').addEventListener('click', handleFormSubmit);
+    document.getElementById('signUpButton').addEventListener('click', handleFormSubmit);
 
 </script>
 

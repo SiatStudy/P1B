@@ -49,7 +49,7 @@ public class Todos {
     // 회원 고유 식별 ID
     @ManyToOne
     @JoinColumn(name="MEM_ID")
-    private Member member;
+    private User user;
 
     public Todos(String tdtitle, String tdcontent, LocalDateTime tdstartdate, int tdstartyeardate, LocalDateTime tdenddate) {
         this.tdtitle = tdtitle;

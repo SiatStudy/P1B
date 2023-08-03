@@ -1,8 +1,7 @@
 package com.example.P1B.service;
 
-import com.example.P1B.domain.Member;
+import com.example.P1B.domain.User;
 import com.example.P1B.domain.Todos;
-import com.example.P1B.dto.TodosOutDTO;
 import com.example.P1B.repository.TodosRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,18 +16,18 @@ public class TodosService {
     private final TodosRepository todosRepository;
 
     @Transactional
-    public void addTodos(String tdTitle, String tdContent, LocalDateTime tdEnd, LocalDateTime tdStart, int tdStartYear, Member member){
+    public void addTodos(String tdTitle, String tdContent, LocalDateTime tdEnd, LocalDateTime tdStart, int tdStartYear, User user){
         Todos todos = new Todos(tdTitle, tdContent, tdEnd, tdStartYear, tdStart);
-        todos.setMember(member);
+        todos.setUser(user);
         todosRepository.save(todos);
     }
 
-    public List<Todos> findTodoList(int tdyddate, Member member){
+    public List<Todos> findTodoList(int tdyddate, User user){
 //        /*
 //            1. 요청받은 년도로 투두스 리스트 색인
 //            2. 색인 해온 데이터를 OutDTO형식으로 리턴
 //         */
-        List<Todos> todosList = todosRepository.findByTdstartyeardateAndMember(tdyddate, member);
+        List<Todos> todosList = todosRepository.findByTdstartyeardateAndUser(tdyddate, user);
         return todosList;
     }
 
