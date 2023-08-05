@@ -10,6 +10,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+// 작성자 : 장재형
+
 @Entity
 @Setter
 @Getter

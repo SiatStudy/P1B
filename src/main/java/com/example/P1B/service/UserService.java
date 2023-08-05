@@ -31,9 +31,12 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder; // 빈으로 주입
 
 
-    public void signUp(UserDTO userDTO) {
+    /// 저장하고 사용자 이메일 인증 정보를 설정하여 이메일 저장
+    public void join(UserDTO userDTO) {
+
+
         // 1. dto -> entity 변환
-        // 2. repository의 signUp 메서드 호출
+        // 2. repository의 join 메서드 호출
         User user = User.toUser(userDTO);
         user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
         user.setRole(User.Role.USER);
@@ -51,11 +54,13 @@ public class UserService {
 
         userRepository.save(user);
         emailRepository.save(email);
-        // repository의 signUp메서드 호출 (조건. entity객체를 넘겨줘야 함)
+        // repository의 join메서드 호출 (조건. entity객체를 넘겨줘야 함)
     }
 
 
 
+    // 전체 사용자 리스트 조회
+    // List로 반환
     public List<UserDTO> findAll() {
         List<User> userList = userRepository.findAll();
         List<UserDTO> userDTOList = new ArrayList<>();
@@ -65,8 +70,10 @@ public class UserService {
         return userDTOList;
     }
 
+    // 아이디 찾기
     public UserDTO findById(Long id) {
         Optional<User> optionalUser = userRepository.findById(id);
+        // 특정 사용자를 조회
         if (optionalUser.isPresent()) {
             return UserDTO.toUserDTO(optionalUser.get());
         } else {
@@ -75,7 +82,9 @@ public class UserService {
 
     }
 
+    // 사용자 정보 수정 목적으로 기존 정보 조회 기능
     public UserDTO updateForm(String myEmail) {
+        // 이메일 가지고 있는지 여부 확인
         Optional<User> result = userRepository.findByUsername(myEmail);
         if (result.isPresent()) {
             return UserDTO.toUserDTO(result.get());
@@ -84,11 +93,16 @@ public class UserService {
         }
     }
 
+    // 사용자 수정
     public void update(UserDTO userDTO) {
+
+        // 전달받은 UserDTO 객체를 User 엔티티로 변환 후, 저장
         userRepository.save(User.toUpdateUser(userDTO));
     }
 
+    // 사용자 삭제
     public void deleteById(Long id) {
+        // 전달받은 ID 값을 조회하여 해당 사용자 삭제
         userRepository.deleteById(id);
     }
 
@@ -117,13 +131,19 @@ public class UserService {
     }
 
 
+    // 이메일로 아이디 찾기 기능
     public Optional<String> findIdByEmail(String userEmail) {
+
+        // 해당 이메일을 가지고 있는 사용자를 조회
         Optional<User> userOptional = userRepository.findByUserEmail(userEmail);
 
+        // 아이디 반환
         return userOptional.map(User::getUsername);
     }
 
 
+    /// 비밀번호 변경
+    // 전달받은 아이디와 새 비밀번호를 사용하여 사용자의 비밀번호를 변경하고 저장
     public void changePassword(String username, String newPassword) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("해당 아이디를 찾을 수 없습니다."));
@@ -131,6 +151,8 @@ public class UserService {
         userRepository.save(user);
     }
 
+
+    // 해당 아이디와 이메일을 가지고 있는 사용자를 조회하고, 아이디를 반환
     public String findUserByUsernameAndEmail(String username, String userEmail) {
         User user = userRepository.findByUsernameAndUserEmail(username, userEmail); // 수정된 부분
 

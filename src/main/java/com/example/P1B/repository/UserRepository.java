@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-// 작업자 : 장재형
+// 작성자 : 장재형
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {

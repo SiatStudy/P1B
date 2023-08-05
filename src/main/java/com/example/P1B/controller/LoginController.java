@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
+// 작성자 : 장재형
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/login")
@@ -16,31 +18,37 @@ public class LoginController {
 
     private final UserService userService;
 
+    // 로그인 페이지 요청 처리
     @GetMapping("/login")
     public String loginForm() {
         return "login";
     }
+
+    // 아이디 중복 검사 요청 처리
     @PostMapping("/duple/id")
     public @ResponseBody boolean idCheck(@RequestBody String username) {
         return !userService.idCheck(username);
     }
 
+    // 이메일 중복 검사 요청 처리
     @PostMapping("/duple/email")
     public @ResponseBody boolean emailCheck(@RequestBody String userEmail) {
         return !userService.emailCheck(userEmail);
     }
 
+    // 아이디 찾기 페이지 요청 처리
     @GetMapping("/search/id")
     public String findIdForm() {
         return "findId";
     }
 
-
+    // 이메일로 아이디 찾기 요청 처리
     @PostMapping("/search/id")
     public String findId(@RequestParam("userEmail") String userEmail, Model model) {
         // 서비스 메소드 호출
         Optional<String> optionalUsername = userService.findIdByEmail(userEmail);
 
+        // 결과 반환
         if (optionalUsername.isPresent()) {
             String username = optionalUsername.get();
             String message = "찾으신 아이디는: " + username;
@@ -57,11 +65,14 @@ public class LoginController {
         return "findIdResult";
     }
 
+
+    // 비밀번호 찾기 페이지 요청 처리
     @GetMapping("/search/password")
     public String findPasswordForm() {
         return "findPassword";
     }
 
+    // 비밀번호 찾기 요청 처리
     @PostMapping("/search/password")
     public String findPassword(@RequestParam("username") String username, @RequestParam("userEmail") String userEmail, Model model) {
         try {

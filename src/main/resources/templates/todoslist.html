@@ -8,11 +8,11 @@
 <h1>Todos List for Year: <span th:text="${year}"></span></h1>
 <table>
     <tr>
-        <th>ID</th>
-        <th>Title</th>
-        <th>Content</th>
-        <th>Start Date</th>
-        <th>End Date</th>
+        <th>아이디</th>
+        <th>제목</th>
+        <th>내용</th>
+        <th>시작일</th>
+        <th>종료일</th>
     </tr>
     <tr th:each="todo : ${todoList}">
         <td th:text="${todo.tdid}"></td>

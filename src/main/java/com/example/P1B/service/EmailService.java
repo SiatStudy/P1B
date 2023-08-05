@@ -8,10 +8,16 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 @Service
+
+// 메일 서비스
 public class EmailService {
 
+    // 로그 기록 생성
     private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
+
+    // 메일 전송용 mailSender
     private JavaMailSender mailSender;
+
 
     // 생성자 주입을 이용한 의존성 주입
     public EmailService(JavaMailSender mailSender) {

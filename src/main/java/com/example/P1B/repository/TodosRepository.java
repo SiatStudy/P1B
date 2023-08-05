@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-// 작업자 : 이건주
+// 작성자 : 이건주
 
 public interface TodosRepository extends JpaRepository<Todos, Long> {
 

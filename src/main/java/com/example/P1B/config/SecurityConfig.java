@@ -11,6 +11,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+// 작성자 : 장재형
+
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -35,7 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .loginPage("/login/login")
                 .permitAll()
-                .successHandler(new AuthSuccessHandler()) // 성공 핸들러 사용 설정
+                .successHandler(new AuthSuccessHandler()) // 성공 페이지 사용 설정
                 .failureUrl("/login/login?error") // 로그인 실패 시
                 .and()
                 .logout()

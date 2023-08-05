@@ -7,6 +7,8 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+// 작성자 : 이건주
+
 @Entity
 @Setter
 @Getter
