@@ -102,6 +102,9 @@ public class UserService {
             // 조회결과가 없다 -> 사용할 수 있다.
             return true;
         }
+        // 조회결과가 있다 -> 사용할 수 없다.
+        // 조회결과가 없다 -> 사용할 수 있다.
+        return result.isEmpty();
     }
 
     // 아이디 체크
@@ -114,6 +117,9 @@ public class UserService {
             // 조회결과가 없다 -> 사용할 수 있다.
             return true;
         }
+        // 조회결과가 있다 -> 사용할 수 없다.
+        // 조회결과가 없다 -> 사용할 수 있다.
+        return result.isEmpty();
     }
 
 
