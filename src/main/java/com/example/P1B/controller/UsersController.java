@@ -7,9 +7,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.ValidationException;
 
 @Controller
 @RequestMapping("/users")
@@ -24,12 +28,46 @@ public class UsersController {
         return "signup";
     }
 
+
     @PostMapping("/signup")
-    public String signUp(@ModelAttribute UserDTO userDTO) {
+    @Validated
+    @ResponseBody
+    public String signUp(@Validated
+                             @RequestBody
+                             @ModelAttribute UserDTO userDTO, BindingResult bindingResult) {
         System.out.println("UserController.signUp");
         System.out.println("userDTO = " + userDTO);
-        userService.signUp(userDTO);
-        return "login";
+
+
+        if (bindingResult.hasErrors()) {
+            // 유효성 위반 결과를 모두 출력
+            for (ObjectError objErr : bindingResult.getAllErrors()) {
+                System.out.println("메세지 : " + objErr.getDefaultMessage());
+                System.out.println("code : " + objErr.getCode());
+                System.out.println("object name : " + objErr.getObjectName());
+                // 유효성 위반 코드
+                System.out.println("<<<<<< code >>>>>>");
+                String[] codes = objErr.getCodes();
+                for (String c1 : codes) {
+                    System.out.println(c1);
+                }
+                // 유효성 위반에 대한 대응 메시지 처리
+                if (codes[0].equals("Size.UserDTO.id")) {
+                    System.out.println("text3는 1 ~ 5 글자 사이를 담을 수 있습니다");
+                } else if (codes[0].equals("Size.UserDTO.userPassword")) {
+                    System.out.println("text3는 3 ~ 10 글자 사이를 담을 수 있습니다");
+                } else if (codes[0].equals("Size.UserDTO.userNickName")) {
+                    System.out.println("text3는 3 ~ 10 글자 사이를 담을 수 있습니다");
+                } else if (codes[0].equals("Size.UserDTO.userEmail")) {
+                    System.out.println("이메일 형식에 맞춰주세요. 이메일은 @ 앞에 최대 63자까지 올 수 있습니다.");
+                }
+            }
+        }
+        if (bindingResult.hasErrors()) {
+            throw new ValidationException();
+        }else{
+            userService.signUp(userDTO);
+        return "login";}
     }
 
     @GetMapping("/main")

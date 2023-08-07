@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class EmailService {
 
     private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
-    private JavaMailSender mailSender;
+    private final JavaMailSender mailSender;
 
     // 생성자 주입을 이용한 의존성 주입
     public EmailService(JavaMailSender mailSender) {
