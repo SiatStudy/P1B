@@ -1,6 +1,5 @@
 package com.example.P1B.domain;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -43,7 +42,7 @@ public class Email {
     // 회원 고유 식별 ID
     @ManyToOne
     @JoinColumn(name = "mem_id")
-    private Member member;
+    private User user;
 
 
 //    @Builder

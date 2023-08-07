@@ -1,10 +1,8 @@
 package com.example.P1B.service;
 
-import com.example.P1B.domain.Member;
-import org.springframework.security.core.Authentication;
+import com.example.P1B.domain.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -14,28 +12,28 @@ import java.util.Collections;
 // 작업자 : 장재형
 public class CustomizeUserDetails implements UserDetails {
 
-    private final Member member;
+    private final User user;
 
-    public CustomizeUserDetails(Member member) {
-        this.member = member;
+    public CustomizeUserDetails(User user) {
+        this.user = user;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority(member.getRole().name()));
+        return Collections.singletonList(new SimpleGrantedAuthority(user.getRole().name()));
     }
 
     @Override
     public String getPassword() {
-        return member.getMemberPassword();
+        return user.getUserPassword();
     }
 
     @Override
     public String getUsername() {
-        return member.getUsername();
+        return user.getUsername();
     }
 
-    public Member getMember(){return member;}
+    public User getUser(){return user;}
 
     @Override
     public boolean isAccountNonExpired() {

@@ -1,7 +1,7 @@
 package com.example.P1B.domain;
 
 public enum Role {
-    MEMBER("USER"),
+    USER("USER"),
     ANONYMOUS("ANONYMOUS");
 
     private final String value;

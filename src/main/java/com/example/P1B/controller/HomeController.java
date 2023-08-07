@@ -10,13 +10,14 @@ import java.util.ArrayList;
 public class HomeController {
 
     @GetMapping
-    public String index(){
+    public String index() {
         return "index";
     }
+
     @GetMapping("/test1")
     public String test1(Model model) {
 
-        int [] array1 = {10, 20, 30};
+        int[] array1 = {10, 20, 30};
         // model.addAttribute("array1", array1[0]);
         // Error : ArrayIndexOutOfBoundsException 수행
         // model.addAttribute("array1", array1[10]);

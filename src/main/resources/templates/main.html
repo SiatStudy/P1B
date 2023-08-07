@@ -8,8 +8,8 @@
 <body>
 세션 값 확인: <p th:text="${sessionId}"></p>
 <th:block th:if ="${sessionId} != null">
-<a th:href="@{/member/update}">내 정보 수정하기</a>
-<a th:href="@{/member/logout}">로그아웃</a>
+<a th:href="@{/users/update}">내 정보 수정하기</a>
+<a th:href="@{/users/logout}">로그아웃</a>
 <a th:href="@{/todos/item}">할일 추가하기</a>
 <a th:href="@{/todos/2023}">23년도 불러오기</a>
 <a th:href="@{/todos/2024}">24년도 불러오기</a>
