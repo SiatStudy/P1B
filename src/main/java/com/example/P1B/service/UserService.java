@@ -72,7 +72,11 @@ public class UserService {
         } else {
             return null;
         }
+    }
 
+    public User findByUser(String useremail){
+        Optional<User> user = userRepository.findByUserEmail(useremail);
+        return user.get();
     }
 
     public UserDTO updateForm(String myEmail) {

@@ -1,9 +1,13 @@
 package com.example.P1B.controller;
 
+import com.example.P1B.domain.User;
 import com.example.P1B.dto.UserDTO;
+import com.example.P1B.repository.UserRepository;
+import com.example.P1B.service.CustomizeUserDetails;
 import com.example.P1B.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,11 +20,12 @@ import javax.servlet.http.HttpSession;
 import javax.validation.ValidationException;
 
 @Controller
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UsersController {
 
     private final UserService userService;
+    private final UserRepository userRepository;
 
     // 회원가입 페이지 출력 요청
     @GetMapping("/signup")
@@ -65,9 +70,10 @@ public class UsersController {
         }
         if (bindingResult.hasErrors()) {
             throw new ValidationException();
-        }else{
+        } else {
             userService.signUp(userDTO);
-        return "login";}
+            return "login";
+        }
     }
 
     @GetMapping("/main")
@@ -94,15 +100,18 @@ public class UsersController {
         return "update";
     }
 
-    @PostMapping("/update")
+    @PatchMapping("/info")
     public String update(@ModelAttribute UserDTO userDTO) {
         userService.update(userDTO);
         return "redirect:/users/" + userDTO.getId();
     }
 
-    @GetMapping("/delete/{id}")
-    public String deleteById(@PathVariable Long id) {
-        userService.deleteById(id);
+    @DeleteMapping("/info/{username}")
+    public String deleteById(@AuthenticationPrincipal CustomizeUserDetails customizeUserDetails,
+                             @PathVariable("username") String username) {
+        User user = userService.findByUser(customizeUserDetails.getUserEmail());
+        user.setUsername(username);
+        userRepository.save(user);
         return "redirect:/users/";
     }
 
@@ -116,5 +125,14 @@ public class UsersController {
     public String changePassword(@RequestParam("username") String username, @RequestParam("newPassword") String newPassword) {
         userService.changePassword(username, newPassword);
         return "redirect:/"; // index.html로 리다이렉트
+    }
+
+    @GetMapping("/setting")
+    public String session(@AuthenticationPrincipal CustomizeUserDetails customizeUserDetails, Model model){
+        System.out.println("--------------- username : " + customizeUserDetails.getUsername());
+        System.out.println("--------------- useremail : " + customizeUserDetails.getUserEmail());
+        model.addAttribute("username", customizeUserDetails.getUsername());
+        model.addAttribute("useremail", customizeUserDetails.getUserEmail());
+        return "usersetting";
     }
 }
