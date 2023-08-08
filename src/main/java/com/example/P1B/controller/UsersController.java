@@ -107,10 +107,9 @@ public class UsersController {
     }
 
     @DeleteMapping("/info/{username}")
-    public String deleteById(@AuthenticationPrincipal CustomizeUserDetails customizeUserDetails,
-                             @PathVariable("username") String username) {
+    public String deleteById(@AuthenticationPrincipal CustomizeUserDetails customizeUserDetails) {
         User user = userService.findByUser(customizeUserDetails.getUserEmail());
-        user.setUsername(username);
+        user.setMemResigned("Y");
         userRepository.save(user);
         return "redirect:/users/";
     }
