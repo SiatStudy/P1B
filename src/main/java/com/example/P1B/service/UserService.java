@@ -95,25 +95,17 @@ public class UserService {
     // 이메일 체크
     public boolean emailCheck(String userEmail) {
         Optional<User> result = userRepository.findByUsername(userEmail);
-        if (result.isPresent()) {
-            // 조회결과가 있다 -> 사용할 수 없다.
-            return false;
-        } else {
-            // 조회결과가 없다 -> 사용할 수 있다.
-            return true;
-        }
+        // 조회결과가 있다 -> 사용할 수 없다.
+        // 조회결과가 없다 -> 사용할 수 있다.
+        return result.isEmpty();
     }
 
     // 아이디 체크
     public boolean idCheck(String username) {
         Optional<User> result = userRepository.findByUsername(username);
-        if (result.isPresent()) {
-            // 조회결과가 있다 -> 사용할 수 없다.
-            return false;
-        } else {
-            // 조회결과가 없다 -> 사용할 수 있다.
-            return true;
-        }
+        // 조회결과가 있다 -> 사용할 수 없다.
+        // 조회결과가 없다 -> 사용할 수 있다.
+        return result.isEmpty();
     }
 
 

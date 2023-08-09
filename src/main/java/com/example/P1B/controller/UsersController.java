@@ -31,7 +31,6 @@ public class UsersController {
 
     @PostMapping("/signup")
     @Validated
-    @ResponseBody
     public String signUp(@Validated
                              @RequestBody
                              @ModelAttribute UserDTO userDTO, BindingResult bindingResult) {
@@ -67,7 +66,8 @@ public class UsersController {
             throw new ValidationException();
         }else{
             userService.signUp(userDTO);
-        return "login";}
+            return "login";
+        }
     }
 
     @GetMapping("/main")

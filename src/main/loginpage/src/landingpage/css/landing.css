@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+.wrapper {
+    font-family: 'Noto Sans', sans-serif;
+    width: 100vw;
+    height: 100vh;
+    background-color: #fff;
+    
+}
+.wrapper section {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 10px;
+    background-image: url("../img/eclipse.png");
+    background-repeat: no-repeat;
+    background-position: right;
+    flex-direction: row-reverse; /* 배경 이미지 오른쪽 정렬 */
+}
+
+.content {
+    margin: 10px 10px 10px 10px;
+}
+.content h1 {
+    display: block;
+    color: #3E54AC;
+    font-size: 53px;
+    font-style: normal;
+    font-weight: 700;
+}
+.content h3 {
+    display: block;
+    color: #8DCBE6;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 700;
+    margin-top: 10px;
+}
+.content p {
+    width: 643px;
+    height: 78px;
+}
+.major {
+    display: block;
+    color: #999999;
+    font-size: 17px;
+    font-style: italic;
+    font-weight: 400;
+    margin-top: 70px;
+}
+.content ul {
+    display: block;
+}
+.btn{
+    display: inline-block;
+}
+.btn:hover {
+    background-color: #ffffff;
+    color: #3E54AC;
+}
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #3E54AC;
+    color: #fff;
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.image {
+    display: block;
+    margin: 10px 10px 10px 10px;
+}
+.image img {
+    padding-top: 67px;
+}

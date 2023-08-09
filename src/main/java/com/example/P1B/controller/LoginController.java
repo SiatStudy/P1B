@@ -3,10 +3,13 @@ package com.example.P1B.controller;
 import com.example.P1B.exception.UserNotFoundException;
 import com.example.P1B.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -37,24 +40,22 @@ public class LoginController {
 
 
     @PostMapping("/search/id")
-    public String findId(@RequestParam("userEmail") String userEmail, Model model) {
+    @ResponseBody
+    public ResponseEntity<Map> findId(@RequestParam("userEmail") String userEmail, Model model) {
         // 서비스 메소드 호출
         Optional<String> optionalUsername = userService.findIdByEmail(userEmail);
-
         if (optionalUsername.isPresent()) {
             String username = optionalUsername.get();
             String message = "찾으신 아이디는: " + username;
             System.out.println("id : " + username);
             System.out.println("find Id 값 : " + message);
-            model.addAttribute("resultMessage", message);
+            return new ResponseEntity<>(Map.of("userid", username), HttpStatus.OK);
         } else {
             String message = "해당 아이디를 찾을 수 없습니다.";
             System.out.println("find Id 값 : " + message);
             model.addAttribute("resultMessage", message);
+            return new ResponseEntity<>(Map.of("userid", message), HttpStatus.CONFLICT);
         }
-        System.out.println("id : " + optionalUsername);
-
-        return "findIdResult";
     }
 
     @GetMapping("/search/password")

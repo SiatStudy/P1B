@@ -5,8 +5,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class AppController {
-    @GetMapping("/P1F")
-    public String P1F(){
-        return "P1F/index";
+    @GetMapping("/loginpage")
+    public String loginpage(){
+        return "loginpage/index";
+    }
+
+    @GetMapping("/mainpage")
+    public String mainpage(){
+        return "mainpage/index";
     }
 }
