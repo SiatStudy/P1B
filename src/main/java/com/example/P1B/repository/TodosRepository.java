@@ -10,4 +10,6 @@ import java.util.List;
 public interface TodosRepository extends JpaRepository<Todos, Long> {
 
     List<Todos> findByTdstartyeardateAndMember(int tdstartyeardate, Member member);
+
+    Todos findByTdid(Long tdid);
 }

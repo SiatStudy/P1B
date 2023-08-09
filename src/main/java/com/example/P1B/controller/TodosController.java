@@ -3,6 +3,7 @@ package com.example.P1B.controller;
 import com.example.P1B.domain.Todos;
 import com.example.P1B.dto.TodosInDTO;
 import com.example.P1B.dto.TodosOutDTO;
+import com.example.P1B.repository.TodosRepository;
 import com.example.P1B.service.CustomizeUserDetails;
 import com.example.P1B.service.TodosService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -20,6 +22,7 @@ import java.util.List;
 public class TodosController {
 
     private final TodosService todosService;
+    private final TodosRepository todosRepository;
 
     @GetMapping("/item")
     public String TodosPage(Model model, TodosInDTO dto){
@@ -42,10 +45,25 @@ public class TodosController {
         return "todoslist";
     }
 
-    @DeleteMapping("item/{id}")
+    @DeleteMapping("/item/{id}")
     public String deleteTodos(@PathVariable("id") Long tdid){
         System.out.println(tdid);
         todosService.deleteTodos(tdid);
         return "redirect:/";
+    }
+
+    @PatchMapping("/item")
+    public String modifyTodos(@RequestParam("title") String title,
+                              @RequestParam("content") String content,
+                              @RequestParam("startDate") LocalDateTime startDate,
+                              @RequestParam("endDate") LocalDateTime endDate,
+                              @RequestParam("id") Long id){
+        Todos todos = todosService.findTodos(id);
+        todos.setTdtitle(title);
+        todos.setTdcontent(content);
+        todos.setTdstartdate(startDate);
+        todos.setTdenddate(endDate);
+        todosRepository.save(todos);
+        return "";
     }
 }

@@ -36,4 +36,6 @@ public class TodosService {
     public void deleteTodos(Long tdid){
         todosRepository.deleteById(tdid);
     }
+
+    public Todos findTodos(Long tdid){return todosRepository.findByTdid(tdid);}
 }
