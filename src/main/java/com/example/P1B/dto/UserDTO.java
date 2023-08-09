@@ -17,10 +17,14 @@ import javax.validation.constraints.Size;
 @Validated
 public class UserDTO {
     private Long id;
-    private String username;
     @NotBlank(message = "공백이 있으면 안됩니다.")
     @Size(min = 3, max= 8, message = "최소 3글자 이상, 최대 8글자 이하여야 합니다.")
     @Pattern(regexp = "^(.*[A-Za-z])(?=.*\\d)[a-z\\d]{3,8}$", message = "영문과 숫자로 이루어진 8자리 이하의 조합이여야 합니다.")
+    private String username;
+
+    @NotBlank(message = "공백이 있으면 안됩니다.")
+    @Size(min = 8, max=15, message = "최소 8글자 이상, 최대 15글자 이하여야 합니다.")
+    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\\\\|,.<>/?])[A-Za-z\\d!@#$%^&*()_+\\-=\\[\\]{};':\\\\|,.<>/?]{8,15}$")
     private String userPassword;
 
     @NotBlank(message = "공백이 있으면 안됩니다.")
