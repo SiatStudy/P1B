@@ -2,17 +2,189 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>landing</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap');
+        html {
+            font-family: 'Apple SD Gothic Neo', Roboto, 'Noto Sans KR', NanumGothic, 'Malgun Gothic', sans-serif;
+            color: #555;
+            line-height: 1.2;
+            word-wrap: break-word;
+        }
+        body {
+            background: #eee;
+            -webkit-font-smoothing: antialiased;
+        }
+        html, body, div, span, applet, object, iframe,
+        h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+        a, abbr, acronym, address, big, cite, code,
+        del, dfn, em, img, ins, kbd, q, s, samp,
+        small, strike, strong, sub, sup, tt, var,
+        b, u, i, center,
+        dl, dt, dd, ol, ul, li,
+        fieldset, form, label, legend,
+        table, caption, tbody, tfoot, thead, tr, th, td,
+        article, aside, canvas, details, embed,
+        figure, figcaption, footer, header, hgroup,
+        menu, nav, output, ruby, section, summary,
+        time, mark, audio, video {
+            margin: 0;
+            padding: 0;
+            border: 0;
+        }
+        article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+            display: block;
+        }
+        div, span, article, section, header, footer, aside, p, ul, li, fieldset, legend, label, a, nav, form {
+            box-sizing: border-box;
+            /* content-box */
+        }
+        ol, ul, li {
+            list-style: none;
+        }
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border: 0;
+        }
+        a {
+            display: inline-block;
+        }
+        button {
+            border: 0;
+            background: transparent;
+            cursor: pointer;
+        }
+
+        .flex-container {
+            /* padding: 10px; */
+            background: lightgray;
+        }
+        .flex-item {
+            padding: 10px;
+            border: 3px solid rgb(50,50,40);
+            color: white;
+            background: mediumseagreen;
+        }
+
+        #wrapper {
+            font-family: 'Noto Sans', sans-serif;
+            width: 100vw;
+            height: 100vh;
+            background-color: #fff;
+            position: relative;
+
+        }
+        #wrapper section {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 10px;
+            background-image: url(/img/eclipse.png);
+            background-repeat: no-repeat;
+            background-position: right;
+            flex-direction: row-reverse; /* 배경 이미지 오른쪽 정렬 */
+        }
+
+        #wrapper section .content {
+            position: absolute;
+            left: 75%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            animation-name: content;
+            animation-duration: 1s;
+            margin: 10px 10px 10px 10px;
+        }
+        @keyframes content {
+            0%{opacity: 0; top: 60%;}
+            30%{opacity: 0; top: 60%;}
+            100%{opacity: 1; top: 50%;}
+        }
+        #wrapper section .content h1 {
+            display: block;
+            color: #3E54AC;
+            font-size: 53px;
+            font-style: normal;
+            font-weight: 700;
+        }
+        #wrapper section .content h3 {
+            display: block;
+            color: #8DCBE6;
+            font-size: 30px;
+            font-style: normal;
+            font-weight: 700;
+            margin-top: 10px;
+        }
+        #wrapper section .content p {
+            width: 643px;
+            height: 78px;
+        }
+        #wrapper section .content .major {
+            display: block;
+            color: #999999;
+            font-size: 17px;
+            font-style: italic;
+            font-weight: 400;
+            margin-top: 70px;
+        }
+        #wrapper section .content ul {
+            display: block;
+        }
+        #wrapper section .content ul li {
+            display: inline-block;
+        }
+        #wrapper section .content ul li a {
+
+        }
+        #wrapper section .content ul li a:hover {
+            background-color: #ffffff;
+            color: #3E54AC;
+            transition: all 0.3s;
+        }
+        #wrapper section .content ul li .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3E54AC;
+            color: #fff;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        #wrapper section .image {
+            display: block;
+            margin: 10px 10px 10px 10px;
+        }
+        #wrapper section .image img {
+            padding-top: 67px;
+        }
+    </style>
 </head>
 <body>
-<h1>메인 페이지</h1>
-<ul>
-    <li><a href="/users/Signup">회원 가입 페이지</a></li>
-    <li><a href="/Mypage/MypageInfo">마이 페이지</a></li>
-</ul>
-<hr/>
-<h2>임시 페이지 입니다</h2>
-<h3>업데이트를 기대해주세요</h3>
-<img src="/imgs/BnMVODzCQAAqfB5.jpg" alt="기다려주세요!">
+<div id="wrapper">
+    <section>
+        <div class="content">
+            <h1>To-Do</h1>
+            <h3>: 생산성 향상을 위한 완벽한 투두리스트</h3>
+            <p class="major">
+                "끊임없는 바쁨 속에서도 효율적으로 일상을 관리할 수 있도록, <br>
+                우리의 투두리스트 앱은 기능과 간결함을 제공합니다."
+            </p>
+            <ul class="">
+                <li>
+                    <a href="/loginpage" class="btn">Get Started</a>
+                </li>
+            </ul>
+        </div>
+        <div class="image">
+            <img src="img/landing.png" alt="" />
+        </div>
+    </section>
+</div>
 </body>
 </html>
