@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/loginpage/static/css/main.ddd26958.css",
+    "main.js": "/loginpage/static/js/main.3f3fa389.js",
+    "static/js/787.0fbeb184.chunk.js": "/loginpage/static/js/787.0fbeb184.chunk.js",
+    "static/media/Eyeline.svg": "/loginpage/static/media/Eyeline.9c0f9faab0d8fcbe60e6be862ebff6fc.svg",
+    "index.html": "/loginpage/index.html",
+    "main.ddd26958.css.map": "/loginpage/static/css/main.ddd26958.css.map",
+    "main.3f3fa389.js.map": "/loginpage/static/js/main.3f3fa389.js.map",
+    "787.0fbeb184.chunk.js.map": "/loginpage/static/js/787.0fbeb184.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.ddd26958.css",
+    "static/js/main.3f3fa389.js"
+  ]
+}

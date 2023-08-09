@@ -46,6 +46,8 @@ public class User {
     @Column(name = "MEM_UDT_DATE")
     private LocalDateTime memUdtDate;
 
+    @Column(name = "MEM_RESIGNED")
+    private String memResigned = "N";
 
     @OneToMany(mappedBy = "user")
     private List<Email> vrid = new ArrayList<>();

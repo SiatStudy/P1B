@@ -40,7 +40,7 @@ public class TodosController {
         return "todoslist";
     }
 
-    @DeleteMapping("item/{id}")
+    @DeleteMapping("/item/{id}")
     public String deleteTodos(@PathVariable("id") Long tdid){
         System.out.println(tdid);
         todosService.deleteTodos(tdid);
