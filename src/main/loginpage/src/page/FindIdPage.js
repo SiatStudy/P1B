@@ -32,14 +32,16 @@ const FindIdPage = () => {
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        console.log("axios 시작");
-        console.log(userEmail);
-        axios.post("http://localhost:8080/login/search/id",null,{params:{userEmail:userEmail}})
+        axios.post("http://localhost:8080/api/login/search/id", null,  {params:{userEmail : userEmail}})
         .then(res => {
-            console.log(res.data);
-            if(res.data.result == 200){
-                navigate("/findidresult", {state : { userid : res.data.username}});
+            console.log(res.status)
+            console.dir(res.status)
+            if(res.data.isValid){
+                navigate("/findidresult", {state : { username : res.data.username}});
+                console.log(res.data.username);
+                console.log("여기는?");
             }else{
+                console.log("여긴 타나?")
                 setDisabled(true);
                 setEmailError(<CustomLoginPageP $errorMessage $findidp>이메일을 다시 입력해주세요.</CustomLoginPageP>);
             }
@@ -48,6 +50,7 @@ const FindIdPage = () => {
             // 에러 핸들링을 위해 errorFunc 유틸리티 사용
             errorFunc('dupleAxios', err)
         })
+
     }
 
     return (

@@ -14,15 +14,12 @@ import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/login")
+@RequestMapping("/api/login")
+@ResponseBody
 public class LoginController {
 
     private final UserService userService;
 
-    @GetMapping("/login")
-    public String loginForm() {
-        return "login";
-    }
     @PostMapping("/duple/id")
     public @ResponseBody boolean idCheck(@RequestBody String username) {
         return !userService.idCheck(username);
@@ -33,14 +30,7 @@ public class LoginController {
         return !userService.emailCheck(userEmail);
     }
 
-    @GetMapping("/search/id")
-    public String findIdForm() {
-        return "findId";
-    }
-
-
     @PostMapping("/search/id")
-    @ResponseBody
     public ResponseEntity<Map> findId(@RequestParam("userEmail") String userEmail, Model model) {
         // 서비스 메소드 호출
         Optional<String> optionalUsername = userService.findIdByEmail(userEmail);
@@ -49,18 +39,14 @@ public class LoginController {
             String message = "찾으신 아이디는: " + username;
             System.out.println("id : " + username);
             System.out.println("find Id 값 : " + message);
-            return new ResponseEntity<>(Map.of("userid", username), HttpStatus.OK);
+            return new ResponseEntity<>(Map.of("username", username, "isValid", true), HttpStatus.OK);
         } else {
+            // 검증 완료된 코드. 나중에 프로덕션 단계에서 코드 정리할 때 스트링 부분은 날려야 합니다. 참고하세요.
             String message = "해당 아이디를 찾을 수 없습니다.";
             System.out.println("find Id 값 : " + message);
             model.addAttribute("resultMessage", message);
-            return new ResponseEntity<>(Map.of("userid", message), HttpStatus.CONFLICT);
+            return new ResponseEntity<>(Map.of("isValid", false), HttpStatus.OK);
         }
-    }
-
-    @GetMapping("/search/password")
-    public String findPasswordForm() {
-        return "findPassword";
     }
 
     @PostMapping("/search/password")

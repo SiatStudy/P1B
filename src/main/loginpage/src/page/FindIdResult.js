@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import {NavLink} from 'react-router-dom';
 
 function FindIdResult () {
-    const userid = useLocation().state.userid;
+    const username = useLocation().state.username;
     const navigate = useNavigate();
 
     return (
@@ -19,7 +19,7 @@ function FindIdResult () {
                     </NavLink>
                 </CustomLoginPageDiv>
 
-                <CustomLoginPageP $findIdResultP>회원님의 아이디는 {userid} 으로 등록되어 있습니다.</CustomLoginPageP>
+                <CustomLoginPageP $findIdResultP>회원님의 아이디는 {username} 으로 등록되어 있습니다.</CustomLoginPageP>
     
                 <CustomLoginPageBtn 
                 $loginbtn 
