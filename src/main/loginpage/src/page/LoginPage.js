@@ -54,9 +54,9 @@ function LoginPage () {
             userEmail: userPw,
         }
 
-        axios.post("http://localhost:8080/login/login", null,  {params:{userData : userData}})
+        axios.post("http://localhost:8080/api/login/login", null,  {params:{userData : userData}})
         .then(res => {
-            if(res.status === 200){
+            if(res.data.isValid){
                 navigate("/login/login");
                 console.log("로그인 성공");
             }else{

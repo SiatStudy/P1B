@@ -97,7 +97,7 @@ export const handleBtnClickEvent = (sInputs, setIsVaild, mode, setButtons, setSi
         setErrorMessage((prevState) => ({...prevState, idError : setIdError()}));
 
         const setIdError = () => {
-            if (searchUserData("http://localhost:8080/login/duple/id", userName, mode)) {
+            if (searchUserData("http://localhost:8080/api/login/duple/id", userName, mode)) {
                 setButtons((prevState) => ({...prevState, checkDuplicateIdButton: true}));
                 setIsVaild((prevState) => ({...prevState, checkId : true}));
                 return <CustomLoginPageP $errorMessage $resultMessage>중복 확인이 완료되었습니다.</CustomLoginPageP>;
@@ -111,7 +111,7 @@ export const handleBtnClickEvent = (sInputs, setIsVaild, mode, setButtons, setSi
         setErrorMessage((prevState) => ({...prevState, emailError : setEmailError()}));
 
         const setEmailError = () => {
-            if (searchUserData("http://localhost:8080/login/duple/email", userEmail, mode)) {
+            if (searchUserData("http://localhost:8080/api/login/duple/email", userEmail, mode)) {
                 setButtons((prevState) => ({...prevState, sendEmailVerificationButton: true}));
                 setButtons((prevState) => ({...prevState, verifyEmailCodeButton: false}));
                 setIsVaild((prevState) => ({...prevState, checkEmail : true}));
