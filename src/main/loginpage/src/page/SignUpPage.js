@@ -82,11 +82,10 @@ function SignUpPage () {
             userEmail: signInputs.userEmail + signInputs.userEmailDomain,
         }
 
-        if (signup("http://localhost:8080/signup",userData,mode)) {
-            console.log("전송 완료");
+        if (signup("http://localhost:8080/api/users/signup",userData,mode)) {
             navigate("/loginpage");
         }else{
-            console.log("전송 실패");
+            alert("다시 시도해 주세요.");
         }
     }
 

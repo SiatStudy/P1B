@@ -52,9 +52,9 @@ const FindPWPage = () => {
             userEmail: userEmail,
         }
 
-        axios.post("http://localhost:8080/login/search/password", null,  {params:{userData : userData}})
+        axios.post("http://localhost:8080/api/login/search/password", null,  {params:{userData : userData}})
         .then(res => {
-            if(res.status === 200){
+            if(res.data.isValid){
                 navigate("/findpwresult");
             }else{
                 setIsVaild((prevState) => ({...prevState, checkId : false}));

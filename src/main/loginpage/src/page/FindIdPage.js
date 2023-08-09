@@ -34,14 +34,9 @@ const FindIdPage = () => {
 
         axios.post("http://localhost:8080/api/login/search/id", null,  {params:{userEmail : userEmail}})
         .then(res => {
-            console.log(res.status)
-            console.dir(res.status)
             if(res.data.isValid){
                 navigate("/findidresult", {state : { username : res.data.username}});
-                console.log(res.data.username);
-                console.log("여기는?");
             }else{
-                console.log("여긴 타나?")
                 setDisabled(true);
                 setEmailError(<CustomLoginPageP $errorMessage $findidp>이메일을 다시 입력해주세요.</CustomLoginPageP>);
             }

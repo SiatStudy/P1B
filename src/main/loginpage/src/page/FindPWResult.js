@@ -56,9 +56,9 @@ function FindPWResult () {
             userConfirmPw: userConfirmPw,
         }
 
-        axios.post("http://localhost:8080/find/userpwupdate", null,  {params:{userData : userData}})
+        axios.post("http://localhost:8080/api/find/userpwupdate", null,  {params:{userData : userData}})
         .then(res => {
-            if(res.status === 200){
+            if(res.data.isValid){
                 navigate("/loginpage");
             }else{
                 setIsVaild((prevState) => ({...prevState, checkPw : false}));

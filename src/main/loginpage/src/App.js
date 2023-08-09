@@ -5,15 +5,12 @@ import FindIdPage from './page/FindIdPage';
 import FindPWPage from './page/FindPWPage';
 import FindIdResult from "./page/FindIdResult";
 import FindPWResult from "./page/FindPWResult";
-import LandingPage from './page/LandingPage';
-
 
 function App() {
 
   return (
     <div>
       <Routes>
-        <Route path={"/"} element={<LandingPage />}></Route>
         <Route path={"/loginpage"} element={<LoginPage />}></Route>
         <Route path={"/signuppage"} element={<SignUpPage />}></Route>
         <Route path={"/findidpage"} element={<FindIdPage />}></Route>

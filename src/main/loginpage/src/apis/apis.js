@@ -21,9 +21,7 @@ const searchUserData = async ({ url, userData, mode }) => {
         axios.post(url, null, {params:{userData:userData}})
             .then(res => {
                 // 중복 데이터가 있을 경우 true 반환, 없을 경우 false 반환
-                if(res.status === 200){
-                    return !!res.data.result;
-                }
+                    return !!res.data.isValid;
             })
             .catch(err => {
                 // 에러 핸들링을 위해 errorFunc 유틸리티 사용
@@ -35,9 +33,7 @@ const searchUserData = async ({ url, userData, mode }) => {
         axios.post(url, null, {params:{userData:userData}})
             .then(res => {
                 // 중복 데이터가 있을 경우 true 반환, 없을 경우 false 반환
-                if(res.status === 200){
-                    return !!res.data.result;
-                }
+                return !!res.data.isValid
             })
             .catch(err => {
                 // 에러 핸들링을 위해 errorFunc 유틸리티 사용
@@ -49,9 +45,7 @@ const searchUserData = async ({ url, userData, mode }) => {
             axios.post(url, null, {params:{userData:userData}})
                 .then(res => {
                     // 중복 데이터가 있을 경우 true 반환, 없을 경우 false 반환
-                    if(res.status === 200){
-                        return !!res.data.result;
-                    }
+                    return !!res.data.isValid;
                 })
                 .catch(err => {
                     // 에러 핸들링을 위해 errorFunc 유틸리티 사용
@@ -70,7 +64,7 @@ const signup = async ({ url, userData, mode }) => {
         // 회원가입
         axios.post(url, null, {params:{userData:userData}})
             .then(res => {
-                if (res.status === 200) {
+                if (res.data.isValid) {
                     // 회원가입이 실패하면 false 반환
                     return false;
                 }
