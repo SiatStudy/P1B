@@ -18,10 +18,12 @@ const searchUserData = async ({ url, userData, mode }) => {
     // 유저 데이터 검색을 담당하는 함수 (아이디 또는 비밀번호로 검색)
     if (mode === "id") {
         // 중복 데이터 확인 기능을 담당하는 함수
-        axios.post(url + '/id', userData)
+        axios.post(url, null, {params:{userData:userData}})
             .then(res => {
                 // 중복 데이터가 있을 경우 true 반환, 없을 경우 false 반환
-                return !!res.data.isDuplicated;
+                if(res.status === 200){
+                    return !!res.data.result;
+                }
             })
             .catch(err => {
                 // 에러 핸들링을 위해 errorFunc 유틸리티 사용
@@ -30,10 +32,12 @@ const searchUserData = async ({ url, userData, mode }) => {
         }
         else if (mode === "email") {
         // 중복 데이터 확인 기능을 담당하는 함수
-        axios.post(url + '/email', userData)
+        axios.post(url, null, {params:{userData:userData}})
             .then(res => {
                 // 중복 데이터가 있을 경우 true 반환, 없을 경우 false 반환
-                return !!res.data.isDuplicated;
+                if(res.status === 200){
+                    return !!res.data.result;
+                }
             })
             .catch(err => {
                 // 에러 핸들링을 위해 errorFunc 유틸리티 사용
@@ -42,10 +46,12 @@ const searchUserData = async ({ url, userData, mode }) => {
         }
         else if (mode === "emailCode") {
             // 중복 데이터 확인 기능을 담당하는 함수
-            axios.post(url + '/emailCode', userData)
+            axios.post(url, null, {params:{userData:userData}})
                 .then(res => {
                     // 중복 데이터가 있을 경우 true 반환, 없을 경우 false 반환
-                    return !!res.data.isDuplicated;
+                    if(res.status === 200){
+                        return !!res.data.result;
+                    }
                 })
                 .catch(err => {
                     // 에러 핸들링을 위해 errorFunc 유틸리티 사용
@@ -62,9 +68,9 @@ const signup = async ({ url, userData, mode }) => {
     // 회원가입 또는 유저 정보 업데이트를 담당하는 함수
     if (mode === "signup") {
         // 회원가입
-        axios.post(url, userData)
+        axios.post(url, null, {params:{userData:userData}})
             .then(res => {
-                if (res.data.registration) {
+                if (res.status === 200) {
                     // 회원가입이 실패하면 false 반환
                     return false;
                 }

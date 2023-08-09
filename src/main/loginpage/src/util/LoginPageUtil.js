@@ -13,9 +13,7 @@ export const handleInputsVal = (value, setIsVaild, pwVal, setErrorMessage, setBu
         setErrorMessage((prevState) => ({...prevState, idError : setIdError(value)}));
 
         const setIdError = () => {
-            if (value.trim() === "") {
-                setButtons((prevState) => ({...prevState, checkDuplicateIdButton: true}));
-            } else if (!idRegex.test(value)) {
+            if (value.trim() === "" || !idRegex.test(value)) {
                 setButtons((prevState) => ({...prevState, checkDuplicateIdButton: true}));
                 return <CustomLoginPageP $errorMessage>아이디: 3~8자의 영문 대/소문자 또는 숫자를 사용해 주세요.</CustomLoginPageP>;
             } else {
@@ -28,10 +26,7 @@ export const handleInputsVal = (value, setIsVaild, pwVal, setErrorMessage, setBu
         setErrorMessage((prevState) => ({...prevState, nicknameError : setNicknameError(value)}));
     
         const setNicknameError = () => {
-            if (value.trim() === "") {
-                setIsVaild((prevState) => ({...prevState, checkNickname : false}));
-                return <CustomLoginPageP $errorMessage>닉네임을 입력해주세요.</CustomLoginPageP>;
-            } else if (!nicknameRegex.test(value)) {
+            if (value.trim() === "" || !nicknameRegex.test(value)) {
                 setIsVaild((prevState) => ({...prevState, checkNickname : false}));
                 return <CustomLoginPageP $errorMessage>닉네임: 15자 이하의 영문 대/소문자 또는 한글을 사용해 주세요.</CustomLoginPageP>;
             } else {
@@ -44,10 +39,7 @@ export const handleInputsVal = (value, setIsVaild, pwVal, setErrorMessage, setBu
         setErrorMessage((prevState) => ({...prevState, pwError : setPwError(value)}));
     
         const setPwError = () => {
-            if (value.trim() === "") {
-                setIsVaild((prevState) => ({...prevState, checkPw : false}));
-                return <CustomLoginPageP $errorMessage>비밀번호를 입력해주세요.</CustomLoginPageP>;
-            } else if (!passwordRegex.test(value)) {
+            if (value.trim() === "" || !passwordRegex.test(value)) {
                 setIsVaild((prevState) => ({...prevState, checkPw : false}));
                 return <CustomLoginPageP $errorMessage>비밀번호: 8~16자의 영문 대/소문자, 숫자, 특수문자를 사용해 주세요.</CustomLoginPageP>;
             } else {
@@ -60,15 +52,10 @@ export const handleInputsVal = (value, setIsVaild, pwVal, setErrorMessage, setBu
         setErrorMessage((prevState) => ({...prevState, confirmPwError : setConfirmPwError(value)}));
 
         const setConfirmPwError = () => {
-            if(value.trim() === ""){
-                setIsVaild((prevState) => ({...prevState, checkConfirmPw : false}));
-                return <CustomLoginPageP $errorMessage>비밀번호를 입력해주세요.</CustomLoginPageP>;
-            }
-            else if(pwVal !== value){
+            if(value.trim() === "" || pwVal !== value){
                 setIsVaild((prevState) => ({...prevState, checkConfirmPw : false}));
                 return <CustomLoginPageP $errorMessage>비밀번호랑 동일하게 입력해주세요.</CustomLoginPageP>;
-            }
-            else{
+            } else{
                 setIsVaild((prevState) => ({...prevState, checkConfirmPw : true}));
                 return '';
             }
@@ -78,9 +65,7 @@ export const handleInputsVal = (value, setIsVaild, pwVal, setErrorMessage, setBu
         setErrorMessage((prevState) => ({...prevState, emailError : setEmailError(value)}));
 
         const setEmailError = () => {
-            if (value.trim() === "") {
-                setButtons((prevState) => ({...prevState, sendEmailVerificationButton: true}));
-            } else if (!emailRegex.test(value)) {
+            if (value.trim() === "" || !emailRegex.test(value)) {
                 setButtons((prevState) => ({...prevState, sendEmailVerificationButton: true}));
                 return <CustomLoginPageP $errorMessage>이메일: 63자이하의 영문 대/소문자, 숫자를 사용해 주세요.</CustomLoginPageP>;
             } else {
@@ -92,10 +77,7 @@ export const handleInputsVal = (value, setIsVaild, pwVal, setErrorMessage, setBu
         setErrorMessage((prevState) => ({...prevState, emailCodeError : setEmailCodeError(value)}));
 
         const setEmailCodeError = () => {
-            if (value.trim() === "") {
-                setButtons((prevState) => ({...prevState, verifyEmailCodeButton: true}));
-                return <CustomLoginPageP $errorMessage>인증코드를 입력해주세요.</CustomLoginPageP>;
-            } else if (!emailCodeRegex.test(value)) {
+            if (value.trim() === "" || !emailCodeRegex.test(value)) {
                 setButtons((prevState) => ({...prevState, verifyEmailCodeButton: true}));
                 return <CustomLoginPageP $errorMessage>인증코드는 숫자8자리 입니다.</CustomLoginPageP>;
             } else {  
@@ -115,7 +97,7 @@ export const handleBtnClickEvent = (sInputs, setIsVaild, mode, setButtons, setSi
         setErrorMessage((prevState) => ({...prevState, idError : setIdError()}));
 
         const setIdError = () => {
-            if (searchUserData("http://localhost:8080/duple/id", userName,mode)) {
+            if (searchUserData("http://localhost:8080/login/duple/id", userName, mode)) {
                 setButtons((prevState) => ({...prevState, checkDuplicateIdButton: true}));
                 setIsVaild((prevState) => ({...prevState, checkId : true}));
                 return <CustomLoginPageP $errorMessage $resultMessage>중복 확인이 완료되었습니다.</CustomLoginPageP>;
@@ -129,7 +111,7 @@ export const handleBtnClickEvent = (sInputs, setIsVaild, mode, setButtons, setSi
         setErrorMessage((prevState) => ({...prevState, emailError : setEmailError()}));
 
         const setEmailError = () => {
-            if (searchUserData("http://localhost:8080/duple/email", userEmail,mode)) {
+            if (searchUserData("http://localhost:8080/login/duple/email", userEmail, mode)) {
                 setButtons((prevState) => ({...prevState, sendEmailVerificationButton: true}));
                 setButtons((prevState) => ({...prevState, verifyEmailCodeButton: false}));
                 setIsVaild((prevState) => ({...prevState, checkEmail : true}));
@@ -145,7 +127,7 @@ export const handleBtnClickEvent = (sInputs, setIsVaild, mode, setButtons, setSi
         setErrorMessage((prevState) => ({...prevState, emailCodeError : setEmailCodeError()}));
 
         const setEmailCodeError = () => {
-            if (searchUserData("http://localhost:8080/duple/emailCode",userEmailCode,mode)) {
+            if (searchUserData("http://localhost:8080/api/mail/send", userEmailCode, mode)) {
                 setButtons((prevState) => ({...prevState, verifyEmailCodeButton: true}));
                 setIsVaild((prevState) => ({...prevState, checkEmailCode : true})); 
                 return <CustomLoginPageP $errorMessage $resultMessage>인증이 완료 되었습니다.</CustomLoginPageP>
