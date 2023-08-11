@@ -8,9 +8,11 @@ import com.example.P1B.service.CustomizeUserDetails;
 import com.example.P1B.service.TodosService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -32,10 +34,24 @@ public class TodosController {
     }
 
     @PostMapping("/item")
-    public String Todos(TodosInDTO dto, @AuthenticationPrincipal CustomizeUserDetails customizeUserDetails){
-        dto.setTdStartYear(dto.getTdStartDate().getYear());
-        todosService.addTodos(dto.getTdTitle(), dto.getTdContent(), dto.getTdEndDate(), dto.getTdStartDate(), dto.getTdStartYear(), customizeUserDetails.getMember());
-        return "main";
+    public ResponseEntity<String> addTodos(
+            @RequestBody @Validated TodosInDTO dto,
+            @AuthenticationPrincipal CustomizeUserDetails customizeUserDetails) {
+
+        if (dto != null) {
+            dto.setTdStartYear(dto.getTdStartDate().getYear());
+            todosService.addTodos(
+                    dto.getTdTitle(),
+                    dto.getTdContent(),
+                    dto.getTdEndDate(),
+                    dto.getTdStartDate(),
+                    dto.getTdStartYear(),
+                    customizeUserDetails.getMember());
+
+            return ResponseEntity.ok("Todo item added successfully.");
+        } else {
+            return ResponseEntity.badRequest().body("Invalid input.");
+        }
     }
 
     @GetMapping("/{year}")

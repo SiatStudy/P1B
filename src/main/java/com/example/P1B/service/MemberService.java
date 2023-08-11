@@ -79,26 +79,26 @@ public class MemberService {
     }
 
     // 이메일 체크
-    public String emailCheck(String memberEmail) {
+    public Boolean emailCheck(String memberEmail) {
         Optional<Member> result = memberRepository.findByUsername(memberEmail);
         if (result.isPresent()) {
             // 조회결과가 있다 -> 사용할 수 없다.
-            return null;
+            return false;
         } else {
             // 조회결과가 없다 -> 사용할 수 있다.
-            return "ok";
+            return true;
         }
     }
 
     // 아이디 체크
-    public String idCheck(String username) {
+    public Boolean idCheck(String username) {
         Optional<Member> result = memberRepository.findByUsername(username);
         if (result.isPresent()) {
             // 조회결과가 있다 -> 사용할 수 없다.
-            return null;
+            return false;
         } else {
             // 조회결과가 없다 -> 사용할 수 있다.
-            return "ok";
+            return true;
         }
     }
 

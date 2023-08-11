@@ -9,3 +9,5 @@ src/main/.DS_Store
 .gradle
 build
 out
+src/main/loginpage/node_modules
+src/main/mainpage/node_modules

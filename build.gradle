@@ -40,3 +40,121 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+
+// 여기서부터가 리액트 파일을 불러오기 위한 절차.
+// 절차는 다음과 같이 나뉜다.
+// 리액트 설치
+// 리액트 빌드
+// 빌드한 리액트 파일을 static으로 복사 (intex.html만 보통 복사된다)
+// 빌드한 리액트 파일을 resources/loginpage로 복사 (static/index.html의 파일이 이 곳의 파일들을 가리킨다)
+
+def frontendDir1 = "$projectDir/src/main/loginpage"
+def frontendDir2 = "$projectDir/src/main/mainpage"
+
+// 리액트 프로젝트 기본 경로 설정
+
+sourceSets {
+    main {resources { srcDirs = ["$projectDir/src/main/resources"]}}
+}
+
+// 소스셋 설정
+
+processResources { dependsOn "copyReactHTMLFiles2" }
+
+// 가장 마지막으로 수행할 task를 지정. -> task 처리의 endpoint를 설정
+
+task installReact1(type: Exec) {
+    workingDir "$frontendDir1"
+    inputs.dir "$frontendDir1"
+    group = BasePlugin.BUILD_GROUP
+    if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+        commandLine "npm.cmd", "audit", "fix"
+        commandLine 'npm.cmd', 'install' }
+    else {
+        commandLine "npm", "audit", "fix" commandLine 'npm', 'install'
+    }
+}
+
+// 리액트 설치
+
+task buildReact1(type: Exec) {
+    dependsOn "installReact1"
+    workingDir "$frontendDir1"
+    inputs.dir "$frontendDir1"
+    group = BasePlugin.BUILD_GROUP
+    if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+        commandLine "npm.cmd", "run-script", "build"
+    } else {
+        commandLine "npm", "run-script", "build"
+    }
+}
+
+// 리액트 빌드
+
+task copyReactBuildResourceFiles1(type: Copy) {
+    dependsOn "buildReact1"
+    from "$frontendDir1/build"
+    into "$projectDir/src/main/resources/static/loginpage"
+    exclude "*.html"
+}
+
+// 빌드한 리액트 파일을 static/loginpage 폴더로 옮김
+// 이 작업은, 컨트롤러에서 이 static 안의 파일을 가리킬 것이기 때문에 필요
+
+task copyReactHTMLFiles1(type: Copy) {
+    dependsOn "copyReactBuildResourceFiles1"
+    from "$frontendDir1/build/index.html"
+    into "$projectDir/src/main/resources/templates/loginpage"
+}
+// Static/loginpage 의 파일은 resources/templates/loginpage 안의 파일들을 가리킨다.
+// 때문에, 컨트롤러에서 static의 html을 호출하면, 해당 파일은 리소스 폴더 내의 경로를 가리킨다.
+
+
+// 리액트 메인페이지 빌드
+task installReact2(type: Exec) {
+    dependsOn "copyReactHTMLFiles1"
+    workingDir "$frontendDir2"
+    inputs.dir "$frontendDir2"
+    group = BasePlugin.BUILD_GROUP
+    if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+        commandLine "npm.cmd", "audit", "fix"
+        commandLine 'npm.cmd', 'install' }
+    else {
+        commandLine "npm", "audit", "fix" commandLine 'npm', 'install'
+    }
+}
+
+// 리액트 설치
+
+task buildReact2(type: Exec) {
+    dependsOn "installReact2"
+    workingDir "$frontendDir2"
+    inputs.dir "$frontendDir2"
+    group = BasePlugin.BUILD_GROUP
+    if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+        commandLine "npm.cmd", "run-script", "build"
+    } else {
+        commandLine "npm", "run-script", "build"
+    }
+}
+
+// 리액트 빌드
+
+task copyReactBuildResourceFiles2(type: Copy) {
+    dependsOn "buildReact2"
+    from "$frontendDir2/build"
+    into "$projectDir/src/main/resources/static/mainpage"
+    exclude "*.html"
+}
+
+// 빌드한 리액트 파일을 static/loginpage 폴더로 옮김
+// 이 작업은, 컨트롤러에서 이 static 안의 파일을 가리킬 것이기 때문에 필요
+
+task copyReactHTMLFiles2(type: Copy) {
+    dependsOn "copyReactBuildResourceFiles2"
+    from "$frontendDir2/build/index.html"
+    into "$projectDir/src/main/resources/templates/mainpage"
+}
+// Static/loginpage 의 파일은 resources/templates/loginpage 안의 파일들을 가리킨다.
+// 때문에, 컨트롤러에서 static의 html을 호출하면, 해당 파일은 리소스 폴더 내의 경로를 가리킨다.
