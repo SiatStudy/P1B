@@ -178,7 +178,7 @@ function SignUpPage () {
                             $signupemail
                             data-mode='email'
                             placeholder='E-mail 입력' 
-                            value={signInputs.userEmail} 
+                            value={signInputs.userEmail}
                             onChange={handleInputsChange} />
                         </CustomLoginPageDiv>
                         <CustomLoginPageDiv $mbemail>@</CustomLoginPageDiv>
@@ -207,7 +207,7 @@ function SignUpPage () {
                             $mbspid 
                             data-mode='emailCode' 
                             placeholder='인증코드 입력'
-                            value={signInputs.userEmailCode} 
+                            value={signInputs.userEmailCode}
                             onChange={handleInputsChange}
                             />
                         </CustomLoginPageDiv>

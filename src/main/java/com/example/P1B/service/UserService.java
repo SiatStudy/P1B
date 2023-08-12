@@ -39,7 +39,6 @@ public class UserService {
         user.setRole(User.Role.USER);
 
         Email email = new Email();
-        email.setUser(user);
 
         // 이메일 인증 시작시간을 현재 시간으로 설정
         LocalDateTime vrCreate = LocalDateTime.now();
@@ -49,7 +48,6 @@ public class UserService {
         LocalDateTime vrExpire = vrCreate.plusMinutes(3);
         email.setVrExpire(vrExpire);
 
-        userRepository.save(user);
         emailRepository.save(email);
         // repository의 signUp메서드 호출 (조건. entity객체를 넘겨줘야 함)
     }
@@ -74,8 +72,8 @@ public class UserService {
         }
     }
 
-    public User findByUser(String useremail){
-        Optional<User> user = userRepository.findByUserEmail(useremail);
+    public User findByUser(String userEmail){
+        Optional<User> user = userRepository.findByUserEmail(userEmail);
         return user.get();
     }
 
@@ -127,13 +125,13 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public String findUserByUsernameAndEmail(String username, String userEmail) {
+    public Boolean findUserByUsernameAndEmail(String username, String userEmail) {
         User user = userRepository.findByUsernameAndUserEmail(username, userEmail); // 수정된 부분
 
         if (user == null) {
-            throw new UserNotFoundException("해당하는 아이디 또는 이메일이 존재하지 않습니다.");
+            return false;
         }
 
-        return user.getUsername(); // 수정된 부분
+        return true; // 수정된 부분
     }
 }

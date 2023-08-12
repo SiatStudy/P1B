@@ -128,9 +128,9 @@ public class UsersController {
     @GetMapping("/setting")
     public String session(@AuthenticationPrincipal CustomizeUserDetails customizeUserDetails, Model model){
         System.out.println("--------------- username : " + customizeUserDetails.getUsername());
-        System.out.println("--------------- useremail : " + customizeUserDetails.getUserEmail());
+        System.out.println("--------------- userEmail : " + customizeUserDetails.getUserEmail());
         model.addAttribute("username", customizeUserDetails.getUsername());
-        model.addAttribute("useremail", customizeUserDetails.getUserEmail());
+        model.addAttribute("userEmail", customizeUserDetails.getUserEmail());
         return "usersetting";
     }
 }

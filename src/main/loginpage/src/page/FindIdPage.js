@@ -64,7 +64,7 @@ const FindIdPage = () => {
                         <CustomLoginPageInput 
                             $idinput 
                             placeholder='E-mail 입력' 
-                            value={userEmail} 
+                            value={userEmail}
                             onChange={handleInputsChange}
                         />
                     </CustomLoginPageDiv>
