@@ -1,0 +1,20 @@
+.Dday{
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  background-color: #E3F6FF;
+}
+
+.Side{
+  display: flex;
+  flex-direction: column;
+  background: #FFF;
+  flex-shrink: 0;
+  justify-content: space-between;
+}
+
+.Main{
+  width: 85%;
+  height: 100%;
+  padding: 1rem;
+}

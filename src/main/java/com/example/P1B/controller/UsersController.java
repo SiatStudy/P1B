@@ -1,11 +1,15 @@
 package com.example.P1B.controller;
 
 import com.example.P1B.domain.User;
+import com.example.P1B.dto.SignupDTO;
 import com.example.P1B.dto.UserDTO;
+import com.example.P1B.exception.UserNotFoundException;
 import com.example.P1B.repository.UserRepository;
 import com.example.P1B.service.CustomizeUserDetails;
 import com.example.P1B.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,12 +22,13 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.ValidationException;
+import java.util.Map;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UsersController {
-
     private final UserService userService;
     private final UserRepository userRepository;
 
@@ -120,10 +125,22 @@ public class UsersController {
     }
 
     @PostMapping("/changePassword")
-    public String changePassword(@RequestParam("username") String username, @RequestParam("newPassword") String newPassword) {
-        userService.changePassword(username, newPassword);
-        return "redirect:/"; // index.html로 리다이렉트
+    public ResponseEntity<Map<String, Boolean>> changePassword(@RequestBody SignupDTO signupDTO) {
+        System.out.println("********************************");
+        System.out.println("useremail : " + signupDTO.getUseremail());
+        System.out.println("newuserpassword : " + signupDTO.getUserpassword());
+        System.out.println("********************************");
+    try {
+        userService.changePassword(signupDTO.getUseremail(), signupDTO.getUserpassword());
+        String message = "비밀번호가 변경되었습니다.";
+        System.out.println(message);
+        return new ResponseEntity<>(Map.of("isValid", true), HttpStatus.OK);
+    } catch (UserNotFoundException e) {
+        String message = "이런! 문제가 생겼네요";
+        System.out.println(message);
+        return new ResponseEntity<>(Map.of("isValid", false), HttpStatus.OK);
     }
+}
 
     @GetMapping("/setting")
     public String session(@AuthenticationPrincipal CustomizeUserDetails customizeUserDetails, Model model){

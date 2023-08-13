@@ -8,8 +8,9 @@ import { ReactComponent as Eyeline } from "../svg/Eyeline.svg";
 import {handleInputsVal, handleBtnClickEvent} from "../util/LoginPageUtil";
 import { useState, useEffect } from 'react';
 import CustomLoginPageP from '../component/CustomLoginPageP';
-import {signup} from '../apis/apis';
 import {useNavigate} from 'react-router-dom';
+import axios from "axios";
+import errorFunc from "../util/errorFunc";
 
 function SignUpPage () {
     const navigate = useNavigate();
@@ -25,13 +26,13 @@ function SignUpPage () {
         checkEmailCode : false
     });
     const [signInputs, setSignInputs] = useState({
-        userName : '',
-        userNickname : '',
-        userPw : '',
-        userConfirmPw : '',
-        userEmail : '',
+        username : '',
+        usernickname : '',
+        userpassword : '',
+        userpasswordchk : '',
+        useremail : '',
         userEmailDomain : '@naver.com',
-        userEmailCode : '',
+        code : '',
     });
     const [errorMessage, setErrorMessage] = useState({
         idError : '',
@@ -52,7 +53,7 @@ function SignUpPage () {
     const handleInputsChange = (event) => {
         const value = event.target.value;
         const mode = event.target.dataset.mode;
-        const pwVal = signInputs.userPw;
+        const pwVal = signInputs.userpassword;
         handleInputsVal(value, setIsVaild, pwVal, setErrorMessage, setButtons, setSignInputs, mode);
     };
     
@@ -75,18 +76,25 @@ function SignUpPage () {
 
     const handleSubmitClick = (event, mode) => {
         event.preventDefault();
-        const userData = {
-            userName: signInputs.userName,
-            userNickname: signInputs.userNickname,
-            userPw: signInputs.userPw,
-            userEmail: signInputs.userEmail + signInputs.userEmailDomain,
+        const userdata = {
+            username: signInputs.username,
+            usernickname: signInputs.usernickname,
+            userpassword: signInputs.userpassword,
+            useremail: signInputs.useremail + signInputs.userEmailDomain,
         }
 
-        if (signup("http://localhost:8080/api/users/signup",userData,mode)) {
-            navigate("/loginpage");
-        }else{
-            alert("다시 시도해 주세요.");
-        }
+        axios.post("http://localhost:8080/api/users/signup", {userdata : userdata})
+        .then(res => {
+            if(res.data.isValid){
+                navigate("/loginpage");
+            }else{
+                alert("다시 시도해 주세요.");
+            }
+        })
+        .catch(err => {
+            // 에러 핸들링을 위해 errorFunc 유틸리티 사용
+            errorFunc('dupleAxios', err)
+        })
     }
 
     useEffect(() => {
@@ -117,7 +125,7 @@ function SignUpPage () {
                             $mbspid
                             data-mode='id'
                             placeholder='ID 입력'
-                            value={signInputs.userName}
+                            value={signInputs.username}
                             onChange={handleInputsChange}/>
                         </CustomLoginPageDiv>
                         <CustomLoginPageBtn 
@@ -135,7 +143,7 @@ function SignUpPage () {
                         <CustomLoginPageInput 
                         $idinput
                         data-mode='nickname'
-                        value={signInputs.userNickname} 
+                        value={signInputs.usernickname} 
                         onChange={handleInputsChange} />
                     </CustomLoginPageDiv>
                     {errorMessage.nicknameError}
@@ -148,7 +156,7 @@ function SignUpPage () {
                             data-mode='pw'
                             placeholder='Password' 
                             type='password' 
-                            value={signInputs.userPw} 
+                            value={signInputs.userpassword} 
                             onChange={handleInputsChange} />
                             <Eyeline className={style.eyelineSvg}/>
                         </CustomLoginPageDiv>
@@ -163,7 +171,7 @@ function SignUpPage () {
                             data-mode='confirmPw'
                             placeholder='Password' 
                             type='password' 
-                            value={signInputs.userConfirmPw} 
+                            value={signInputs.userpasswordchk} 
                             onChange={handleInputsChange} />
                             <Eyeline className={style.eyelineSvg}/>
                         </CustomLoginPageDiv>
@@ -178,7 +186,7 @@ function SignUpPage () {
                             $signupemail
                             data-mode='email'
                             placeholder='E-mail 입력' 
-                            value={signInputs.userEmail}
+                            value={signInputs.useremail} 
                             onChange={handleInputsChange} />
                         </CustomLoginPageDiv>
                         <CustomLoginPageDiv $mbemail>@</CustomLoginPageDiv>
@@ -207,7 +215,7 @@ function SignUpPage () {
                             $mbspid 
                             data-mode='emailCode' 
                             placeholder='인증코드 입력'
-                            value={signInputs.userEmailCode}
+                            value={signInputs.code} 
                             onChange={handleInputsChange}
                             />
                         </CustomLoginPageDiv>

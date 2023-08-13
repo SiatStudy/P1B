@@ -12,8 +12,8 @@ import {useNavigate, Link} from 'react-router-dom';
 
 function LoginPage () {
 
-    const [userName, setUserName] = useState('');
-    const [userPw, setUserPw] = useState('');
+    const [username, setUsername] = useState('');
+    const [userpassword, setUserpassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [isVaild, setIsVaild] = useState({
         checkId : false,
@@ -25,7 +25,7 @@ function LoginPage () {
     const handleIdChange = (event) => {
         const value = event.target.value;
         const idRegex = /^[A-Za-z0-9]{3,8}$/;
-        setUserName(value);
+        setUsername(value);
         if (value.trim() === "" || !idRegex.test(value)) {
             setIsVaild((prevState) => ({...prevState, checkId : false}));
             return setErrorMessage(<CustomLoginPageP $errorMessage $loginerr>아이디 또는 비밀번호를 다시 입력해주세요.</CustomLoginPageP>);
@@ -37,7 +37,7 @@ function LoginPage () {
     const handlePwChange = (event) => {
         const value = event.target.value;
         const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/;
-        setUserPw(value);
+        setUserpassword(value);
         if (value.trim() === "" || !passwordRegex.test(value)) {
             setIsVaild((prevState) => ({...prevState, checkPw : false}));
             return setErrorMessage(<CustomLoginPageP $errorMessage $loginerr>아이디 또는 비밀번호를 다시 입력해주세요.</CustomLoginPageP>);
@@ -49,12 +49,8 @@ function LoginPage () {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        const userData = {
-            userName: userName,
-            userEmail: userPw,
-        }
 
-        axios.post("http://localhost:8080/api/login/login", null,  {params:{userData : userData}})
+        axios.post("http://localhost:8080/login/login", {username : username, userpassword : userpassword})
         .then(res => {
             if(res.data.isValid){
                 navigate("/login/login");
@@ -80,13 +76,13 @@ function LoginPage () {
 
                     <CustomLoginPageDiv $idpwsection>
                         <CustomLoginPageLabel $idlabel>ID :</CustomLoginPageLabel>
-                        <CustomLoginPageInput $idinput value={userName} onChange={handleIdChange} placeholder='ID 입력' />
+                        <CustomLoginPageInput $idinput value={username} onChange={handleIdChange} placeholder='ID 입력' />
                     </CustomLoginPageDiv>
 
                     <CustomLoginPageDiv $idpwsection>
                         <CustomLoginPageLabel $idlabel>Password :</CustomLoginPageLabel>
                         <CustomLoginPageDiv $pwinputdiv>
-                            <CustomLoginPageInput $pwinput type='password' value={userPw} onChange={handlePwChange} placeholder='Password' />
+                            <CustomLoginPageInput $pwinput type='password' value={userpassword} onChange={handlePwChange} placeholder='Password' />
                             <Eyeline className={style.eyelineSvg}/>
                         </CustomLoginPageDiv>
                     </CustomLoginPageDiv>

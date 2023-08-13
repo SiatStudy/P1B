@@ -28,7 +28,7 @@ public class EmailService {
 
     @Transactional
     public void sendSimpleMessage(MailDTO mailDto) {
-        int verificationCode = (int) Math.floor(100000 + Math.random() * 900000);
+        int verificationCode = (int) Math.floor(10000000 + Math.random() * 90000000);
 
         try {
             System.out.println("------------ sendmail 시작---------------------");
