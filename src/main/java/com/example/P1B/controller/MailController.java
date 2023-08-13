@@ -1,7 +1,7 @@
 package com.example.P1B.controller;
 
 import com.example.P1B.domain.Email;
-import com.example.P1B.dto.MailDTO;
+import com.example.P1B.dto.SignupDTO;
 import com.example.P1B.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,36 +20,15 @@ public class MailController {
 
     private final EmailService emailService;
 
-    @PostMapping("/send")
-    public @ResponseBody ResponseEntity<Map<String, Boolean>> sendMail(@Validated
-                                                                       @RequestBody MailDTO mailDto) {
-        System.out.println("sendMail 실행 확인");
-        System.out.println("----------mailDTO email : " + mailDto.getUseremail());
-        System.out.println("----------mailDTO username : " + mailDto.getUsername());
-
-        Map<String, Boolean> map1 = new HashMap<>();
-        try {
-            map1.put("result", true);
-            emailService.sendSimpleMessage(mailDto);
-        } catch (Exception e){
-            map1.put("result", false);
-            e.printStackTrace();
-        }
-
-        ResponseEntity<Map<String, Boolean>> entity =
-                new ResponseEntity<>(map1, HttpStatus.OK);
-        return entity;
-    }
-
     @PostMapping("/check")
-    public @ResponseBody ResponseEntity<Map<String, Boolean>> codeCheck(@RequestBody MailDTO mailDto){
-        Email email = emailService.findUser(mailDto.getUsername());
+    public @ResponseBody ResponseEntity<Map<String, Boolean>> codeCheck(@RequestBody SignupDTO signupDTO){
+        Email email = emailService.findUser(signupDTO.getUsername());
 
         Map<String, Boolean> map1 = new HashMap<>();
-        if (email.getVrAuthCode() == mailDto.getCode()) {
-            map1.put("result", true);
+        if (email.getVrAuthCode() == signupDTO.getCode()) {
+            map1.put("isValid", true);
         } else {
-            map1.put("result", false);
+            map1.put("isValid", false);
         }
 
         return new ResponseEntity<>(map1, HttpStatus.OK);

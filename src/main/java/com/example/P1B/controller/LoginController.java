@@ -1,6 +1,8 @@
 package com.example.P1B.controller;
 
+import com.example.P1B.domain.User;
 import com.example.P1B.dto.SignupDTO;
+import com.example.P1B.service.EmailService;
 import com.example.P1B.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -8,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -18,6 +21,7 @@ import java.util.Optional;
 public class LoginController {
 
     private final UserService userService;
+    private final EmailService emailService;
 
     @PostMapping("/duple/id")
     public ResponseEntity<Map<String, Boolean>> idCheck(@RequestBody SignupDTO signupDTO) {
@@ -40,15 +44,39 @@ public class LoginController {
 
         boolean isIdUnique = userService.emailCheck(signupDTO.getUseremail());
 
-        return new ResponseEntity<>(Map.of("isValid", isIdUnique), HttpStatus.OK);
+        if (isIdUnique) {
+            System.out.println("sendMail 실행 확인");
+            System.out.println("----------mailDTO email : " + signupDTO.getUseremail());
+            System.out.println("----------mailDTO username : " + signupDTO.getUsername());
+
+            Map map1 = new HashMap<>();
+            try {
+                map1.put("isValid", true);
+                System.out.println("---------- emailService 이메일 전송 시작 -------------");
+                emailService.sendSimpleMessage(signupDTO);
+                map1.put("messege", "메일이 성공적으로 전송되었습니다.");
+                return (ResponseEntity<Map<String, Boolean>>) map1;
+            } catch (Exception e){
+                map1.put("isValid", false);
+                map1.put("messege", "메일 전송이 실패했습니다. 다시 시도해 주세요");
+                e.printStackTrace();
+                return (ResponseEntity<Map<String, Boolean>>) map1;
+            }
+        } else {
+            System.out.println("------------- duple email else문 -----------");
+            Map map = new HashMap();
+            map.put("isValid", isIdUnique);
+            map.put("messege", "중복된 이메일 입니다");
+            return new ResponseEntity<>(map, HttpStatus.OK);
+        }
     }
 
     @PostMapping("/search/id")
     public ResponseEntity<Map> findId(@RequestBody SignupDTO signupDTO) {
         // 서비스 메소드 호출
-        Optional<String> optionalUsername = userService.findIdByEmail(signupDTO.getUseremail());
-        if (optionalUsername.isPresent()) {
-            String username = optionalUsername.get();
+        User optionalUsername = userService.findIdByEmail(signupDTO.getUseremail());
+        if (optionalUsername != null) {
+            String username = optionalUsername.getUsername();
             String message = "찾으신 아이디는: " + username;
             System.out.println("id : " + username);
             System.out.println("find Id 값 : " + message);

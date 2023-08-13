@@ -32,13 +32,6 @@ public class UsersController {
     private final UserService userService;
     private final UserRepository userRepository;
 
-    // 회원가입 페이지 출력 요청
-    @GetMapping("/signup")
-    public String signUpForm() {
-        return "signup";
-    }
-
-
     @PostMapping("/signup")
     @Validated
     public String signUp(@Validated
@@ -46,7 +39,6 @@ public class UsersController {
                              @ModelAttribute UserDTO userDTO, BindingResult bindingResult) {
         System.out.println("UserController.signUp");
         System.out.println("userDTO = " + userDTO);
-
 
         if (bindingResult.hasErrors()) {
             // 유효성 위반 결과를 모두 출력

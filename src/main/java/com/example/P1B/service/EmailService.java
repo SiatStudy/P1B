@@ -1,7 +1,7 @@
 package com.example.P1B.service;
 
 import com.example.P1B.domain.Email;
-import com.example.P1B.dto.MailDTO;
+import com.example.P1B.dto.SignupDTO;
 import com.example.P1B.repository.EmailRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,20 +27,20 @@ public class EmailService {
 
 
     @Transactional
-    public void sendSimpleMessage(MailDTO mailDto) {
+    public void sendSimpleMessage(SignupDTO signupDTO) {
         int verificationCode = (int) Math.floor(10000000 + Math.random() * 90000000);
 
         try {
             System.out.println("------------ sendmail 시작---------------------");
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom("siatproject123@gmail.com");
-            message.setTo(mailDto.getUseremail());
+            message.setTo(signupDTO.getUseremail());
             message.setSubject("[TODOS] 회원 가입 이메일 인증");
             message.setText("회원 가입을 위한 인증 코드는 " + verificationCode + " 입니다.");
             mailSender.send(message);
 
             Email email = new Email();
-            email.setUsername(mailDto.getUsername());
+            email.setUsername(signupDTO.getUsername());
             email.setVrAuthCode(verificationCode);
 
             // 이메일 인증 시작시간을 현재 시간으로 설정
@@ -51,7 +51,7 @@ public class EmailService {
             LocalDateTime vrExpire = vrCreate.plusMinutes(3);
             email.setVrExpire(vrExpire);
 
-            email.setUsername(mailDto.getUsername());
+            email.setUsername(signupDTO.getUsername());
 
             emailRepository.save(email);
         } catch (Exception e) {
