@@ -33,14 +33,35 @@ public class LoginController {
         return new ResponseEntity<>(Map.of("isValid", false), HttpStatus.OK);
         }
     }
-
-    @PostMapping("/duple/email")
-    public ResponseEntity<Map<String, Boolean>> emailCheck(@RequestBody SignupDTO signupDTO) {
+    
+    public ResponseEntity<Map<String, Object>> emailCheck(@RequestBody SignupDTO signupDTO) {
         System.out.println("-------------- useremail : " + signupDTO.getUseremail());
 
         boolean isIdUnique = userService.emailCheck(signupDTO.getUseremail());
 
-        return new ResponseEntity<>(Map.of("isValid", isIdUnique), HttpStatus.OK);
+        Map<String, Object> responseMap = new HashMap<>();
+        if (isIdUnique) {
+            System.out.println("sendMail 실행 확인");
+            System.out.println("----------mailDTO email : " + signupDTO.getUseremail());
+            System.out.println("----------mailDTO username : " + signupDTO.getUsername());
+
+            try {
+                responseMap.put("isValid", true);
+                System.out.println("---------- emailService 이메일 전송 시작 -------------");
+                emailService.sendSimpleMessage(signupDTO);
+                responseMap.put("message", "메일이 성공적으로 전송되었습니다.");
+            } catch (Exception e) {
+                responseMap.put("isValid", false);
+                responseMap.put("message", "메일 전송이 실패했습니다. 다시 시도해 주세요");
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("------------- duple email else문 -----------");
+            responseMap.put("isValid", false);
+            responseMap.put("message", "중복된 이메일 입니다");
+        }
+
+        return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
 
     @PostMapping("/search/id")

@@ -96,13 +96,13 @@ public class UserService {
 
     // 이메일 체크
     public boolean emailCheck(String userEmail) {
-        User result = userRepository.findByUsername(userEmail).get();
-        if (result != null) {
-            System.out.println("**************************"+result.getUserEmail());
+        User result = userRepository.findByUserEmail(userEmail);
+        if (result!=null) {
+            System.out.println("**************************"+result);
             // 조회결과가 있다 -> 사용할 수 없다.
             return false;
         } else {
-            System.out.println("**************************"+result.getUserEmail());
+            System.out.println("**************************"+result);
             // 조회결과가 없다 -> 사용할 수 있다.
             return true;
         }

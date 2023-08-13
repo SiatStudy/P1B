@@ -17,13 +17,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import javax.validation.ValidationException;
 import java.util.Map;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/api/users")
@@ -40,10 +39,9 @@ public class UsersController {
 
 
     @PostMapping("/signup")
-    @Validated
-    public String signUp(@Validated
-                             @RequestBody
-                             @ModelAttribute UserDTO userDTO, BindingResult bindingResult) {
+    public String signUp(@Valid @RequestBody Map<String, Object> requestData, UserDTO userDTO, BindingResult bindingResult) {
+        System.out.println("UserController.signUp");
+
         System.out.println("UserController.signUp");
         System.out.println("userDTO = " + userDTO);
 
@@ -76,7 +74,7 @@ public class UsersController {
             throw new ValidationException();
         } else {
             userService.signUp(userDTO);
-            return "login";
+            return "redirect:/login";
         }
     }
 
