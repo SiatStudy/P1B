@@ -10,8 +10,8 @@ import axios from "axios";
 import errorFunc from '../util/errorFunc';
 
 const FindPWPage = () => {
-    const [userName, setUserName] = useState('');
-    const [userEmail, setUserEmail] = useState('');
+    const [username, setUsername] = useState('');
+    const [useremail, setUseremail] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [isVaild, setIsVaild] = useState({
         checkId : false,
@@ -23,7 +23,7 @@ const FindPWPage = () => {
     const handleIdChange = (event) => {
         const value = event.target.value;
         const idRegex = /^[A-Za-z0-9]{3,8}$/;
-        setUserName(value);
+        setUsername(value);
         if (value.trim() === "" || !idRegex.test(value)) {
             setIsVaild((prevState) => ({...prevState, checkId : false}));
             return setErrorMessage(<CustomLoginPageP $errorMessage $findpwp>아이디 또는 이메일을 다시 입력해주세요.</CustomLoginPageP>);
@@ -35,7 +35,7 @@ const FindPWPage = () => {
     const handleEmailChange = (event) => {
         const value = event.target.value;
         const emailRegex = /^[A-Za-z0-9.@]{1,63}$/;
-        setUserEmail(value);
+        setUseremail(value);
         if (value.trim() === "" || !emailRegex.test(value)) {
             setIsVaild((prevState) => ({...prevState, checkEmail : false}));
             return setErrorMessage(<CustomLoginPageP $errorMessage $findpwp>아이디 또는 이메일을 다시 입력해주세요.</CustomLoginPageP>);
@@ -47,25 +47,21 @@ const FindPWPage = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        const userData = {
-            userName: userName,
-            userEmail: userEmail,
-        }
 
-        axios.post("http://localhost:8080/api/login/search/password", null,  {params:{userData : userData}})
-        .then(res => {
-            if(res.data.isValid){
-                navigate("/findpwresult");
-            }else{
-                setIsVaild((prevState) => ({...prevState, checkId : false}));
-                setIsVaild((prevState) => ({...prevState, checkEmail : false}));
-                setErrorMessage(<CustomLoginPageP $errorMessage $findpwp>아이디 또는 이메일을 다시 입력해주세요.</CustomLoginPageP>);
-            }
-        })
-        .catch(err => {
-            // 에러 핸들링을 위해 errorFunc 유틸리티 사용
-            errorFunc('dupleAxios', err)
-        })
+        axios.post("http://localhost:8080/api/login/search/password", {username : username, useremail : useremail})
+            .then(res => {
+                if(res.data.isValid){
+                    navigate("/findpwresult", {state : { useremail : useremail}});
+                }else{
+                    setIsVaild((prevState) => ({...prevState, checkId : false}));
+                    setIsVaild((prevState) => ({...prevState, checkEmail : false}));
+                    setErrorMessage(<CustomLoginPageP $errorMessage $findpwp>아이디 또는 이메일을 다시 입력해주세요.</CustomLoginPageP>);
+                }
+            })
+            .catch(err => {
+                // 에러 핸들링을 위해 errorFunc 유틸리티 사용
+                errorFunc('dupleAxios', err)
+            })
 
     }
 
@@ -83,12 +79,12 @@ const FindPWPage = () => {
 
                         <CustomLoginPageDiv $idpwsection $findpwsection>
                             <CustomLoginPageLabel $idlabel>ID :</CustomLoginPageLabel>
-                            <CustomLoginPageInput $idinput value={userName} onChange={handleIdChange} placeholder='ID 입력' />
+                            <CustomLoginPageInput $idinput value={username} onChange={handleIdChange} placeholder='ID 입력' />
                         </CustomLoginPageDiv>
 
                         <CustomLoginPageDiv $idpwsection $findpwsection>
                             <CustomLoginPageLabel $idlabel>E-mail :</CustomLoginPageLabel>
-                            <CustomLoginPageInput $idinput value={userEmail} onChange={handleEmailChange} placeholder='E-mail 입력' />
+                            <CustomLoginPageInput $idinput value={useremail} onChange={handleEmailChange} placeholder='E-mail 입력' />
                         </CustomLoginPageDiv>
                         {errorMessage}
 

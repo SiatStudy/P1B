@@ -39,7 +39,6 @@ public class UserService {
         user.setRole(User.Role.USER);
 
         Email email = new Email();
-        email.setUser(user);
 
         // 이메일 인증 시작시간을 현재 시간으로 설정
         LocalDateTime vrCreate = LocalDateTime.now();
@@ -49,7 +48,6 @@ public class UserService {
         LocalDateTime vrExpire = vrCreate.plusMinutes(3);
         email.setVrExpire(vrExpire);
 
-        userRepository.save(user);
         emailRepository.save(email);
         // repository의 signUp메서드 호출 (조건. entity객체를 넘겨줘야 함)
     }
@@ -74,8 +72,8 @@ public class UserService {
         }
     }
 
-    public User findByUser(String useremail){
-        Optional<User> user = userRepository.findByUserEmail(useremail);
+    public User findByUser(String userEmail){
+        Optional<User> user = userRepository.findByUserEmail(userEmail);
         return user.get();
     }
 
@@ -98,18 +96,31 @@ public class UserService {
 
     // 이메일 체크
     public boolean emailCheck(String userEmail) {
-        Optional<User> result = userRepository.findByUsername(userEmail);
-        // 조회결과가 있다 -> 사용할 수 없다.
-        // 조회결과가 없다 -> 사용할 수 있다.
-        return result.isEmpty();
+        User result = userRepository.findByUsername(userEmail).get();
+        if (result != null) {
+            System.out.println("**************************"+result.getUserEmail());
+            // 조회결과가 있다 -> 사용할 수 없다.
+            return false;
+        } else {
+            System.out.println("**************************"+result.getUserEmail());
+            // 조회결과가 없다 -> 사용할 수 있다.
+            return true;
+        }
     }
 
     // 아이디 체크
+
     public boolean idCheck(String username) {
-        Optional<User> result = userRepository.findByUsername(username);
-        // 조회결과가 있다 -> 사용할 수 없다.
-        // 조회결과가 없다 -> 사용할 수 있다.
-        return result.isEmpty();
+        User result = userRepository.findByUsername(username).get();
+        if (result != null) {
+            System.out.println("**************************"+result.getUsername() + "있다!");
+            // 조회결과가 있다 -> 사용할 수 없다.
+            return false;
+        } else {
+            System.out.println("**************************"+result.getUsername() + "없다!");
+            // 조회결과가 없다 -> 사용할 수 있다.
+            return true;
+        }
     }
 
 
@@ -120,20 +131,18 @@ public class UserService {
     }
 
 
-    public void changePassword(String username, String newPassword) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException("해당 아이디를 찾을 수 없습니다."));
+    public void changePassword(String useremail, String newPassword) {
+        User user = userRepository.findByUserEmail(useremail).get();
+//                .orElseThrow(() -> new UserNotFoundException("해당 아이디를 찾을 수 없습니다."));
+        System.out.println("*************************user : " + user);
         user.setUserPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
 
-    public String findUserByUsernameAndEmail(String username, String userEmail) {
-        User user = userRepository.findByUsernameAndUserEmail(username, userEmail); // 수정된 부분
+    public Optional<String> findUserByUsernameAndEmail(String username, String userEmail) {
+        Optional<User> userOptional = userRepository.findByUsername(username);
 
-        if (user == null) {
-            throw new UserNotFoundException("해당하는 아이디 또는 이메일이 존재하지 않습니다.");
-        }
-
-        return user.getUsername(); // 수정된 부분
+        return userOptional.filter(user -> user.getUserEmail().equals(userEmail))
+                .map(User::getUsername);
     }
 }

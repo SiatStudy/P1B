@@ -49,13 +49,9 @@ public class User {
     @Column(name = "MEM_RESIGNED")
     private String memResigned = "N";
 
-    @OneToMany(mappedBy = "user")
-    private List<Email> vrid = new ArrayList<>();
-
     public enum Role{
         USER, ANONYMOUS
     }
-
 
     public static User toUser(UserDTO userDTO) {
         User user = new User();

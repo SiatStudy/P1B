@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 // import { useDispatch } from "react-redux";
 
 import errorFunc from '../util/errorFunc';
@@ -14,11 +14,11 @@ import errorFunc from '../util/errorFunc';
  * @returns {Promise} Promise 객체를 반환하며, 아이디 검색 시 아이디를, 비밀번호 검색 시 true를 반환합니다.
  */
 
-const searchUserData = async ({ url, userData, mode }) => {
+const searchUserData = async ( url, userdata, mode ) => {
     // 유저 데이터 검색을 담당하는 함수 (아이디 또는 비밀번호로 검색)
     if (mode === "id") {
         // 중복 데이터 확인 기능을 담당하는 함수
-        axios.post(url, null, {params:{userData:userData}})
+        axios.post(url, null, {params:{username:userdata}})
             .then(res => {
                 // 중복 데이터가 있을 경우 true 반환, 없을 경우 false 반환
                     return !!res.data.isValid;
@@ -30,7 +30,7 @@ const searchUserData = async ({ url, userData, mode }) => {
         }
         else if (mode === "email") {
         // 중복 데이터 확인 기능을 담당하는 함수
-        axios.post(url, null, {params:{userData:userData}})
+        axios.post(url, null, {params:{userdata:userdata}})
             .then(res => {
                 // 중복 데이터가 있을 경우 true 반환, 없을 경우 false 반환
                 return !!res.data.isValid
@@ -42,7 +42,7 @@ const searchUserData = async ({ url, userData, mode }) => {
         }
         else if (mode === "emailCode") {
             // 중복 데이터 확인 기능을 담당하는 함수
-            axios.post(url, null, {params:{userData:userData}})
+            axios.post(url, null, {params:{code:userdata}})
                 .then(res => {
                     // 중복 데이터가 있을 경우 true 반환, 없을 경우 false 반환
                     return !!res.data.isValid;
@@ -58,11 +58,11 @@ const searchUserData = async ({ url, userData, mode }) => {
         }
 };
 
-const signup = async ({ url, userData, mode }) => {
+const signup = async ( url, userdata, mode ) => {
     // 회원가입 또는 유저 정보 업데이트를 담당하는 함수
     if (mode === "signup") {
         // 회원가입
-        axios.post(url, null, {params:{userData:userData}})
+        axios.post(url, null, {params:{userdata:userdata}})
             .then(res => {
                 if (res.data.isValid) {
                     // 회원가입이 실패하면 false 반환
