@@ -111,13 +111,15 @@ public class UserService {
     // 아이디 체크
 
     public boolean idCheck(String username) {
-        User result = userRepository.findByUsername(username).get();
-        if (result != null) {
-            System.out.println("**************************"+result.getUsername() + "있다!");
+
+        Optional<User> resultOptional = userRepository.findByUsername(username);
+
+        if (resultOptional.isPresent()) {
+            System.out.println("**************************"+resultOptional.get() + "있다!");
             // 조회결과가 있다 -> 사용할 수 없다.
             return false;
         } else {
-            System.out.println("**************************"+result.getUsername() + "없다!");
+            System.out.println("**************************"+username + "없다!");
             // 조회결과가 없다 -> 사용할 수 있다.
             return true;
         }
