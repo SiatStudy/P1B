@@ -1,7 +1,6 @@
 package com.example.P1B.service;
 
 import com.example.P1B.domain.Email;
-import com.example.P1B.dto.MailDTO;
 import com.example.P1B.dto.SignupDTO;
 import com.example.P1B.repository.EmailRepository;
 import org.slf4j.Logger;

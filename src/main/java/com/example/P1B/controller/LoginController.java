@@ -1,15 +1,14 @@
 package com.example.P1B.controller;
 
 import com.example.P1B.domain.User;
-import com.example.P1B.dto.MailDTO;
 import com.example.P1B.dto.SignupDTO;
+import com.example.P1B.service.EmailService;
 import com.example.P1B.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import com.example.P1B.service.EmailService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,28 +44,30 @@ public class LoginController {
 
         boolean isIdUnique = userService.emailCheck(signupDTO.getUseremail());
 
-        Map<String, Object> responseMap = new HashMap<>();
         if (isIdUnique) {
             System.out.println("sendMail 실행 확인");
             System.out.println("----------mailDTO email : " + signupDTO.getUseremail());
             System.out.println("----------mailDTO username : " + signupDTO.getUsername());
+
+            Map<String, Object> response = new HashMap<>();
             try {
-                responseMap.put("isValid", true);
+                response.put("isValid", true);
                 System.out.println("---------- emailService 이메일 전송 시작 -------------");
                 emailService.sendSimpleMessage(signupDTO);
-                responseMap.put("message", "메일이 성공적으로 전송되었습니다.");
-            } catch (Exception e) {
-                responseMap.put("isValid", false);
-                responseMap.put("message", "메일 전송이 실패했습니다. 다시 시도해 주세요");
+                response.put("message", "메일이 성공적으로 전송되었습니다.");
+            } catch (Exception e){
+                response.put("isValid", false);
+                response.put("message", "메일 전송이 실패했습니다. 다시 시도해 주세요");
                 e.printStackTrace();
             }
+            return ResponseEntity.ok(response);
         } else {
             System.out.println("------------- duple email else문 -----------");
-            responseMap.put("isValid", false);
-            responseMap.put("message", "중복된 이메일 입니다");
+            Map<String, Object> response = new HashMap<>();
+            response.put("isValid", isIdUnique);
+            response.put("message", "중복된 이메일 입니다");
+            return ResponseEntity.ok(response);
         }
-
-        return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
 
     @PostMapping("/search/id")
@@ -80,6 +81,7 @@ public class LoginController {
             System.out.println("find Id 값 : " + message);
             return new ResponseEntity<>(Map.of("username", username, "isValid", true), HttpStatus.OK);
         } else {
+            // 검증 완료된 코드. 나중에 프로덕션 단계에서 코드 정리할 때 스트링 부분은 날려야 합니다. 참고하세요.
             String message = "해당 아이디를 찾을 수 없습니다.";
             System.out.println("find Id 값 : " + message);
             return new ResponseEntity<>(Map.of("isValid", false), HttpStatus.OK);
@@ -107,6 +109,5 @@ public class LoginController {
             System.out.println("find Id 값 : " + message);
             return new ResponseEntity<>(Map.of("isValid", false), HttpStatus.OK);
         }
-
     }
 }
