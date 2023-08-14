@@ -73,8 +73,8 @@ public class UserService {
     }
 
     public User findByUser(String userEmail){
-        Optional<User> user = userRepository.findByUserEmail(userEmail);
-        return user.get();
+        User user = userRepository.findByUserEmail(userEmail);
+        return user;
     }
 
     public UserDTO updateForm(String myEmail) {
@@ -126,15 +126,15 @@ public class UserService {
     }
 
 
-    public Optional<String> findIdByEmail(String userEmail) {
-        Optional<User> userOptional = userRepository.findByUserEmail(userEmail);
+    public User findIdByEmail(String userEmail) {
+        User userOptional = userRepository.findByUserEmail(userEmail);
 
-        return userOptional.map(User::getUsername);
+        return userOptional;
     }
 
 
     public void changePassword(String useremail, String newPassword) {
-        User user = userRepository.findByUserEmail(useremail).get();
+        User user = userRepository.findByUserEmail(useremail);
 //                .orElseThrow(() -> new UserNotFoundException("해당 아이디를 찾을 수 없습니다."));
         System.out.println("*************************user : " + user);
         user.setUserPassword(passwordEncoder.encode(newPassword));
