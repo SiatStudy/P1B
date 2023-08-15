@@ -35,10 +35,6 @@ public class User {
     @Column(unique = true, name = "MEM_EMAIL") // unique 제약조건 추가
     private String userEmail;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "MEM_ROLE")
-    private Role role;
-
     @Column(name = "MEM_CRT_DATE", nullable = false, updatable = false)
     @CreatedDate // Entity 생성 시
     private LocalDateTime memCrtDate = LocalDateTime.now();
@@ -49,9 +45,6 @@ public class User {
     @Column(name = "MEM_RESIGNED")
     private String memResigned = "N";
 
-    public enum Role{
-        USER, ANONYMOUS
-    }
 
     public static User toUser(UserDTO userDTO) {
         User user = new User();

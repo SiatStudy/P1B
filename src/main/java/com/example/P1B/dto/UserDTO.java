@@ -37,7 +37,6 @@ public class UserDTO {
     @Pattern(regexp = "^(?!^\\d+$)[A-Za-z0-9]{3,62}@[A-Za-z0-9]+\\.[A-Za-z]+$", message = "이메일 형식을 지켜주세요")
     private String userEmail;
     private User user;
-    private User.Role role;
 
     public static UserDTO toUserDTO(User user) {
         UserDTO userDTO = new UserDTO();

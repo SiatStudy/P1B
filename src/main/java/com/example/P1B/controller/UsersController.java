@@ -5,25 +5,20 @@ import com.example.P1B.dto.SignupDTO;
 import com.example.P1B.dto.UserDTO;
 import com.example.P1B.exception.UserNotFoundException;
 import com.example.P1B.repository.UserRepository;
-import com.example.P1B.service.CustomizeUserDetails;
 import com.example.P1B.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import javax.validation.ValidationException;
 import java.util.Map;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/api/users")
@@ -33,12 +28,14 @@ public class UsersController {
     private final UserRepository userRepository;
 
     @PostMapping("/signup")
-    @Validated
-    public String signUp(@Validated
-                             @RequestBody
-                             @ModelAttribute UserDTO userDTO, BindingResult bindingResult) {
+    public ResponseEntity<Map<String, Boolean>> signUp(@Valid
+                                                       @RequestBody SignupDTO signupDTO,
+                                                       BindingResult bindingResult) {
         System.out.println("UserController.signUp");
-        System.out.println("userDTO = " + userDTO);
+
+        System.out.println("UserController.signUp");
+        System.out.println("userDTO = " + signupDTO);
+
 
         if (bindingResult.hasErrors()) {
             // 유효성 위반 결과를 모두 출력
@@ -67,8 +64,8 @@ public class UsersController {
         if (bindingResult.hasErrors()) {
             throw new ValidationException();
         } else {
-            userService.signUp(userDTO);
-            return "login";
+            userService.signUp(signupDTO);
+            return new ResponseEntity<>(Map.of("isValid", true), HttpStatus.OK);
         }
     }
 
@@ -87,10 +84,15 @@ public class UsersController {
         return "detail";
     }
 
+
     @GetMapping("/update")
-    public String updateForm(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String myEmail = authentication.getName();
+    public String updateForm(Model model, HttpSession session) {
+        // 세션에서 사용자 이메일 조회
+        String myEmail = (String) session.getAttribute("userEmail");
+        if (myEmail == null) {
+            // 로그인되지 않은 경우 에러 페이지 표시
+            return "error";
+        }
         UserDTO userDTO = userService.updateForm(myEmail);
         model.addAttribute("updateUser", userDTO);
         return "update";
@@ -102,9 +104,11 @@ public class UsersController {
         return "redirect:/users/" + userDTO.getId();
     }
 
+
     @DeleteMapping("/info/{username}")
-    public String deleteById(@AuthenticationPrincipal CustomizeUserDetails customizeUserDetails) {
-        User user = userService.findByUser(customizeUserDetails.getUserEmail());
+    public String deleteById(HttpSession session) {
+        String userEmail = (String) session.getAttribute("userEmail");
+        User user = userService.findByUser(userEmail);
         user.setMemResigned("Y");
         userRepository.save(user);
         return "redirect:/users/";
@@ -122,24 +126,29 @@ public class UsersController {
         System.out.println("useremail : " + signupDTO.getUseremail());
         System.out.println("newuserpassword : " + signupDTO.getUserpassword());
         System.out.println("********************************");
-    try {
-        userService.changePassword(signupDTO.getUseremail(), signupDTO.getUserpassword());
-        String message = "비밀번호가 변경되었습니다.";
-        System.out.println(message);
-        return new ResponseEntity<>(Map.of("isValid", true), HttpStatus.OK);
-    } catch (UserNotFoundException e) {
-        String message = "이런! 문제가 생겼네요";
-        System.out.println(message);
-        return new ResponseEntity<>(Map.of("isValid", false), HttpStatus.OK);
+        try {
+            userService.changePassword(signupDTO.getUseremail(), signupDTO.getUserpassword());
+            String message = "비밀번호가 변경되었습니다.";
+            System.out.println(message);
+            return new ResponseEntity<>(Map.of("isValid", true), HttpStatus.OK);
+        } catch (UserNotFoundException e) {
+            String message = "이런! 문제가 생겼네요";
+            System.out.println(message);
+            return new ResponseEntity<>(Map.of("isValid", false), HttpStatus.OK);
+        }
     }
-}
 
     @GetMapping("/setting")
-    public String session(@AuthenticationPrincipal CustomizeUserDetails customizeUserDetails, Model model){
-        System.out.println("--------------- username : " + customizeUserDetails.getUsername());
-        System.out.println("--------------- userEmail : " + customizeUserDetails.getUserEmail());
-        model.addAttribute("username", customizeUserDetails.getUsername());
-        model.addAttribute("userEmail", customizeUserDetails.getUserEmail());
+    public String session(HttpSession session, Model model) {
+        String userEmail = (String) session.getAttribute("userEmail");
+        String username = (String) session.getAttribute("username");
+
+        System.out.println("--------------- username : " + username);
+        System.out.println("--------------- userEmail : " + userEmail);
+
+        model.addAttribute("username", username);
+        model.addAttribute("userEmail", userEmail);
+
         return "usersetting";
     }
 }

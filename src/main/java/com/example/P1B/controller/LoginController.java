@@ -5,11 +5,18 @@ import com.example.P1B.dto.SignupDTO;
 import com.example.P1B.service.EmailService;
 import com.example.P1B.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -17,13 +24,62 @@ import java.util.Optional;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/api/login")
-@ResponseBody
 public class LoginController {
 
     private final UserService userService;
     private final EmailService emailService;
 
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody SignupDTO signupDTO, HttpServletRequest request) {
+        System.out.println("signupDTO: " + signupDTO);
+
+        User user = userService.findUser(signupDTO.getUsername());
+        System.out.println("user: " + user.getUsername());
+        System.out.println("user: " + user.getUserPassword());
+
+        if (user == null) {
+            System.out.println("사용자를 찾을 수 없습니다.");
+            return new ResponseEntity<>(Map.of("isValid", false, "message", "사용자를 찾을 수 없습니다."), HttpStatus.UNAUTHORIZED);
+        }
+
+        // 비밀번호가 null이거나 비어 있는 경우 확인
+        String rawPassword = signupDTO.getUserpassword();
+        if (rawPassword == null || rawPassword.isEmpty()) {
+            System.out.println("비밀번호를 입력해주세요.");
+            return new ResponseEntity<>(Map.of("isValid", false, "message", "비밀번호를 입력해주세요."), HttpStatus.UNAUTHORIZED);
+        }
+
+        // 비밀번호가 일치하는지 확인하기 위한 코드
+        if (user.getUsername().equals(signupDTO.getUsername()) && user.getUserPassword().equals(rawPassword)) {
+            System.out.println("로그인 성공");
+
+            System.out.println("username : "+ user.getUsername());
+            System.out.println("userEmail : "+ user.getUserEmail());
+
+            HttpSession session = request.getSession();
+            session.setMaxInactiveInterval(3600);
+            
+            request.getSession().setAttribute("username", user.getUsername());
+            request.getSession().setAttribute("userEmail", user.getUserEmail());
+
+            System.out.println("========= 세션 값 확인 ========");
+            System.out.println("session = " + session);
+
+            System.out.println("username : "+ session.getAttribute("username"));
+            System.out.println("userEmail : "+ session.getAttribute("userEmail"));
+
+            return new ResponseEntity<>(Map.of("isValid", true), HttpStatus.OK);
+        } else {
+            System.out.println("로그인 실패");
+            return new ResponseEntity<>(Map.of("isValid", false, "message", "로그인 실패, 아이디와 비밀번호를 확인해주세요."), HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+
+
     @PostMapping("/duple/id")
+    @ResponseBody
     public ResponseEntity<Map<String, Boolean>> idCheck(@RequestBody SignupDTO signupDTO) {
         String username = signupDTO.getUsername();
 
@@ -39,7 +95,8 @@ public class LoginController {
     }
 
     @PostMapping("/duple/email")
-    public ResponseEntity<Map<String, Boolean>> emailCheck(@RequestBody SignupDTO signupDTO) {
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> emailCheck(@RequestBody SignupDTO signupDTO) {
         System.out.println("-------------- useremail : " + signupDTO.getUseremail());
 
         boolean isIdUnique = userService.emailCheck(signupDTO.getUseremail());
@@ -49,29 +106,29 @@ public class LoginController {
             System.out.println("----------mailDTO email : " + signupDTO.getUseremail());
             System.out.println("----------mailDTO username : " + signupDTO.getUsername());
 
-            Map map1 = new HashMap<>();
+            Map<String, Object> response = new HashMap<>();
             try {
-                map1.put("isValid", true);
+                response.put("isValid", true);
                 System.out.println("---------- emailService 이메일 전송 시작 -------------");
                 emailService.sendSimpleMessage(signupDTO);
-                map1.put("messege", "메일이 성공적으로 전송되었습니다.");
-                return (ResponseEntity<Map<String, Boolean>>) map1;
+                response.put("message", "메일이 성공적으로 전송되었습니다.");
             } catch (Exception e){
-                map1.put("isValid", false);
-                map1.put("messege", "메일 전송이 실패했습니다. 다시 시도해 주세요");
+                response.put("isValid", false);
+                response.put("message", "메일 전송이 실패했습니다. 다시 시도해 주세요");
                 e.printStackTrace();
-                return (ResponseEntity<Map<String, Boolean>>) map1;
             }
+            return ResponseEntity.ok(response);
         } else {
             System.out.println("------------- duple email else문 -----------");
-            Map map = new HashMap();
-            map.put("isValid", isIdUnique);
-            map.put("messege", "중복된 이메일 입니다");
-            return new ResponseEntity<>(map, HttpStatus.OK);
+            Map<String, Object> response = new HashMap<>();
+            response.put("isValid", isIdUnique);
+            response.put("message", "중복된 이메일 입니다");
+            return ResponseEntity.ok(response);
         }
     }
 
     @PostMapping("/search/id")
+    @ResponseBody
     public ResponseEntity<Map> findId(@RequestBody SignupDTO signupDTO) {
         // 서비스 메소드 호출
         User optionalUsername = userService.findIdByEmail(signupDTO.getUseremail());
@@ -90,6 +147,7 @@ public class LoginController {
     }
 
     @PostMapping("/search/password")
+    @ResponseBody
     public ResponseEntity<Map> findPassword(@RequestBody SignupDTO signupDTO) {
 
         // 서비스 메소드 호출
@@ -110,6 +168,5 @@ public class LoginController {
             System.out.println("find Id 값 : " + message);
             return new ResponseEntity<>(Map.of("isValid", false), HttpStatus.OK);
         }
-
     }
 }
