@@ -1,15 +1,15 @@
 package com.example.P1B.controller;
 
 import com.example.P1B.domain.Todos;
+import com.example.P1B.domain.User;
 import com.example.P1B.dto.TodosInDTO;
-import com.example.P1B.service.CustomizeUserDetails;
 import com.example.P1B.service.TodosService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
@@ -27,15 +27,17 @@ public class TodosController {
     }
 
     @PostMapping("/item")
-    public String Todos(TodosInDTO dto, @AuthenticationPrincipal CustomizeUserDetails customizeUserDetails){
+    public String Todos(TodosInDTO dto, HttpSession session){
         dto.setTdStartYear(dto.getTdStartDate().getYear());
-        todosService.addTodos(dto.getTdTitle(), dto.getTdContent(), dto.getTdEndDate(), dto.getTdStartDate(), dto.getTdStartYear(), customizeUserDetails.getUser());
+        User user = (User)session.getAttribute("user");
+        todosService.addTodos(dto.getTdTitle(), dto.getTdContent(), dto.getTdEndDate(), dto.getTdStartDate(), dto.getTdStartYear(), user);
         return "main";
     }
 
     @GetMapping("/{year}")
-    public String findTodos(@PathVariable("year") int year, @AuthenticationPrincipal CustomizeUserDetails customizeUserDetails, Model model){
-        List<Todos> todosList = todosService.findTodoList(year, customizeUserDetails.getUser());
+    public String findTodos(@PathVariable("year") int year, HttpSession session, Model model){
+        User user = (User) session.getAttribute("user");
+        List<Todos> todosList = todosService.findTodoList(year, user);
         model.addAttribute("todoList", todosList);
         return "todoslist";
     }
