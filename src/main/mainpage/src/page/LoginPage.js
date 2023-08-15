@@ -50,12 +50,14 @@ function LoginPage () {
     const handleSubmit = (event) => {
         event.preventDefault();
         const userData = {
-            userName: userName,
-            userEmail: userPw,
+            username: userName,
+            userpassword: userPw,
         }
 
-        axios.post("http://localhost:8080/api/login/login", null,  {params:{userData : userData}})
+        axios.post("http://localhost:8080/login/login", {username: userName,
+            userpassword: userPw})
         .then(res => {
+            console.log(res.data)
             if(res.data.isValid){
                 navigate("/login/login");
                 console.log("로그인 성공");
@@ -68,6 +70,7 @@ function LoginPage () {
         .catch(err => {
             // 에러 핸들링을 위해 errorFunc 유틸리티 사용
             errorFunc('dupleAxios', err)
+            console.log(err.message())
         })
 
     }

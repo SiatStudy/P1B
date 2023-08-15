@@ -50,16 +50,17 @@ function LoginPage () {
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        axios.post("http://localhost:8080/login/login", {username : username, userpassword : userpassword})
+        axios.post("http://localhost:8080/api/login/login", {username : username, password : userpassword})
         .then(res => {
-            if(res.data.isValid){
-                navigate("/login/login");
-                console.log("로그인 성공");
-            }else{
-                setIsVaild((prevState) => ({...prevState, checkId : false}));
-                setIsVaild((prevState) => ({...prevState, checkPw : false}));
-                setErrorMessage(<CustomLoginPageP $errorMessage $loginerr>아이디 또는 비밀번호를 다시 입력해주세요.</CustomLoginPageP>);
-            }
+            // if(res.data.isValid){
+            //     navigate("/login/login");
+            //     console.log("로그인 성공");
+            // }else{
+            //     setIsVaild((prevState) => ({...prevState, checkId : false}));
+            //     setIsVaild((prevState) => ({...prevState, checkPw : false}));
+            //     setErrorMessage(<CustomLoginPageP $errorMessage $loginerr>아이디 또는 비밀번호를 다시 입력해주세요.</CustomLoginPageP>);
+            // }
+            console.log(res);
         })
         .catch(err => {
             // 에러 핸들링을 위해 errorFunc 유틸리티 사용
@@ -95,7 +96,6 @@ function LoginPage () {
                     </CustomLoginPageDiv>
 
                     <CustomLoginPageBtn $loginbtn type='submit' disabled={!areAllValid}>로그인</CustomLoginPageBtn>
-
                     <CustomLoginPageDiv $membershipsection>
                         아직 회원이 아니십니까?
                         <Link to="/signuppage"><CustomLoginPageBtn $membershipbtn type='button'>회원가입</CustomLoginPageBtn></Link>

@@ -32,11 +32,14 @@ public class UsersController {
     private final UserRepository userRepository;
 
     @PostMapping("/signup")
-    public String signUp(@Valid @RequestBody Map<String, Object> requestData, UserDTO userDTO, BindingResult bindingResult) {
+    public ResponseEntity<Map<String,Boolean>> signUp(@Valid
+                                                      @RequestBody SignupDTO signupDTO,
+                                                      BindingResult bindingResult) {
         System.out.println("UserController.signUp");
 
         System.out.println("UserController.signUp");
-        System.out.println("userDTO = " + userDTO);
+        System.out.println("userDTO = " + signupDTO);
+
 
         if (bindingResult.hasErrors()) {
             // 유효성 위반 결과를 모두 출력
@@ -65,8 +68,8 @@ public class UsersController {
         if (bindingResult.hasErrors()) {
             throw new ValidationException();
         } else {
-            userService.signUp(userDTO);
-            return "redirect:/login";
+            userService.signUp(signupDTO);
+            return new ResponseEntity<>(Map.of("isValid", true), HttpStatus.OK);
         }
     }
 

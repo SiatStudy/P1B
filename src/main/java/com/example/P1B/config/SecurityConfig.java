@@ -1,21 +1,26 @@
 package com.example.P1B.config;
 
 import com.example.P1B.domain.Role;
+import com.example.P1B.handler.AuthFailureHandler;
 import com.example.P1B.handler.AuthSuccessHandler;
 import com.example.P1B.service.CustomizeUserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+@Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private CustomizeUserDetailsService customizeUserDetailsService;
+    private final CustomizeUserDetailsService customizeUserDetailsService;
+
+    public SecurityConfig(CustomizeUserDetailsService customizeUserDetailsService) {
+        this.customizeUserDetailsService = customizeUserDetailsService;
+    }
 
 
     @Override
@@ -27,16 +32,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/users/signup", "/users/emailCheck", "/users/idCheck", "/users/list", "/login/search/id",
-                        "/login/search/password","/users/findIdResult","/users/changePassword").permitAll()
+                .antMatchers( "/api/users/**", "/api/login/**").permitAll()
                 .antMatchers("/users/").hasAuthority(Role.USER.getValue())
                 .antMatchers("/guest/").hasAuthority(Role.ANONYMOUS.getValue())
                 .and()
                 .formLogin()
-                .loginPage("/login/login")
-                .permitAll()
+                    .loginProcessingUrl("/api/login/login")
+                    .permitAll()
                 .successHandler(new AuthSuccessHandler()) // 성공 핸들러 사용 설정
-                .failureUrl("/login/login?error") // 로그인 실패 시
+                .failureHandler(new AuthFailureHandler()) // 실패 핸들러 사용 설정
                 .and()
                 .logout()
                 .logoutUrl("/users/logout")

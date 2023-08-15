@@ -76,15 +76,20 @@ function SignUpPage () {
 
     const handleSubmitClick = (event, mode) => {
         event.preventDefault();
-        const userdata = {
+        // const userdata = {
+        //     username: signInputs.username,
+        //     usernickname: signInputs.usernickname,
+        //     userpassword: signInputs.userpassword,
+        //     useremail: signInputs.useremail + signInputs.userEmailDomain,
+        // }
+
+        axios.post("http://localhost:8080/api/users/signup", {
             username: signInputs.username,
             usernickname: signInputs.usernickname,
             userpassword: signInputs.userpassword,
-            useremail: signInputs.useremail + signInputs.userEmailDomain,
-        }
-
-        axios.post("http://localhost:8080/api/users/signup", {userdata : userdata})
+            useremail: signInputs.useremail + signInputs.userEmailDomain})
         .then(res => {
+            console.log(res.data)
             if(res.data.isValid){
                 navigate("/loginpage");
             }else{

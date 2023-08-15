@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -17,13 +18,31 @@ import java.util.Optional;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/api/login")
-@ResponseBody
 public class LoginController {
 
     private final UserService userService;
     private final EmailService emailService;
 
+    @PostMapping("/login")
+    public String login(@RequestBody SignupDTO signupDTO) {
+        System.out.println("signupDTO : " + signupDTO);
+
+        User user = userService.findUser(signupDTO.getUsername());
+        System.out.println("user : " + user.getUsername());
+        System.out.println("user : " + user.getUserPassword());
+
+        if (user.getUsername().equals(signupDTO.getUsername())
+                && user.getUserPassword().equals(signupDTO.getUserpassword())){
+            System.out.println("로그인 성공");
+            return "redirect:/mainpage/index";
+        } else {
+            System.out.println("로그인 실패");
+            return "login";
+        }
+    }
+
     @PostMapping("/duple/id")
+    @ResponseBody
     public ResponseEntity<Map<String, Boolean>> idCheck(@RequestBody SignupDTO signupDTO) {
         String username = signupDTO.getUsername();
 
@@ -39,6 +58,7 @@ public class LoginController {
     }
 
     @PostMapping("/duple/email")
+    @ResponseBody
     public ResponseEntity<Map<String, Object>> emailCheck(@RequestBody SignupDTO signupDTO) {
         System.out.println("-------------- useremail : " + signupDTO.getUseremail());
 
@@ -71,6 +91,7 @@ public class LoginController {
     }
 
     @PostMapping("/search/id")
+    @ResponseBody
     public ResponseEntity<Map> findId(@RequestBody SignupDTO signupDTO) {
         // 서비스 메소드 호출
         User optionalUsername = userService.findIdByEmail(signupDTO.getUseremail());
@@ -89,6 +110,7 @@ public class LoginController {
     }
 
     @PostMapping("/search/password")
+    @ResponseBody
     public ResponseEntity<Map> findPassword(@RequestBody SignupDTO signupDTO) {
 
         // 서비스 메소드 호출
