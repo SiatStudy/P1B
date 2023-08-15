@@ -89,6 +89,7 @@ export const handleInputsVal = (value, setIsVaild, pwVal, setErrorMessage, setBu
         }
     }
 };
+
 export const handleBtnClickEvent = async (sInputs, setIsVaild, mode, setButtons, setSignInputs, setErrorMessage) => {
     const username = sInputs.username;
     const useremail = sInputs.useremail+sInputs.userEmailDomain;
@@ -104,9 +105,9 @@ export const handleBtnClickEvent = async (sInputs, setIsVaild, mode, setButtons,
                 errorFunc('dupleAxios', err);
             }
         };
-
+    
         const idisVal = await checkidduple();
-
+        
         setErrorMessage((prevState) => ({...prevState, idError : setIdError()}));
 
         const setIdError = () => {
@@ -123,7 +124,7 @@ export const handleBtnClickEvent = async (sInputs, setIsVaild, mode, setButtons,
     }else if(mode === 'email'){
         const emailcheck = async () => {
             try {
-                const res = await axios.post("http://localhost:8080/api/login/duple/email", { useremail: useremail, username:username })
+                const res = await axios.post("http://localhost:8080/api/login/duple/email", { useremail : useremail, username : username })
                 return {
                     isValid: res.data.isValid,
                     message: res.data.message
@@ -136,7 +137,7 @@ export const handleBtnClickEvent = async (sInputs, setIsVaild, mode, setButtons,
         const emailchecking = await emailcheck();
 
         setErrorMessage((prevState) => ({ ...prevState, emailError: setEmailError(emailchecking) }));
-
+            
         function setEmailError(result) {
             if (result.isValid) {
                 setButtons((prevState) => ({
@@ -168,7 +169,7 @@ export const handleBtnClickEvent = async (sInputs, setIsVaild, mode, setButtons,
         }
 
         const codeisVal = await checkcode();
-
+        
         setErrorMessage((prevState) => ({ ...prevState, emailCodeError: setEmailCodeError() }));
 
         function setEmailCodeError() {

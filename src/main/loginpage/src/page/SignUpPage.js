@@ -10,7 +10,7 @@ import { useState, useEffect } from 'react';
 import CustomLoginPageP from '../component/CustomLoginPageP';
 import {useNavigate} from 'react-router-dom';
 import axios from "axios";
-import errorFunc from "../util/errorFunc";
+import errorFunc from '../util/errorFunc';
 
 function SignUpPage () {
     const navigate = useNavigate();
@@ -76,20 +76,14 @@ function SignUpPage () {
 
     const handleSubmitClick = (event, mode) => {
         event.preventDefault();
-        // const userdata = {
-        //     username: signInputs.username,
-        //     usernickname: signInputs.usernickname,
-        //     userpassword: signInputs.userpassword,
-        //     useremail: signInputs.useremail + signInputs.userEmailDomain,
-        // }
 
         axios.post("http://localhost:8080/api/users/signup", {
             username: signInputs.username,
             usernickname: signInputs.usernickname,
             userpassword: signInputs.userpassword,
-            useremail: signInputs.useremail + signInputs.userEmailDomain})
+            useremail: signInputs.useremail + signInputs.userEmailDomain
+        })
         .then(res => {
-            console.log(res.data)
             if(res.data.isValid){
                 navigate("/loginpage");
             }else{
