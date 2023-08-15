@@ -1,0 +1,60 @@
+.Page{
+    display: flex;
+    flex-direction: row;
+    background-color: #E3F6FF;
+    flex-grow: 1;
+}
+
+.Side{
+    display: flex;
+    flex-direction: column;
+    background: #FFF;
+    flex-shrink: 0;
+    justify-content: space-between;
+}
+
+.MainA{
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    flex-grow: 1;
+}
+
+.Main{
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    flex-grow: 1;
+    height: 100vh;
+}
+
+.CalendarM{
+    margin-top: 1rem;
+    background-color: white;
+    padding: 1rem;
+    flex-grow: 1;
+}
+
+.Section{
+    margin-top: 1rem;
+}
+
+.GraphM{
+    margin-top: 1rem;
+    background-color: white;
+    padding: 1rem;
+}
+
+.List{
+    margin-top: 1rem;
+    background-color: white;
+    padding: 1rem;
+    flex-grow: 1;
+}
+
+.MyPage{
+    margin-top: 1rem;
+    background-color: white;
+    padding: 1rem;
+    flex-grow: 1;
+}
