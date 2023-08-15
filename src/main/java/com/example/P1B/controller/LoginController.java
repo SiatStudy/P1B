@@ -5,12 +5,18 @@ import com.example.P1B.dto.SignupDTO;
 import com.example.P1B.service.EmailService;
 import com.example.P1B.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.validation.Valid;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -23,23 +29,54 @@ public class LoginController {
     private final UserService userService;
     private final EmailService emailService;
 
+
     @PostMapping("/login")
-    public String login(@RequestBody SignupDTO signupDTO) {
-        System.out.println("signupDTO : " + signupDTO);
+    public ResponseEntity<?> login(@RequestBody SignupDTO signupDTO, HttpServletRequest request) {
+        System.out.println("signupDTO: " + signupDTO);
 
         User user = userService.findUser(signupDTO.getUsername());
-        System.out.println("user : " + user.getUsername());
-        System.out.println("user : " + user.getUserPassword());
+        System.out.println("user: " + user.getUsername());
+        System.out.println("user: " + user.getUserPassword());
 
-        if (user.getUsername().equals(signupDTO.getUsername())
-                && user.getUserPassword().equals(signupDTO.getUserpassword())){
+        if (user == null) {
+            System.out.println("사용자를 찾을 수 없습니다.");
+            return new ResponseEntity<>(Map.of("isValid", false, "message", "사용자를 찾을 수 없습니다."), HttpStatus.UNAUTHORIZED);
+        }
+
+        // 비밀번호가 null이거나 비어 있는 경우 확인
+        String rawPassword = signupDTO.getUserpassword();
+        if (rawPassword == null || rawPassword.isEmpty()) {
+            System.out.println("비밀번호를 입력해주세요.");
+            return new ResponseEntity<>(Map.of("isValid", false, "message", "비밀번호를 입력해주세요."), HttpStatus.UNAUTHORIZED);
+        }
+
+        // 비밀번호가 일치하는지 확인하기 위한 코드
+        if (user.getUsername().equals(signupDTO.getUsername()) && user.getUserPassword().equals(rawPassword)) {
             System.out.println("로그인 성공");
-            return "redirect:/mainpage/index";
+
+            System.out.println("username : "+ user.getUsername());
+            System.out.println("userEmail : "+ user.getUserEmail());
+
+            HttpSession session = request.getSession();
+            session.setMaxInactiveInterval(3600);
+            
+            request.getSession().setAttribute("username", user.getUsername());
+            request.getSession().setAttribute("userEmail", user.getUserEmail());
+
+            System.out.println("========= 세션 값 확인 ========");
+            System.out.println("session = " + session);
+
+            System.out.println("username : "+ session.getAttribute("username"));
+            System.out.println("userEmail : "+ session.getAttribute("userEmail"));
+
+            return new ResponseEntity<>(Map.of("isValid", true), HttpStatus.OK);
         } else {
             System.out.println("로그인 실패");
-            return "login";
+            return new ResponseEntity<>(Map.of("isValid", false, "message", "로그인 실패, 아이디와 비밀번호를 확인해주세요."), HttpStatus.UNAUTHORIZED);
         }
     }
+
+
 
     @PostMapping("/duple/id")
     @ResponseBody

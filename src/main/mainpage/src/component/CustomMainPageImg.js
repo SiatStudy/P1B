@@ -22,7 +22,7 @@ const CustomMainPageImg = styled.img`
         position: absolute;
         width: 1rem;
         top: 0.625rem;
-        right: 1.5rem;
+        right: 2.5rem;
         margin: 0;
     `}
 `;

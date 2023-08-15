@@ -1,6 +1,5 @@
 package com.example.P1B.service;
 
-import com.example.P1B.domain.Email;
 import com.example.P1B.domain.User;
 import com.example.P1B.dto.SignupDTO;
 import com.example.P1B.dto.UserDTO;
@@ -25,8 +24,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final EmailRepository emailRepository;
 
-//    @Autowired
-//    private final BCryptPasswordEncoder passwordEncoder; // 빈으로 주입
 
 
     public void signUp(@Valid SignupDTO signupDTO) {
@@ -38,7 +35,6 @@ public class UserService {
         user.setUserNickName(signupDTO.getUsernickname());
         user.setUsername(signupDTO.getUsername());
         user.setUserPassword(signupDTO.getUserpassword());
-        user.setRole(User.Role.USER);
 //
 //        Email email = new Email();
 //
@@ -140,7 +136,6 @@ public class UserService {
         User user = userRepository.findByUserEmail(useremail);
 //                .orElseThrow(() -> new UserNotFoundException("해당 아이디를 찾을 수 없습니다."));
         System.out.println("*************************user : " + user);
-//        user.setUserPassword(passwordEncoder.encode(newPassword));
         user.setUserPassword(newPassword);
         userRepository.save(user);
     }

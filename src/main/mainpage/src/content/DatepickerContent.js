@@ -13,8 +13,9 @@ import CustomPopupInput from "../component/CustomPopupInput";
 import CustomPopupLabel from "../component/CustomPopupLabel";
 import CustomPopupArea from "../component/CustomPopupArea";
 import CustomPopupDiv from "../component/CustomPopupDiv";
+import style from './DatepickerModal.module.scss';
 
-const ExComp = ({ onChangeModal }) => {
+const DatepickerContent = ({ onChangeModal }) => {
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
     const [disabled, setDisabled] = useState(true);
@@ -90,74 +91,76 @@ const ExComp = ({ onChangeModal }) => {
 
     return (
         <>
-            <CustomPopupDiv $header>
-                <CustomPopupDiv $headertitle>일정</CustomPopupDiv>
-                <Closefill onClick={()=>onChangeModal(false)} className="closefill-custom"></Closefill>
-            </CustomPopupDiv>
+            <div className={style.modalCustom}>
+                <CustomPopupDiv $header>
+                    <CustomPopupDiv $headertitle>일정</CustomPopupDiv>
+                    <Closefill onClick={()=>onChangeModal(false)} className="closefill-custom"></Closefill>
+                </CustomPopupDiv>
 
-            <form onSubmit={handleSubmit}>
-                <CustomPopupDiv $outcontent>
-                    <CustomPopupDiv $section $incontent>
-                        <CustomPopupDiv $section>
-                            <CustomPopupLabel>제목<p className="title-p-tag">* 필수 입력란</p></CustomPopupLabel>
-                            <CustomPopupInput type="text" value={titleVal} onChange={handleChangeTitle} required />
-                        </CustomPopupDiv>
+                <form onSubmit={handleSubmit}>
+                    <CustomPopupDiv $outcontent>
+                        <CustomPopupDiv $section $incontent>
+                            <CustomPopupDiv $section>
+                                <CustomPopupLabel>제목<p className="title-p-tag">* 필수 입력란</p></CustomPopupLabel>
+                                <CustomPopupInput type="text" value={titleVal} onChange={handleChangeTitle} required />
+                            </CustomPopupDiv>
 
-                        <CustomPopupDiv $section>
-                            <CustomPopupLabel>시작</CustomPopupLabel>
-                            <DatePicker
-                                locale={ko}
-                                selected={startDate}
-                                onChange={(date)=>setStartDate(date)}
-                                showTimeSelect
-                                timeFormat="HH:mm"
-                                timeIntervals={30}
-                                timeCaption="시간"
-                                selectsStart
-                                startDate={startDate}
-                                endDate={endDate}
-                                customInput={<ExampleCustomInput />}
-                                filterDate={filterDate}
-                                dateFormat="yyyy-MM-dd HH:mm"
-                                renderCustomHeader={dpCustomHeader}
-                            />
-                        </CustomPopupDiv>
+                            <CustomPopupDiv $section>
+                                <CustomPopupLabel>시작</CustomPopupLabel>
+                                <DatePicker
+                                    locale={ko}
+                                    selected={startDate}
+                                    onChange={(date)=>setStartDate(date)}
+                                    showTimeSelect
+                                    timeFormat="HH:mm"
+                                    timeIntervals={30}
+                                    timeCaption="시간"
+                                    selectsStart
+                                    startDate={startDate}
+                                    endDate={endDate}
+                                    customInput={<ExampleCustomInput />}
+                                    filterDate={filterDate}
+                                    dateFormat="yyyy-MM-dd HH:mm"
+                                    renderCustomHeader={dpCustomHeader}
+                                />
+                            </CustomPopupDiv>
 
-                        <CustomPopupDiv $section>
-                            <CustomPopupLabel>종료</CustomPopupLabel>
-                            <DatePicker
-                                locale={ko}
-                                selected={endDate}
-                                onChange={(date) => setEndDate(date)}
-                                showTimeSelect
-                                timeFormat="HH:mm"
-                                timeIntervals={30}
-                                timeCaption="시간"
-                                selectsEnd
-                                startDate={startDate}
-                                endDate={endDate}
-                                minDate={startDate}
-                                customInput={<ExampleCustomInput />}
-                                dateFormat="yyyy-MM-dd HH:mm"
-                                renderCustomHeader={dpCustomHeader}
-                            />
-                            {show && <span className="reSelectEndDate">종료 날짜를 다시 선택해 주세요.</span>}
-                        </CustomPopupDiv>
+                            <CustomPopupDiv $section>
+                                <CustomPopupLabel>종료</CustomPopupLabel>
+                                <DatePicker
+                                    locale={ko}
+                                    selected={endDate}
+                                    onChange={(date) => setEndDate(date)}
+                                    showTimeSelect
+                                    timeFormat="HH:mm"
+                                    timeIntervals={30}
+                                    timeCaption="시간"
+                                    selectsEnd
+                                    startDate={startDate}
+                                    endDate={endDate}
+                                    minDate={startDate}
+                                    customInput={<ExampleCustomInput />}
+                                    dateFormat="yyyy-MM-dd HH:mm"
+                                    renderCustomHeader={dpCustomHeader}
+                                />
+                                {show && <span className="reSelectEndDate">종료 날짜를 다시 선택해 주세요.</span>}
+                            </CustomPopupDiv>
 
-                        <CustomPopupDiv $section>
-                            <CustomPopupLabel>메모</CustomPopupLabel>
-                            <CustomPopupArea type="text" placeholder="메모를 추가해보세요." value={memoVal} onChange={handleChangeMemo} />
+                            <CustomPopupDiv $section>
+                                <CustomPopupLabel>메모</CustomPopupLabel>
+                                <CustomPopupArea type="text" placeholder="메모를 추가해보세요." value={memoVal} onChange={handleChangeMemo} />
+                            </CustomPopupDiv>
                         </CustomPopupDiv>
                     </CustomPopupDiv>
-                </CustomPopupDiv>
 
-                <CustomPopupDiv $footer>
-                    <CustomPopupBtn $footerButton $btncancel type="button" onClick={()=>onChangeModal(false)}>취소</CustomPopupBtn>
-                    <CustomPopupBtn $footerButton type="submit" disabled={disabled} >저장</CustomPopupBtn>
-                </CustomPopupDiv>
-            </form>
+                    <CustomPopupDiv $footer>
+                        <CustomPopupBtn $footerButton $btncancel type="button" onClick={()=>onChangeModal(false)}>취소</CustomPopupBtn>
+                        <CustomPopupBtn $footerButton type="submit" disabled={disabled} >저장</CustomPopupBtn>
+                    </CustomPopupDiv>
+                </form>
+            </div>
         </>
     );
 };
 
-export default ExComp;
+export default DatepickerContent;
