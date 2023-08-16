@@ -104,10 +104,10 @@ function Listday() {
           <button onClick={()=>{addTodoBack(obj5)}}>백 데이터 추가 임시 버튼</button>
           <button onClick={()=>{delTodoBack("td5")}}>백 데이터 삭제 임시 버튼</button>
           <button onClick={()=>{modifyTodoBack({ tdid: "td5", key: "tdContent", value: "new5" })}}>백 데이터 수정 임시 버튼</button>
-          {/* <div><h2>userData</h2>
+          <div><h2>userData</h2>
             <pre>{JSON.stringify(userData, null, 2)}</pre></div>
           <div><h2>todoData</h2>
-            <pre>{JSON.stringify(todoData, null, 2)}</pre></div> */}
+            <pre>{JSON.stringify(todoData, null, 2)}</pre></div>
         </div>
       {/* </div> */}
     </div>

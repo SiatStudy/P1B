@@ -288,7 +288,13 @@ const connectTodoData = (url, mode = "get", data = null) => {
     });
   } else if (mode == "add") {
     // Todo 데이터 추가
-    axios.patch(url, data).catch(error => {
+    axios.post(url, data).then(res => {
+      if(res.data.isValid) {
+        console.log(res.data);
+        return res.data.tdid;
+      }
+    })
+    .catch(error => {
       errorFunc("addTodoAxios", error);
     });
   } else if (mode == "modify") {

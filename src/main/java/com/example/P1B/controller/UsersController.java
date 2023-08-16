@@ -120,7 +120,7 @@ public class UsersController {
         return "index";
     }
 
-    @PostMapping("/changePassword")
+    @PostMapping("/changepassword")
     public ResponseEntity<Map<String, Boolean>> changePassword(@RequestBody SignupDTO signupDTO) {
         System.out.println("********************************");
         System.out.println("useremail : " + signupDTO.getUseremail());

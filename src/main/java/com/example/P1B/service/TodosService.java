@@ -16,10 +16,11 @@ public class TodosService {
     private final TodosRepository todosRepository;
 
     @Transactional
-    public void addTodos(String tdTitle, String tdContent, LocalDateTime tdEnd, LocalDateTime tdStart, int tdStartYear, User user){
-        Todos todos = new Todos(tdTitle, tdContent, tdEnd, tdStartYear, tdStart);
-        todos.setUser(user);
-        todosRepository.save(todos);
+    public Long addTodos(String tdtitle, String tdcontent, LocalDateTime tdstartdate, int tdstartyeardate, LocalDateTime tdenddate, User user) {
+        Todos newTodo = new Todos(tdtitle, tdcontent, tdstartdate, tdstartyeardate, tdenddate);
+        newTodo.setUser(user);
+        Todos savedTodo = todosRepository.save(newTodo);
+        return savedTodo.getTdid(); // 추가한 아이템의 PK 반환
     }
 
     public List<Todos> findTodoList(int tdyddate, User user){
