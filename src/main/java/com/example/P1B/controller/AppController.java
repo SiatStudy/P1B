@@ -32,7 +32,8 @@ public class AppController {
         String ifNoneMatch = request.getHeader("If-None-Match"); // If-None-Match 헤더 값 가져오기
         if (etag.equals(ifNoneMatch)) { // ETag 값이 일치하면
             return "redirect:/mainpage"; // 302 리다이렉트 보내기
-        }
+        }else{
         return "mainpage/index";
+        }
     }
 }
