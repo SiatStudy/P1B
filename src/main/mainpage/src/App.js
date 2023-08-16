@@ -16,7 +16,7 @@ function App() {
         <Route path={"/listday"} element={<Listday />} />
         <Route path={"/calendarP"} element={<CalendarP />} />
         <Route path={"/dday"} element={<Dday />} />
-        <Route path="/graphp" element={<GraphP />} />
+        <Route path={"/graphp"} element={<GraphP />} />
         <Route path={"/mypage"} element={<MyPage />}></Route>
         <Route path={"/search/:word"} element={<SearchPage />}></Route>
         <Route path={"*"} element={<h1>잘못된 페이지 요청입니다.</h1>}></Route>

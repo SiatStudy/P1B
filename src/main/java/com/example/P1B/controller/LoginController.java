@@ -59,15 +59,15 @@ public class LoginController {
 
             HttpSession session = request.getSession();
             session.setMaxInactiveInterval(3600);
-            
+
             request.getSession().setAttribute("username", user.getUsername());
-            request.getSession().setAttribute("userEmail", user.getUserEmail());
+            request.getSession().setAttribute("useremail", user.getUserEmail());
 
             System.out.println("========= 세션 값 확인 ========");
             System.out.println("session = " + session);
 
             System.out.println("username : "+ session.getAttribute("username"));
-            System.out.println("userEmail : "+ session.getAttribute("userEmail"));
+            System.out.println("userEmail : "+ session.getAttribute("useremail"));
 
             return new ResponseEntity<>(Map.of("isValid", true), HttpStatus.OK);
         } else {
