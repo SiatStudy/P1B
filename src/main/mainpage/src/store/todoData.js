@@ -4,10 +4,10 @@ let todoData = createSlice({
     name : "todoData",
     initialState : [{ // 받는 객체 형식
         tdid : "", // 할일 아이디
-        month : 0, // 시작 날의 월
-        startDate: 0, // 시작날짜
-        endDate: 0,   // 끝 날짜
-        finishDate : 0, // 실제 완료 날짜
+        month : "", // 시작 날의 월
+        startDate: "", // 시작날짜
+        endDate: "",   // 끝 날짜
+        finishDate : "", // 실제 완료 날짜
         tdTitle: "", // 제목
         tdContent : "", // 내용
         status: false

@@ -11,14 +11,15 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @ToString
 public class TodosInDTO {
-    private String tdTitle;
-    private String tdContent;
+    private String title;
+    private String content;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime tdStartDate;
+    // "2023-08-18T10:00:00"
+    private LocalDateTime startDate;
 
     private int tdStartYear;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime tdEndDate;
+    private LocalDateTime endDate;
 }
