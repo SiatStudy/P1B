@@ -5,6 +5,7 @@ import com.example.P1B.dto.SignupDTO;
 import com.example.P1B.service.EmailService;
 import com.example.P1B.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Controller
 @RequiredArgsConstructor
@@ -69,7 +71,9 @@ public class LoginController {
             System.out.println("username : "+ session.getAttribute("username"));
             System.out.println("userEmail : "+ session.getAttribute("useremail"));
 
-            return new ResponseEntity<>(Map.of("isValid", true), HttpStatus.OK);
+            return ResponseEntity.ok()
+                    .cacheControl(CacheControl.maxAge(60, TimeUnit.SECONDS))
+                    .body(Map.of("isValid", true));
         } else {
             System.out.println("로그인 실패");
             return new ResponseEntity<>(Map.of("isValid", false, "message", "로그인 실패, 아이디와 비밀번호를 확인해주세요."), HttpStatus.UNAUTHORIZED);
