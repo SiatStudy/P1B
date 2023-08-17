@@ -9,6 +9,7 @@ import listPlugin from '@fullcalendar/list'
 import { debounce } from "../service/redux/debounce";
 
 import { setCurrentYear } from "../store/selectedYear";
+import {setTodoData} from "../store/todoData";
 import { useSectionReturn } from "../store/userLogin";
 import { findWidthObject } from "../util/dataUtils/findWidthObject";
 import { todoData } from "../apis/apis";
@@ -27,10 +28,10 @@ import { dummyData2 } from "../apis/dummyData2";
  */
 
 export const Calendar = ({ mode }) => {
-    const currentYear = useSelector(state => state.selectedYear);
+    const userEvent = useSelector(state => state.todosData);
     const dispatch = useDispatch();
 
-    const [event, setEvent] = useState([]);
+    const [event, setEvent] = useState([ ...userEvent]);
     const [width, setWidth] = useState(window.innerWidth);
     const [modalIsOpen, setModalIsOpen] = useState(false);
 
@@ -40,31 +41,17 @@ export const Calendar = ({ mode }) => {
 
     useEffect(() => {
         window.addEventListener("resize", handleResize);
+
+        if(userEvent.data.length === 0) {
+            todoData("/api/todos", null, "general").then(r => {
+                setEvent(r);
+                dispatch(setTodoData(r));
+            });
+        }
         return () => {
             window.removeEventListener("resize", handleResize);
         };
     }, []);
-
-    const dateSetFunc = dateInfo => {
-        const calendarDate = dateInfo.view.calendar.getDate();
-        const Data = {
-            sectionId : dispatch(useSectionReturn),
-            yDate : currentYear
-        }
-
-        if(currentYear !== calendarDate.getFullYear()) {
-            dispatch(setCurrentYear(calendarDate.getFullYear()));
-            const url = `/todos`;
-        
-            todoData(url, Data, "general")
-                .then(({ data }) => {
-                    setEvent(data);
-                })
-                .catch(err => {
-                    errorFunc('dataCalendar', err);
-                });
-        }
-    };
 
     const handlemodal = (data) =>{
         setModalIsOpen(data);
@@ -128,7 +115,6 @@ export const Calendar = ({ mode }) => {
                         titleFormat={findWidthObject(width, widthObject).titleFormat}
                         customButtons={{AddEvent: AddButton}}
                         events={event}
-                        datesSet={dataInfo => dateSetFunc(dataInfo)}
                         initialView={"dayGridMonth"}
                         />
                     : <FullCalendar
@@ -138,57 +124,7 @@ export const Calendar = ({ mode }) => {
                             center : "",
                             end : ""
                         }}
-                        events={[
-                            {
-                                id : 1,
-                                title : "delectus aut autem",
-                                start : "2023-08-10",
-                                end : "2023-08-11",
-                                state : true
-                            },
-                            {
-                                id : 2,
-                                title : "quis ut nam facilis et officia qui",
-                                start : "2023-08-12",
-                                end : "2023-08-13",
-                                state : true
-                            },
-                            {
-                                id : 5,
-                                title : "laboriosam mollitia et enimtest2",
-                                start : "2023-08-17",
-                                end : "2023-08-18",
-                                state : true
-                            },
-                            {
-                                id : 6,
-                                title : "illo expedita",
-                                start : "2023-08-19",
-                                end : "2023-08-20",
-                                state : true
-                            },
-                            {
-                                id : 7,
-                                title : "quo adipisci",
-                                start : "2023-08-20",
-                                end : "2023-08-21",
-                                state : true
-                            },
-                            {
-                                id : 8,
-                                title : "molestiae perspiciati",
-                                start : "2023-08-23",
-                                end : "2023-08-24",
-                                state : true
-                            },
-                            {
-                                id : 9,
-                                title : "illo est ratione doloremque",
-                                start : "2023-08-25",
-                                end : "2023-08-26",
-                                state : true
-                            }
-                        ]}
+                        events={event}
 
                         titleFormat={"YYYY.MM.({DD})"}
                         initialView={"listMonth"}

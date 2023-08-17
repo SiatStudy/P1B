@@ -20,6 +20,8 @@ import { addTodoData } from "../store/todoData";
 import axios from "axios";
 
 const DatepickerContent = ({ onChangeModal }) => {
+    const dispatch = useDispatch();
+
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
     const [disabled, setDisabled] = useState(true);
@@ -84,11 +86,10 @@ const DatepickerContent = ({ onChangeModal }) => {
         </div>
     )
 
-    const dispatch = useDispatch();
-
     const handleSubmit = (event) => { // form 전송
+        event.preventDefault();
+
         if(startDate <= endDate){
-            event.preventDefault();
             onChangeModal(false);
 
             axios.post("http://localhost:8080/api/todos/item", {

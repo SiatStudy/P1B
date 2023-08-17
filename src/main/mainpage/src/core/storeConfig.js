@@ -12,6 +12,6 @@ export default configureStore({
        selectedYear : selectedYearReducer,
        searchData : searchDataReducer,
        userData : userDataReducer,
-       todoData : todoDataReducer
+       todosData : todoDataReducer
    }
 });
