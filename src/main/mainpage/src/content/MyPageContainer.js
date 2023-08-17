@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import style from "./MyPageContainer.module.css";
 import CustomMainPageH1 from "../component/CustomMainPageH1";
-import CustomMainPageRow from "../component/CustomManinPageRow";
+import CustomMainPageRow from "../component/CustomMainPageRow";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserNickName } from "../store/userData";
 // import { changeNickName } from "../apis/apis";

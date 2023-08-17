@@ -6,9 +6,8 @@ import UserInfo from '../content/UserInfo';
 import { connectTodoData, getUserData } from "../apis/apis";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserEmail, setUserNickName } from "../store/userData";
-import ListdayContainer from "../content/ListdayContainer";
+import ListDayContainer from "../content/ListDayContainer";
 import { setTodoData } from "../store/todosData";
-import {convertToLocalDate} from "../util/dataUtils/convertToLocalDate";
 
 function Listday() {
   const [titleh, setTitleh] = useState("List Day");
@@ -33,25 +32,17 @@ function Listday() {
 
     let arr = await connectTodoData(`/api/todos/list`, "get");
     // 받아온 배열을 알맞은 형태로 교체
-    console.log(arr);
-    if (arr.length != 0){
-      console.log("여기오는거확인용")
-      const transformeArr = arr.map(item => {
-        let startDate = convertToLocalDate(item.startDate);
-        let endDate = convertToLocalDate(item.endDate);
-        return {
-          tdid: item.tdid,
-          month: startDate.getMonth() + 1,
-          startDate: startDate,
-          endDate: endDate,
-          finishDate: "",
-          tdTitle: item.tdTitle,
-          tdContent: item.tdContent,
-          status: item.status
-        };
-      })
-      dispatch(setTodoData(transformeArr));
-    };
+    const transformeArr = arr.map(item => {
+      return {
+        tdid: item.tdid,
+        tdstartDate: item.tdstartdate,
+        tdendDate: item.tdenddate,
+        tdtitle: item.tdtitle,
+        tdcontent: item.tdcontent,
+        status: item.status,
+      };
+    })
+    dispatch(setTodoData(transformeArr));
   }
   
   
@@ -63,7 +54,7 @@ function Listday() {
       </div>
       <div className={style.MainA}>
         <Header $titleh={titleh} />
-          <ListdayContainer></ListdayContainer>
+          <ListDayContainer></ListDayContainer>
         </div>
     </div>
   );

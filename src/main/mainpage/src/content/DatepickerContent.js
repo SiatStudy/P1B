@@ -103,9 +103,11 @@ const DatepickerContent = ({ onChangeModal }) => {
                 if(res.data.isValid){
                     dispatch(addTodoData([{
                         tdid : res.data.tdid, // 할일 아이디
-                        start: reduxStartDate, // 시작날짜
-                        end: reduxEndDate,   // 끝 날짜
-                        title: titleVal, // 제목
+                        tdstartDate: reduxStartDate, // 시작날짜
+                        tdendDate: reduxEndDate,   // 끝 날짜
+                        tdtitle: titleVal, // 제목
+                        tdendDate : memoVal,
+                        status : 0,
                     }]));
                 }else{
                     console.log("Error : 데이터 받기 실패");

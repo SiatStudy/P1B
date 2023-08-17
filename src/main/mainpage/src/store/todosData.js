@@ -30,6 +30,8 @@ let todosData = createSlice({
             // 할일 삭제 시 삭제할 tdid 받아서 삭제
             const id = action.payload;
             state.data = state.data.filter(item => item.id !== id);
+            // 새로운 상태 객체를 반환해야 합니다.
+            return { ...state.data };
         },
         returnAverage : (state, action) => {
             const month = state.data.filter(item => item.month === action.payload);

@@ -12,4 +12,5 @@ public interface TodosRepository extends JpaRepository<Todos, Long> {
 
     List<Todos> findByUser(User user);
 
+    Todos findByTdid(Long tdid);
 }

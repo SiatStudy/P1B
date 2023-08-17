@@ -36,4 +36,15 @@ public class TodosService {
     public void deleteTodos(Long tdid){
         todosRepository.deleteById(tdid);
     }
+
+    @Transactional
+    public void patchTodos(Long tdid) {
+        Todos todo = todosRepository.findByTdid(tdid);
+        if (todo.getTdstatus() == 0){
+            todo.setTdstatus(1);
+        } else {
+            todo.setTdstatus(0);
+        }
+        todosRepository.save(todo);
+    }
 }

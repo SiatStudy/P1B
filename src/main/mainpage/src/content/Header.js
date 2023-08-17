@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import style from "./Header.module.css";
 import CustomMainPageInput from "../component/CustomMainPageInput";
-import CustomMainPageImg from "../component/CustomMainPageImg";
 import CustomMainPageP from "../component/CustomMainPageP";
 import { useNavigate } from "react-router-dom";
+import { ReactComponent as SearchIcon } from "../asset/img/SearchIcon.svg";
 
 function Header(props) {
     const [val, setVal] = useState("");
@@ -32,8 +32,7 @@ function Header(props) {
                         value={val} 
                         pattern="[a-zA-Z가-힣0-9]{2,10}" title="2~10글자를 입력해 주세요"
                         placeholder="검색" required></CustomMainPageInput>
-                    <button><CustomMainPageImg $headerinputicon src={'/asset/img/SearchIcon.svg'}
-                        ></CustomMainPageImg></button>
+                    <button><SearchIcon className={style.SearchIcon}></SearchIcon></button>
                 </div>
             </form>
         </div>

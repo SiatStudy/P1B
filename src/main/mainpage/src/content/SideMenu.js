@@ -4,6 +4,7 @@ import React, {useEffect} from "react";
 import style from "./SideMenu.module.css";
 import CustomMainPageP from "../component/CustomMainPageP";
 import { NavLink } from "react-router-dom";
+import { ReactComponent as LogoIcon } from "../asset/img/LogoIcon.svg";
 
 function SideMenu(props){
 
@@ -11,7 +12,7 @@ function SideMenu(props){
         <div className={style.SideNavBar}>
             <div className={style.NavTop}>
                 <div className={style.Logo}>
-                    <img src={ "/asset/img/LogoIcon.svg" }/>
+                    <LogoIcon></LogoIcon>
                 </div>
                 <div className={style.NavMain}>
                     <div className={style.NavMenu}>

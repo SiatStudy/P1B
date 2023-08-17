@@ -42,10 +42,17 @@ public class TodosController {
         return new ResponseEntity<>(Map.of("isValid", true, "todoList", todosList), HttpStatus.OK);
     }
 
-    @DeleteMapping("/item/{id}")
-    public ResponseEntity<?> deleteTodos(@PathVariable("id") Long tdid){
-        System.out.println(tdid);
-        todosService.deleteTodos(tdid);
+    @PostMapping("/elimination")
+    public ResponseEntity<?> deleteTodos(@RequestBody TodosInDTO todosInDTO){
+        System.out.println("-----------tdid : " + todosInDTO.getTdid());
+        todosService.deleteTodos(todosInDTO.getTdid());
+        return new ResponseEntity<>(Map.of("isValid", true), HttpStatus.OK);
+    }
+
+    @PostMapping("/change")
+    public ResponseEntity<?> patchTodos(@RequestBody TodosInDTO todosInDTO){
+        System.out.println("-----------tdid : " + todosInDTO.getTdid());
+        todosService.patchTodos(todosInDTO.getTdid());
         return new ResponseEntity<>(Map.of("isValid", true), HttpStatus.OK);
     }
 }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import style from './SearchPageContainer.module.css'
 import CustomMainPageH1 from '../component/CustomMainPageH1';
-import CustomMainPageRow from '../component/CustomManinPageRow';
+import CustomMainPageRow from '../component/CustomMainPageRow';
 import { connectTodoData } from '../apis/apis';
 import { useSelector } from 'react-redux';
 

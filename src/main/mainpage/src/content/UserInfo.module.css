@@ -4,15 +4,17 @@
 
 }
 
-.NavBotPic{
+.OuterNavBotPic{
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 1.5rem;
     flex-shrink: 1;
-    /* background-image: url('/public/asset/img/NavBotPic.svg');
-    background-size: cover;
-    background-position: center; */
+}
+
+.NavBotPic{
+    width: 14.25rem;
+    height: 16.3125rem;
 }
 
 .NavFooter{
@@ -37,4 +39,14 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+}
+
+.Avatar{
+    width: 2rem;
+    height: 2rem;
+}
+
+.SettingsIcon{
+    width: 1.5rem;
+    height: 1.5rem;
 }

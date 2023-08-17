@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @ToString
 public class TodosInDTO {
+    private Long tdid;
     private String title;
     private String content;
 

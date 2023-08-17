@@ -1,0 +1,31 @@
+.MonthYear{
+  display: flex;
+  flex-direction: row;
+  padding: 1rem;
+}
+
+.Check0{
+  padding: 0 0.5rem;
+  display: none;
+}
+
+.Check1{
+  padding: 0 0.5rem;
+  display: block;
+}
+
+.parent:hover .DelIcon {
+  visibility: visible;
+}
+
+.DelIcon{
+  padding: 0 0.5rem;
+  visibility : hidden;
+  display: block;
+}
+
+.DelIconNone{
+  padding: 0 0.5rem;
+  visibility : hidden;
+  display: none;
+}

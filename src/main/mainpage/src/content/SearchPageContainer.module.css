@@ -61,3 +61,14 @@
   flex-direction: column;
   align-items: center;
 }
+
+.check{
+  display: block;
+  padding : 0 0.5rem;
+}
+
+.delicon{
+  display: block;
+  padding: 0 0.5rem;
+  visibility: visible;
+}
