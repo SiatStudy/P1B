@@ -26,6 +26,7 @@ public class TodosController {
 
     @PostMapping("/item")
     public ResponseEntity<?> addTodos(@RequestBody TodosInDTO dto, HttpSession session) {
+        System.out.println("00000000000  Todos 추가 로직 실행 ----------");
         System.out.println("----------- session : " + session.getAttribute("username"));
         dto.setTdStartYear(dto.getStartDate().getYear());
         User user = userService.findUser((String) session.getAttribute("username"));
@@ -38,8 +39,7 @@ public class TodosController {
         System.out.println("---------------session id : " + session.getAttribute("username"));
         User user = userService.findUser((String) session.getAttribute("username"));
         List<Todos> todosList = todosService.findTodoList(user);
-        System.out.println("------------ todosList" + todosList);
-        return new ResponseEntity<>(Map.of("todoList", todosList), HttpStatus.OK);
+        return new ResponseEntity<>(Map.of("isValid", true, "todoList", todosList), HttpStatus.OK);
     }
 
     @DeleteMapping("/item/{id}")

@@ -8,42 +8,43 @@ import { delTodoData, modifyTodoData } from '../store/todosData';
 const ListdayContainer = () => {
   const dispatch = useDispatch();
   const [todoDataArr, setTodoDataArr] = useState([]);
-  const todoData = useSelector((state) => state.todoData);
+  const todosData = useSelector((state) => state.todosData);
   const date = new Date();
   let currentMonth = date.getMonth() + 1;
   let currentYear = date.getFullYear();
 
   useEffect(() => {
     settingReduxData();
-  }, [todoData]);
+  }, [todosData]);
 
   //리덕스 데이터 세팅
   const settingReduxData = () => {
     // 리덕스에서 받기
-    let data = todoData;
-    let transformeArr = data.map(item => {
-      const { tdStartDate, tdEndDate } = item;
-      const startDateObj = new Date(tdStartDate);
-      const endDateObj = new Date(tdEndDate);
-      const options = {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      };
-      return {
-        tdid: item.tdid,
-        today: startDateObj.toLocaleDateString('ko-KR', options),
-        month: startDateObj.getMonth() + 1,
-        startDay: startDateObj.getDate(),
-        startTime: startDateObj.toLocaleTimeString('en-US', { hour12: false }).split(':').slice(0, 2).join(':'),
-        endDay: endDateObj.getDate(),
-        endTime: endDateObj.toLocaleTimeString('en-US', { hour12: false }).split(':').slice(0, 2).join(':'),
-        tdTitle: item.tdTitle,
-        status: item.status
-      };
-    });
-    transformeArr = transformeArr.filter(item => { return item.month == currentMonth });
-    setTodoDataArr(transformeArr);
+    if (todosData.data.length != 0){
+      let transformeArr = todosData.data.map(item => {
+        const { tdStartDate, tdEndDate } = item;
+        const startDateObj = new Date(tdStartDate);
+        const endDateObj = new Date(tdEndDate);
+        const options = {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        };
+        return {
+          tdid: item.tdid,
+          today: startDateObj.toLocaleDateString('ko-KR', options),
+          month: startDateObj.getMonth() + 1,
+          startDay: startDateObj.getDate(),
+          startTime: startDateObj.toLocaleTimeString('en-US', { hour12: false }).split(':').slice(0, 2).join(':'),
+          endDay: endDateObj.getDate(),
+          endTime: endDateObj.toLocaleTimeString('en-US', { hour12: false }).split(':').slice(0, 2).join(':'),
+          tdTitle: item.tdTitle,
+          status: item.status
+        };
+      });
+      transformeArr = transformeArr.filter(item => { return item.month == currentMonth });
+      setTodoDataArr(transformeArr);
+    }
   }
 
   // 월별 작업 데이터 정렬 및 필터링하는 함수

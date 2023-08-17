@@ -276,13 +276,15 @@ const todoData = async (url, userData, mode) => {
 const connectTodoData = async (url, mode = "get", data = null) => {
     try {
         if (mode === "get") {
-            // Todo 데이터 받기
-            const response = await axios.get(url);
-            if (response.data.success) {
-                return response.data;
-            } else {
-                return false;
-            }
+          // Todo 데이터 받기
+          const response = await axios.get(url);
+          console.dir(response);
+          if (response.data.isValid) {
+            console.log(response.data.todoList);
+            return response.data.todoList;
+          } else {
+            return false;
+          }
         } else if (mode === "add") {
             // Todo 데이터 추가
             await axios.post(url, data);
@@ -305,7 +307,9 @@ const getUserData = async (url) => {
   try {
       console.log("getUserData호출");
       const response = await axios.get(url);
+      console.log(response);
       if (response.data.isValid) {
+        console.dir(response.data);
           const email = response.data.useremail;
           const nickName = response.data.usernickname;
           const obj = {

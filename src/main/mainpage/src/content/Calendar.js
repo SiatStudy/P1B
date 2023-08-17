@@ -6,13 +6,19 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import momentPlugin from '@fullcalendar/moment';
 import interactionPlugin from '@fullcalendar/interaction'
 import listPlugin from '@fullcalendar/list'
+import { debounce } from "../service/redux/debounce";
+import koLocale from "@fullcalendar/core/locales/ko"
 
+import { setCurrentYear } from "../store/selectedYear";
 import {setTodoData} from "../store/todosData";
+import { useSectionReturn } from "../store/userLogin";
 import { findWidthObject } from "../util/dataUtils/findWidthObject";
 import { todoData } from "../apis/apis";
+import errorFunc from "../util/errorFunc";
 import DatepickerContent from "./DatepickerContent";
 
 import "./Datepicker.scss";
+import { dummyData2 } from "../apis/dummyData2";
 
 
 /**
@@ -23,10 +29,8 @@ import "./Datepicker.scss";
  */
 
 export const Calendar = ({ mode }) => {
-    const userEvent = useSelector(state => state.todosData);
+    const userEvent = useSelector(state => state.todosData.data);
     const dispatch = useDispatch();
-
-    const [event, setEvent] = useState([ ...userEvent]);
     const [width, setWidth] = useState(window.innerWidth);
     const [modalIsOpen, setModalIsOpen] = useState(false);
 
@@ -37,11 +41,8 @@ export const Calendar = ({ mode }) => {
     useEffect(() => {
         window.addEventListener("resize", handleResize);
 
-        if(userEvent.data.length === 0) {
-            todoData("/api/todos/list", null, "general").then(r => {
-                console.log(r);
-                console.dir(r);
-                setEvent(r);
+        if(!userEvent) {
+            todoData("/api/todos", null, "general").then(r => {
                 dispatch(setTodoData(r));
             });
         }
@@ -69,8 +70,9 @@ export const Calendar = ({ mode }) => {
                 end : "prev next AddEvent"
             },
             dayHeaderFormat : {
-                year : "numeric",
-                month : "numeric"
+                week : "short",
+                month : "2-digit",
+                day : "2-digit"
             },
             titleFormat : "YYYY.MM"
         },
@@ -81,8 +83,9 @@ export const Calendar = ({ mode }) => {
                 end : "today AddEvent"
             },
             dayHeaderFormat : {
-                year : "numeric",
-                month : "2-digit"
+                week : "short",
+                month : "2-digit",
+                day : "2-digit"
             },
             titleFormat : "YYYY.MM"
         },
@@ -93,12 +96,22 @@ export const Calendar = ({ mode }) => {
                 end : "dayGridMonth dayGridWeek prev next"
             },
             dayHeaderFormat : {
-                year : "numeric",
-                month : "2-digit"
+                week : "short",
+                month : "2-digit",
+                day : "2-digit"
             },
             titleFormat : "YYYY-MM"
         }
     };
+
+    const fullcaldata = userEvent.map(item => {
+        return {
+            id : item.tdid,
+            start : item.startDate,
+            end : item.endDate,
+            title : item.tdtitle
+        }
+    });
 
     return (
         <div>
@@ -107,11 +120,14 @@ export const Calendar = ({ mode }) => {
                 (mode === "calendar" ?
                         <FullCalendar
                             plugins={[dayGridPlugin, momentPlugin, interactionPlugin]}
+                            locale={koLocale}
                             headerToolbar={findWidthObject(width, widthObject).headerToolbar}
                             dayHeaderFormat={findWidthObject(width, widthObject).dayHeaderFormat}
                             titleFormat={findWidthObject(width, widthObject).titleFormat}
                             customButtons={{AddEvent: AddButton}}
-                            events={event}
+
+
+                            events={fullcaldata}
                             initialView={"dayGridMonth"}
                         />
                         : <FullCalendar
@@ -121,7 +137,7 @@ export const Calendar = ({ mode }) => {
                                 center : "",
                                 end : ""
                             }}
-                            events={event}
+                            events={fullcaldata}
 
                             titleFormat={"YYYY.MM.({DD})"}
                             initialView={"listMonth"}

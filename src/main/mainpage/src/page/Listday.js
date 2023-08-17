@@ -15,7 +15,7 @@ function Listday() {
   // //리덕스 연결
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.userData);
-  const todoData = useSelector((state) => state.todoData);
+  const todosData = useSelector((state) => state.todosData);
 
   useEffect(() => {
     connectBack();
@@ -26,27 +26,32 @@ function Listday() {
     const date = new Date();
     const year = date.getFullYear()
     let obj = await getUserData(`/api/users/setting`);
+    console.log(obj);
+    console.dir(obj);
     dispatch(setUserEmail(obj.email));
     dispatch(setUserNickName(obj.nickName));
 
     let arr = await connectTodoData(`/api/todos/list`, "get");
     // 받아온 배열을 알맞은 형태로 교체
-    console.log(arr)
-    const transformeArr = arr.map(item => {
-      let startDate = convertToLocalDate(item.startDate);
-      let endDate = convertToLocalDate(item.endDate);
-      return {
-        tdid: item.tdid,
-        month: startDate.getMonth() + 1,
-        startDate: startDate,
-        endDate: endDate,
-        finishDate: "",
-        tdTitle: item.tdTitle,
-        tdContent: item.tdContent,
-        status: item.status
-      };
-    });
-    dispatch(setTodoData(transformeArr));
+    console.log(arr);
+    if (arr.length != 0){
+      console.log("여기오는거확인용")
+      const transformeArr = arr.map(item => {
+        let startDate = convertToLocalDate(item.startDate);
+        let endDate = convertToLocalDate(item.endDate);
+        return {
+          tdid: item.tdid,
+          month: startDate.getMonth() + 1,
+          startDate: startDate,
+          endDate: endDate,
+          finishDate: "",
+          tdTitle: item.tdTitle,
+          tdContent: item.tdContent,
+          status: item.status
+        };
+      })
+      dispatch(setTodoData(transformeArr));
+    };
   }
   
   

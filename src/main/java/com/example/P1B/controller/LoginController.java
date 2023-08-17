@@ -87,7 +87,7 @@ public class LoginController {
                     .body(Map.of("isValid", true));
         } else {
             System.out.println("로그인 실패");
-            return new ResponseEntity<>(Map.of("isValid", false, "message", "로그인 실패, 아이디와 비밀번호를 확인해주세요."), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(Map.of("isValid", false), HttpStatus.UNAUTHORIZED);
         }
     }
 

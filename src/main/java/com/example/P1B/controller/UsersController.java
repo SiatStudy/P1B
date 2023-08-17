@@ -29,22 +29,22 @@ public class UsersController {
     private final UserService userService;
     private final UserRepository userRepository;
 
-    public String encryptPassword(String password) {
-        try {
-            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-            messageDigest.update(password.getBytes());
-            byte[] bytes = messageDigest.digest();
-
-            StringBuilder stringBuilder = new StringBuilder();
-
-            for (byte b : bytes) {
-                stringBuilder.append(String.format("%02x", b));
-            }
-            return stringBuilder.toString();
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("암호화 실패");
-        }
-    }
+//    public String encryptPassword(String password) {
+//        try {
+//            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+//            messageDigest.update(password.getBytes());
+//            byte[] bytes = messageDigest.digest();
+//
+//            StringBuilder stringBuilder = new StringBuilder();
+//
+//            for (byte b : bytes) {
+//                stringBuilder.append(String.format("%02x", b));
+//            }
+//            return stringBuilder.toString();
+//        } catch (NoSuchAlgorithmException e) {
+//            throw new RuntimeException("암호화 실패");
+//        }
+//    }
 
     @PostMapping("/signup")
     public ResponseEntity<Map<String, Boolean>> signUp(@Valid
@@ -84,8 +84,8 @@ public class UsersController {
             throw new ValidationException();
         } else {
             String oldPassword = signupDTO.getUserpassword();
-            String encryptedPassword = encryptPassword(oldPassword); // 암호화 추가
-            signupDTO.setUserpassword(encryptedPassword);
+//            String encryptedPassword = encryptPassword(oldPassword); // 암호화 추가
+            signupDTO.setUserpassword(oldPassword);
 
             userService.signUp(signupDTO);
             return new ResponseEntity<>(Map.of("isValid", true), HttpStatus.OK);
@@ -143,7 +143,7 @@ public class UsersController {
         return "index";
     }
 
-    @PostMapping("/changePassword")
+    @PostMapping("/changepassword")
     public ResponseEntity<Map<String, Boolean>> changePassword(@RequestBody SignupDTO signupDTO) {
         System.out.println("********************************");
         System.out.println("useremail : " + signupDTO.getUseremail());
@@ -151,10 +151,10 @@ public class UsersController {
         System.out.println("********************************");
 
         String newPassword = signupDTO.getUserpassword();
-        String encryptedPassword = encryptPassword(newPassword); // 암호화 추가
+//        String encryptedPassword = encryptPassword(newPassword); // 암호화 추가
 
         try {
-            userService.changePassword(signupDTO.getUseremail(), encryptedPassword);
+            userService.changePassword(signupDTO.getUseremail(), newPassword);
             String message = "비밀번호가 변경되었습니다.";
             System.out.println(message);
             return new ResponseEntity<>(Map.of("isValid", true), HttpStatus.OK);

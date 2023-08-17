@@ -14,6 +14,10 @@ import CustomPopupLabel from "../component/CustomPopupLabel";
 import CustomPopupArea from "../component/CustomPopupArea";
 import CustomPopupDiv from "../component/CustomPopupDiv";
 import style from './DatepickerModal.module.scss';
+import errorFunc from "../util/errorFunc";
+import { useDispatch } from "react-redux";
+import { addTodoData } from "../store/todosData";
+import axios from "axios";
 
 const DatepickerContent = ({ onChangeModal }) => {
     const [startDate, setStartDate] = useState(new Date());
@@ -30,6 +34,7 @@ const DatepickerContent = ({ onChangeModal }) => {
             <Vector className="Vt-custom" onClick={onClick}/>
         </>
     ));
+    const dispatch = useDispatch();
 
     const handleChangeTitle = (event) => {
         const value = event.target.value;
@@ -51,9 +56,12 @@ const DatepickerContent = ({ onChangeModal }) => {
     }
 
     // startDate 백으로 보낼 데이터
-    const remakeStartDate = startDate.getFullYear() + '-' + (startDate.getMonth()+1) + '-' + startDate.getDate() + ' ' + startDate.getHours().toString().padStart(2, '0') + ':' + startDate.getMinutes().toString().padStart(2, '0');
+    const remakeStartDate = startDate.getFullYear() + '-' + (startDate.getMonth()+1).toString().padStart(2, '0') + '-' + startDate.getDate() + 'T' + startDate.getHours().toString().padStart(2, '0') + ':' + startDate.getMinutes().toString().padStart(2, '0') + ':' + startDate.getSeconds().toString().padStart(2, '0');
     // endDate 백으로 보낼 데이터
-    const remakeEndDate = endDate.getFullYear() + '-' + (endDate.getMonth()+1) + '-' + endDate.getDate() + ' ' + endDate.getHours().toString().padStart(2, '0') + ':' + endDate.getMinutes().toString().padStart(2, '0');
+    const remakeEndDate = endDate.getFullYear() + '-' + (endDate.getMonth()+1).toString().padStart(2, '0') + '-' + endDate.getDate() + 'T' + endDate.getHours().toString().padStart(2, '0') + ':' + endDate.getMinutes().toString().padStart(2, '0')  + ':' + startDate.getSeconds().toString().padStart(2, '0');
+    const startMonth = startDate.getMonth()+1;
+    const reduxStartDate = startDate.getFullYear() + '-' + (startDate.getMonth()+1).toString().padStart(2, '0') + '-' + startDate.getDate();
+    const reduxEndDate = endDate.getFullYear() + '-' + (endDate.getMonth()+1).toString().padStart(2, '0') + '-' + endDate.getDate();
 
     const dpCustomHeader = ({
                                 date,
@@ -83,6 +91,30 @@ const DatepickerContent = ({ onChangeModal }) => {
         if(startDate <= endDate){
             event.preventDefault();
             onChangeModal(false);
+
+
+            axios.post("http://localhost:8080/api/todos/item", {
+                title : titleVal,
+                startDate : remakeStartDate,
+                endDate : remakeEndDate,
+                content : memoVal,
+            })
+            .then(res => {
+                if(res.data.isValid){
+                    dispatch(addTodoData([{
+                        tdid : res.data.tdid, // 할일 아이디
+                        start: reduxStartDate, // 시작날짜
+                        end: reduxEndDate,   // 끝 날짜
+                        title: titleVal, // 제목
+                    }]));
+                }else{
+                    console.log("Error : 데이터 받기 실패");
+                }
+            })
+            .catch(err => {
+                // 에러 핸들링을 위해 errorFunc 유틸리티 사용
+                errorFunc('[ERROR] DatepickerContent', err)
+            })
         } else { // 데이터 오입력시
             event.preventDefault();
             setShow(true);
