@@ -2,10 +2,8 @@ import React, { useState, useEffect } from 'react';
 import style from './SearchPageContainer.module.css'
 import CustomMainPageH1 from '../component/CustomMainPageH1';
 import CustomMainPageRow from '../component/CustomManinPageRow';
-import { dummyData2 } from '../apis/dummyData2';
 import { connectTodoData } from '../apis/apis';
 import { useSelector } from 'react-redux';
-import { dummyData4 } from '../apis/dummyData4';
 
 const SearchPageContainer = ({ word }) => {
   const [searchDataArr, setSearchDataArr] = useState([]);
@@ -16,20 +14,13 @@ const SearchPageContainer = ({ word }) => {
 
   //처음 랜더링 시에만 실행
   useEffect(() => {
-    //더미데이터 가져옴. 본 사용시 아래 settingReduxData사용 
-    // setSearchDataArr(dummyData2);  
     settingReduxData();
   }, []);
 
   //리덕스 데이터 세팅
   const settingReduxData = () => {
-    //startDate : 시작일
-    //endDate : 종료일
-    //title : 일 제목
     // 리덕스에서 받기
-    // let data = todoData;
-    // 더미값 받기
-    let data = dummyData4;
+    let data = todoData;
 
     // 백엔드에서 받은 배열을 알맞은 형태로 재생성하는 로직
     const transformeArr = data.map(item => {

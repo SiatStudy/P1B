@@ -6,18 +6,13 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import momentPlugin from '@fullcalendar/moment';
 import interactionPlugin from '@fullcalendar/interaction'
 import listPlugin from '@fullcalendar/list'
-import { debounce } from "../service/redux/debounce";
 
-import { setCurrentYear } from "../store/selectedYear";
-import {setTodoData} from "../store/todoData";
-import { useSectionReturn } from "../store/userLogin";
+import {setTodoData} from "../store/todosData";
 import { findWidthObject } from "../util/dataUtils/findWidthObject";
 import { todoData } from "../apis/apis";
-import errorFunc from "../util/errorFunc";
 import DatepickerContent from "./DatepickerContent";
 
 import "./Datepicker.scss";
-import { dummyData2 } from "../apis/dummyData2";
 
 
 /**
@@ -43,7 +38,9 @@ export const Calendar = ({ mode }) => {
         window.addEventListener("resize", handleResize);
 
         if(userEvent.data.length === 0) {
-            todoData("/api/todos", null, "general").then(r => {
+            todoData("/api/todos/list", null, "general").then(r => {
+                console.log(r);
+                console.dir(r);
                 setEvent(r);
                 dispatch(setTodoData(r));
             });
@@ -109,26 +106,26 @@ export const Calendar = ({ mode }) => {
                 :
                 (mode === "calendar" ?
                         <FullCalendar
-                        plugins={[dayGridPlugin, momentPlugin, interactionPlugin]}
-                        headerToolbar={findWidthObject(width, widthObject).headerToolbar}
-                        dayHeaderFormat={findWidthObject(width, widthObject).dayHeaderFormat}
-                        titleFormat={findWidthObject(width, widthObject).titleFormat}
-                        customButtons={{AddEvent: AddButton}}
-                        events={event}
-                        initialView={"dayGridMonth"}
+                            plugins={[dayGridPlugin, momentPlugin, interactionPlugin]}
+                            headerToolbar={findWidthObject(width, widthObject).headerToolbar}
+                            dayHeaderFormat={findWidthObject(width, widthObject).dayHeaderFormat}
+                            titleFormat={findWidthObject(width, widthObject).titleFormat}
+                            customButtons={{AddEvent: AddButton}}
+                            events={event}
+                            initialView={"dayGridMonth"}
                         />
-                    : <FullCalendar
-                        plugins={[listPlugin, momentPlugin]}
-                        headerToolbar={{
-                            start : "title",
-                            center : "",
-                            end : ""
-                        }}
-                        events={event}
+                        : <FullCalendar
+                            plugins={[listPlugin, momentPlugin]}
+                            headerToolbar={{
+                                start : "title",
+                                center : "",
+                                end : ""
+                            }}
+                            events={event}
 
-                        titleFormat={"YYYY.MM.({DD})"}
-                        initialView={"listMonth"}
-                    />
+                            titleFormat={"YYYY.MM.({DD})"}
+                            initialView={"listMonth"}
+                        />
                 )
             }
         </div>

@@ -1,6 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
 
+const CustomMainPageRow = ({title, value, $mode, onChange, $page, pattern, 
+  $inputTitle, $isButtonVisible, status, toggleStatus, delRow}) => {
+  // title : 제목
+  // value : 내용
+  // $mode : 상태 전환
+  // onChange : 이벤트
+
 const obj = {
   myPage : {
     keyDiv : `
@@ -34,7 +41,6 @@ const obj = {
   searchPage : {
     outDiv : `
     display: flex;
-   
     align-items: center;
     align-self: stretch;
     border-radius: 0.35rem; 
@@ -43,13 +49,14 @@ const obj = {
     `,
     keyDiv : `
     display: flex;
-    width: 9rem; 
+    width: 9rem;
     padding: 0.6rem 0rem; 
     justify-content: center;
     align-items: center;
     gap: 0.5rem; 
     `,
     customH3 :`
+    flex: 1;
     color: #3E54AC;
     font-family: Noto Sans;
     font-size: 0.95rem; 
@@ -73,8 +80,17 @@ display: ${props => (props.$mode ? 'none' : 'block')};
 const OutDiv = styled.div`
 ${prop => obj[prop.$page].outDiv}
 `;
-const buttonDiv = styled.div`
-display : ${prop => obj[prop.$isButtonVisible]? 'block' : 'none'}
+const Img = styled.img`
+display: ${props=>(props.$isButtonVisible ? "block" : "none")};
+padding: 0 0.5rem;
+`;
+const DelImg = styled.img`
+display: ${props=>(props.$isButtonVisible ? "block" : "none")};
+padding: 0 0.5rem;
+visibility : hidden;
+${OutDiv}:hover & {
+  visibility: visible;
+}
 `;
 
 const CustomInput = styled.input`
@@ -84,23 +100,15 @@ border: 1px solid #000;
 display: ${props => (props.$mode ? 'block' : 'none')};
 `;
 
-const CustomMainPageRow = ({title, value, $mode, onChange, $page, pattern, $inputTitle, $isButtonVisible, $checked}) => {
-  // title : 제목
-  // value : 내용
-  // $mode : 상태 전환
-  // onChange : 이벤트
-  
   return (
     <OutDiv $page={$page}>
-      <KeyDiv $page={$page}>{title}</KeyDiv>
+      { status ? <Img src='/asset/img/check1.svg' alt="Checked" $isButtonVisible={$isButtonVisible} onClick={toggleStatus}></Img>
+       : <Img src='/asset/img/check0.svg' alt="Unchecked" $isButtonVisible={$isButtonVisible} onClick={toggleStatus}></Img> }
+      <KeyDiv $page={$page} $isButtonVisible={$isButtonVisible}>{title}</KeyDiv>
       <CustomH3 $page={$page} $mode={$mode}>{value}</CustomH3>
       <CustomInput type="text" $mode={$mode} value={value} onChange={(e) => onChange(e.target.value)}
       pattern={pattern} title={$inputTitle}></CustomInput>
-      <buttonDiv $isButtonVisible={$isButtonVisible}>
-      { $checked ? <img src='/asset/img/check1' alt="Checked"></img>
-       : <img src='/asset/img/check0' alt="Unchecked"></img> }
-        <img src='/asset/img/delIcon'></img>
-      </buttonDiv>
+      <DelImg src='/asset/img/delIcon.svg' $isButtonVisible={$isButtonVisible} onClick={delRow}></DelImg>
     </OutDiv>
   );
 };
@@ -108,7 +116,7 @@ const CustomMainPageRow = ({title, value, $mode, onChange, $page, pattern, $inpu
 CustomMainPageRow.defaultProps = {
   $page : "myPage",
   $isButtonVisible : false,
-  $checked : false
+  status : false
 };
 
 export default CustomMainPageRow;

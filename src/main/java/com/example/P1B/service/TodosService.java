@@ -23,12 +23,12 @@ public class TodosService {
         return savedTodo.getTdid(); // 추가한 아이템의 PK 반환
     }
 
-    public List<Todos> findTodoList(int tdyddate, User user){
+    public List<Todos> findTodoList(User user){
 //        /*
 //            1. 요청받은 년도로 투두스 리스트 색인
 //            2. 색인 해온 데이터를 OutDTO형식으로 리턴
 //         */
-        List<Todos> todosList = todosRepository.findByTdstartyeardateAndUser(tdyddate, user);
+        List<Todos> todosList = todosRepository.findByUser(user);
         return todosList;
     }
 

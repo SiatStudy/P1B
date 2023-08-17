@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.net.URI;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -31,6 +33,14 @@ public class LoginController {
     private final UserService userService;
     private final EmailService emailService;
 
+    // 아이디 찾기 뒷 2자리 * 처리
+    private String encryptStar(String username) {
+        if (username != null && username.length() > 2) {
+            int length = username.length();
+            return username.substring(0, length - 2) + "**";
+        }
+        return username;
+    }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody SignupDTO signupDTO, HttpServletRequest request) {
@@ -64,6 +74,7 @@ public class LoginController {
 
             request.getSession().setAttribute("username", user.getUsername());
             request.getSession().setAttribute("useremail", user.getUserEmail());
+            request.getSession().setAttribute("usernickname", user.getUserNickName());
 
             System.out.println("========= 세션 값 확인 ========");
             System.out.println("session = " + session);
@@ -138,10 +149,11 @@ public class LoginController {
         User optionalUsername = userService.findIdByEmail(signupDTO.getUseremail());
         if (optionalUsername != null) {
             String username = optionalUsername.getUsername();
-            String message = "찾으신 아이디는: " + username;
+            String maskname = encryptStar(username);
+            String message = "찾으신 아이디는: " + maskname;
             System.out.println("id : " + username);
             System.out.println("find Id 값 : " + message);
-            return new ResponseEntity<>(Map.of("username", username, "isValid", true), HttpStatus.OK);
+            return new ResponseEntity<>(Map.of("username", maskname, "isValid", true), HttpStatus.OK);
         } else {
             // 검증 완료된 코드. 나중에 프로덕션 단계에서 코드 정리할 때 스트링 부분은 날려야 합니다. 참고하세요.
             String message = "해당 아이디를 찾을 수 없습니다.";

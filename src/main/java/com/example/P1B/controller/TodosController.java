@@ -33,11 +33,13 @@ public class TodosController {
         return new ResponseEntity<>(Map.of("isValid", true, "tdid", addedItemId), HttpStatus.OK);
     }
 
-    @GetMapping("/{year}")
-    public ResponseEntity<?> findTodos(@PathVariable("year") int year, HttpSession session){
+    @GetMapping("/list")
+    public ResponseEntity<?> findTodos(HttpSession session){
+        System.out.println("---------------session id : " + session.getAttribute("username"));
         User user = userService.findUser((String) session.getAttribute("username"));
-        List<Todos> todosList = todosService.findTodoList(year, user);
-        return new ResponseEntity<>(Map.of("isValid", true, "todoList", todosList), HttpStatus.OK);
+        List<Todos> todosList = todosService.findTodoList(user);
+        System.out.println("------------ todosList" + todosList);
+        return new ResponseEntity<>(Map.of("todoList", todosList), HttpStatus.OK);
     }
 
     @DeleteMapping("/item/{id}")

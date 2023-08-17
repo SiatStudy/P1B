@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import style from "./MyPageContainer.module.css";
 import CustomMainPageH1 from "../component/CustomMainPageH1";
 import CustomMainPageRow from "../component/CustomManinPageRow";
-import { dummyData1 as dummy } from "../apis/dummyData1";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserNickName } from "../store/userData";
 // import { changeNickName } from "../apis/apis";
@@ -20,17 +19,10 @@ const MyPageContainer = () => {
   //처음 랜더링 시에만 실행
   //더미데이터를 state객체에 할당
   useEffect(() => {
-    //더미값 매핑, 본 사용시 아래 settingUserData 함수로 교체
-    console.log("useEffect실행");
-    // setDataObj(dummy[6]);
     settingUserData();
   }, []);
 
   //리덕스에서 데이터를 받아 세팅
-  //{
-  //  nickName : nickName, 닉네임을 받음
-  //  email : email        이메일을 받음
-  //}
   const settingUserData = () => {
     let data = {
       nickName: userData.userNickName,

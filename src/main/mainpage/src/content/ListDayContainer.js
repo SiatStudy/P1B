@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import style from './SearchPageContainer.module.css'
 import CustomMainPageH1 from '../component/CustomMainPageH1';
 import CustomMainPageRow from '../component/CustomManinPageRow';
-import { connectTodoData } from '../apis/apis';
-import { useSelector } from 'react-redux';
-import { dummyData4 } from '../apis/dummyData4';
+import { useDispatch, useSelector } from 'react-redux';
+import { delTodoData, modifyTodoData } from '../store/todosData';
 
 const ListdayContainer = () => {
+  const dispatch = useDispatch();
   const [todoDataArr, setTodoDataArr] = useState([]);
   const todoData = useSelector((state) => state.todoData);
   const date = new Date();
@@ -21,9 +21,6 @@ const ListdayContainer = () => {
   const settingReduxData = () => {
     // 리덕스에서 받기
     let data = todoData;
-    // 더미값 받기
-    // let data = dummyData4;
-
     let transformeArr = data.map(item => {
       const { tdStartDate, tdEndDate } = item;
       const startDateObj = new Date(tdStartDate);
@@ -78,11 +75,19 @@ const ListdayContainer = () => {
     return groupedData;
   };
 
+  const toggleStatus = (tdid, status) => {
+    dispatch(modifyTodoData({ tdid: tdid, key: "status", value: !status }));
+    // 여기에 status수정 백엔드 통신 필요
+  }
+  const delRow = tdid =>{
+    dispatch(delTodoData(tdid));
+    // 여기에 DB에서 해당 tdid 지우는 백엔드 통신 필요
+  }
+
   const filteredData = getFilteredData();
 
   return (
     <div className={style.mainContainer}>
-
       <div className={style.titleDiv}>
         <div className={style.monthTitle}>{currentMonth}월</div>
         <CustomMainPageH1 $searchPageYear>{currentYear}</CustomMainPageH1>
@@ -102,7 +107,10 @@ const ListdayContainer = () => {
               title={work.startDay === work.endDay ? `${work.startTime + " - " + work.endTime}` : `${work.startTime} ~ `}
               // 작업 제목을 표시
               value={work.tdTitle}
+              status={work.status}
               $isButtonVisible={true}
+              toggleStatus={()=>{toggleStatus(work.tdid, work.status)}}
+              delRow={()=>{delRow(work.tdid)}}
             />
           ))} </div>
         </div>

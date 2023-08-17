@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import javax.validation.ValidationException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
 @Controller
@@ -26,6 +28,23 @@ import java.util.Map;
 public class UsersController {
     private final UserService userService;
     private final UserRepository userRepository;
+
+    public String encryptPassword(String password) {
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+            messageDigest.update(password.getBytes());
+            byte[] bytes = messageDigest.digest();
+
+            StringBuilder stringBuilder = new StringBuilder();
+
+            for (byte b : bytes) {
+                stringBuilder.append(String.format("%02x", b));
+            }
+            return stringBuilder.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("암호화 실패");
+        }
+    }
 
     @PostMapping("/signup")
     public ResponseEntity<Map<String, Boolean>> signUp(@Valid
@@ -64,6 +83,10 @@ public class UsersController {
         if (bindingResult.hasErrors()) {
             throw new ValidationException();
         } else {
+            String oldPassword = signupDTO.getUserpassword();
+            String encryptedPassword = encryptPassword(oldPassword); // 암호화 추가
+            signupDTO.setUserpassword(encryptedPassword);
+
             userService.signUp(signupDTO);
             return new ResponseEntity<>(Map.of("isValid", true), HttpStatus.OK);
         }
@@ -120,14 +143,18 @@ public class UsersController {
         return "index";
     }
 
-    @PostMapping("/changepassword")
+    @PostMapping("/changePassword")
     public ResponseEntity<Map<String, Boolean>> changePassword(@RequestBody SignupDTO signupDTO) {
         System.out.println("********************************");
         System.out.println("useremail : " + signupDTO.getUseremail());
         System.out.println("newuserpassword : " + signupDTO.getUserpassword());
         System.out.println("********************************");
+
+        String newPassword = signupDTO.getUserpassword();
+        String encryptedPassword = encryptPassword(newPassword); // 암호화 추가
+
         try {
-            userService.changePassword(signupDTO.getUseremail(), signupDTO.getUserpassword());
+            userService.changePassword(signupDTO.getUseremail(), encryptedPassword);
             String message = "비밀번호가 변경되었습니다.";
             System.out.println(message);
             return new ResponseEntity<>(Map.of("isValid", true), HttpStatus.OK);
@@ -139,16 +166,15 @@ public class UsersController {
     }
 
     @GetMapping("/setting")
-    public String session(HttpSession session, Model model) {
-        String userEmail = (String) session.getAttribute("userEmail");
+    public ResponseEntity<?> session(HttpSession session) {
+        String useremail = (String) session.getAttribute("useremail");
         String username = (String) session.getAttribute("username");
+        String usernickname = (String) session.getAttribute("usernickname");
 
         System.out.println("--------------- username : " + username);
-        System.out.println("--------------- userEmail : " + userEmail);
+        System.out.println("--------------- useremail : " + useremail);
+        System.out.println("--------------- usernickname : " + usernickname);
 
-        model.addAttribute("username", username);
-        model.addAttribute("userEmail", userEmail);
-
-        return "usersetting";
+        return new ResponseEntity<>(Map.of("isValid", true, "useremail", useremail, "usernickname", usernickname), HttpStatus.OK);
     }
 }
