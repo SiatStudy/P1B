@@ -12,7 +12,8 @@ let todosData = createSlice({
         },
         addTodoData : (state, action) => {
             //할일 추가 시 객체를 받아 배열에 추가하는 함수
-            state.data = [ ...state.data, ...action.payload ];
+            const newData = [ ...state.data, ...action.payload ];
+            state.data = newData;
         },
         //action = { id : todoId, data : { todoData }}
         modifyTodoData : (state, action) => {
@@ -20,16 +21,19 @@ let todosData = createSlice({
             // 할일 수정 시 수정할 tdid, 변경할 키값, 변경할 value 받아서 수정
             const { id, data } = action.payload;
 
-            state.data = state.data.map(item =>
+            const newData = state.data.map(item =>
                 item.id === id ? { ...item, ...data } : item
             );
+
+            state.data = newData;
         },
         //action = id
         delTodoData : (state, action) => {
             // 어떤 기준으로 삭제하는지
             // 할일 삭제 시 삭제할 tdid 받아서 삭제
             const id = action.payload;
-            state.data = state.data.filter(item => item.id !== id);
+            const newData = state.data.filter(item => item.id !== id);
+            state.data = newData;
             // 새로운 상태 객체를 반환해야 합니다.
             return { ...state.data };
         },
