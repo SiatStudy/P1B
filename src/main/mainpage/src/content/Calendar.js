@@ -126,7 +126,6 @@ export const Calendar = ({ mode }) => {
                             titleFormat={findWidthObject(width, widthObject).titleFormat}
                             customButtons={{AddEvent: AddButton}}
 
-
                             events={fullcaldata}
                             initialView={"dayGridMonth"}
                         />

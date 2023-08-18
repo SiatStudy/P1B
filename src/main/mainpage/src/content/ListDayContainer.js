@@ -42,7 +42,7 @@ const ListDayContainer = () => {
       } else if (a.startTime !== b.startTime) {
         return a.startTime - b.startTime;
       } else if (a.endDay !== b.endDay) {
-        return a.endDay - b.endDa5y;
+        return a.endDay - b.endDay;
       } else {
         return a.endTime - b.endTime;
       }

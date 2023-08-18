@@ -36,7 +36,7 @@ export const Graph = () => {
             series={[
                 {
                     name: `${currentYear}'s 월별 달성도`,
-                    data: datas // 변경된 부분: datas로 변경
+                    data: [60, 37, 64, 45, 70, 100, 82, 31, 0, 0, 0, 0] // 변경된 부분: datas로 변경
                 }
             ]}
             options={{
