@@ -34,8 +34,6 @@ let todosData = createSlice({
             const id = action.payload;
             const newData = state.data.filter(item => item.id !== id);
             state.data = newData;
-            // 새로운 상태 객체를 반환해야 합니다.
-            return { ...state.data };
         },
         returnAverage : (state, action) => {
             const month = state.data.filter(item => item.month === action.payload);

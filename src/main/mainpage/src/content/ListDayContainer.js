@@ -17,13 +17,12 @@ const ListDayContainer = () => {
 
   useEffect(() => {
     settingReduxData();
-  }, [ListDaytodosData]);
+  }, []);
 
   //리덕스 데이터 세팅
   const settingReduxData = () => {
     // 리덕스에서 받기
-      let transformeArr = ListDaytodosData.map(item => {
-        return {
+      let transformedArr = ListDaytodosData.map(item => ({
           tdid: item.tdid,
           today: new Date(item.tdstartDate).getFullYear() + '년 ' + (new Date(item.tdstartDate).getMonth()+1).toString().padStart(2, '0') + '월 ' + new Date(item.tdstartDate).getDate() + '일',
           month: new Date(item.tdstartDate).getMonth() + 1,
@@ -33,17 +32,17 @@ const ListDayContainer = () => {
           endTime: new Date(item.tdendDate).getHours().toString().padStart(2, '0') + ':' + new Date(item.tdendDate).getMinutes().toString().padStart(2, '0'),
           tdtitle: item.tdtitle,
           status: item.status
-        };
-      });
-      transformeArr = transformeArr.filter(item => { return item.month == currentMonth });
-      setTodoDataArr(transformeArr);
+      }));
+
+      const filterData = transformedArr.filter(item => item.month === currentMonth );
+      getFilteredData(filterData);
   }
 
   // 월별 작업 데이터 정렬 및 필터링하는 함수
-  const getFilteredData = () => {
+  const getFilteredData = (arr) => {
 
     // 데이터 정렬 (낮은 순 정렬 -> startDay기준->startTime기준->endDay기준->endTime기준)
-    const sortedData = todoDataArr.sort((a, b) => {
+    const sortedData = arr.sort((a, b) => {
       if (a.startDay !== b.startDay) {
         return a.startDay - b.startDay;
       } else if (a.startTime !== b.startTime) {
@@ -65,7 +64,7 @@ const ListDayContainer = () => {
       groupedData[startDay].push(data);
     });
 
-    return groupedData;
+    setTodoDataArr(groupedData);
   };
 
   const toggleStatus = async (tdid, status) => {
@@ -102,8 +101,6 @@ const ListDayContainer = () => {
     }
   };
 
-  const filteredData = getFilteredData();
-
   const changeRow = tdid =>{
     // 비어있는 함수
   }
@@ -115,15 +112,15 @@ const ListDayContainer = () => {
         <CustomMainPageH1 $searchPageYear>{currentYear}</CustomMainPageH1>
       </div>
       {/* // 각 일별 컨테이너 생성 (일의 이름을 key로 설정 */}
-      {Object.entries(filteredData).map(([startDay, works]) => (
+      {Object.entries(todoDataArr).map(([startDay, works]) => (
         <div className={style.dayContainer} key={startDay}>
            {/* 해당 일의 today속성 */}
            <div className={style.dayTitle}>{works.length > 0 ? works[0].today : ''}</div>
            <div className={style.worksContainer}>
-          {works.map((work, index) => (
+          {works.map(work => (
             // CustomMainPageRow 컴포넌트를 작업 데이터에 맞게 생성
             <CustomMainPageRow
-              key={index}
+              key={work.tdid}
               $page="searchPage"
               // 작업 기간이 하루인 경우에는 단일 날짜를 표시하고, 아닌 경우에는 작업 기간을 표시하는 title 설정
               title={work.startDay === work.endDay ? `${work.startTime + " - " + work.endTime}` : `${work.startTime} ~ `}

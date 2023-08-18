@@ -17,8 +17,7 @@ function DdayTable(props) {
   //리덕스 데이터 세팅
   const settingReduxData = () => {
     // 리덕스에서 받기
-      let transformeArr = ListDaytodosData.map(item => {
-        return {
+      let transformeArr = ListDaytodosData.map(item => ({
           tdid: item.tdid,
           today: new Date(item.tdstartDate).getFullYear() + '년 ' + (new Date(item.tdstartDate).getMonth()+1).toString().padStart(2, '0') + '월 ' + new Date(item.tdstartDate).getDate() + '일',
           month: new Date(item.tdstartDate).getMonth() + 1,
@@ -27,11 +26,10 @@ function DdayTable(props) {
           endDay: new Date(item.tdendDate).getDate(),
           endTime: new Date(item.tdendDate).getHours().toString().padStart(2, '0') + ':' + new Date(item.tdendDate).getMinutes().toString().padStart(2, '0'),
           endDate: new Date(item.tdendDate),
-          tdtitle: item.tdtitle,
+          tdTitle: item.tdtitle,
           status: item.status
-        };
-      });
-      transformeArr = transformeArr.filter(item => { return item.month == currentMonth });
+      }));
+      transformeArr = transformeArr.filter(item => { return item.month === currentMonth });
       setTodoDataArr(transformeArr);
   }
 
@@ -80,7 +78,7 @@ function DdayTable(props) {
       <div className={style.Table}>
         <div className={style.TableHeader}>
           <CustomMainPageP $tableheader>작성 날짜</CustomMainPageP>
-          <CustomMainPageP $tableheader> 작업명</CustomMainPageP>
+          <CustomMainPageP $tableheader>작업명</CustomMainPageP>
           <CustomMainPageP $tableheader>D-DAY</CustomMainPageP>
         </div>
         <div className={style.TableMain}>
