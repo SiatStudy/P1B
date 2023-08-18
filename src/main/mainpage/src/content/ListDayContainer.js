@@ -9,20 +9,14 @@ import errorFunc from "../util/errorFunc";
 
 const ListDayContainer = () => {
   const dispatch = useDispatch();
-  const [isChecked, setIsChecked] = useState(false);
-  const [todoDataArr, setTodoDataArr] = useState([]);
   const ListDaytodosData = useSelector(state => state.todosData.data);
   let currentMonth = new Date().getMonth() + 1;
   let currentYear = new Date().getFullYear();
 
-  useEffect(() => {
-    settingReduxData();
-  }, []);
-
   //리덕스 데이터 세팅
-  const settingReduxData = () => {
+  const settingReduxData = (listArr) => {
     // 리덕스에서 받기
-      let transformedArr = ListDaytodosData.map(item => ({
+      let transformedArr = listArr.map(item => ({
           tdid: item.tdid,
           today: new Date(item.tdstartDate).getFullYear() + '년 ' + (new Date(item.tdstartDate).getMonth()+1).toString().padStart(2, '0') + '월 ' + new Date(item.tdstartDate).getDate() + '일',
           month: new Date(item.tdstartDate).getMonth() + 1,
@@ -35,7 +29,7 @@ const ListDayContainer = () => {
       }));
 
       const filterData = transformedArr.filter(item => item.month === currentMonth );
-      getFilteredData(filterData);
+      return getFilteredData(filterData);
   }
 
   // 월별 작업 데이터 정렬 및 필터링하는 함수
@@ -48,7 +42,7 @@ const ListDayContainer = () => {
       } else if (a.startTime !== b.startTime) {
         return a.startTime - b.startTime;
       } else if (a.endDay !== b.endDay) {
-        return a.endDay - b.endDay;
+        return a.endDay - b.endDa5y;
       } else {
         return a.endTime - b.endTime;
       }
@@ -64,7 +58,7 @@ const ListDayContainer = () => {
       groupedData[startDay].push(data);
     });
 
-    setTodoDataArr(groupedData);
+    return groupedData;
   };
 
   const toggleStatus = async (tdid, status) => {
@@ -112,7 +106,7 @@ const ListDayContainer = () => {
         <CustomMainPageH1 $searchPageYear>{currentYear}</CustomMainPageH1>
       </div>
       {/* // 각 일별 컨테이너 생성 (일의 이름을 key로 설정 */}
-      {Object.entries(todoDataArr).map(([startDay, works]) => (
+      {Object.entries(settingReduxData(ListDaytodosData)).map(([startDay, works]) => (
         <div className={style.dayContainer} key={startDay}>
            {/* 해당 일의 today속성 */}
            <div className={style.dayTitle}>{works.length > 0 ? works[0].today : ''}</div>
