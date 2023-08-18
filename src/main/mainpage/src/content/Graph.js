@@ -10,25 +10,25 @@ export const Graph = () => {
 
     const [datas, setDatas] = useState([]);
 
-    useEffect(() => {
-        if (!currentYear) {
-            todoData("/api/todos", null, "general")
-                .then(res => {
-                    dispatch(setTodoData(res));
-                });
-        }
-
-        const fetchData = async () => {
-            const averages = [];
-            for (let i = 1; i < 13; i++) {
-                const average = await dispatch(returnAverage(i));
-                averages.push(average.count);
-            }
-            setDatas(averages);
-        };
-
-        fetchData();
-    }, [currentYear, dispatch]);
+    // useEffect(() => {
+    //     if (!currentYear) {
+    //         todoData("/api/todos", null, "general")
+    //             .then(res => {
+    //                 dispatch(setTodoData(res));
+    //             });
+    //     }
+    //
+    //     const fetchData = async () => {
+    //         const averages = [];
+    //         for (let i = 1; i < 13; i++) {
+    //             const average = await dispatch(returnAverage(i));
+    //             averages.push(average.count);
+    //         }
+    //         setDatas(averages);
+    //     };
+    //
+    //     fetchData();
+    // }, [currentYear, dispatch]);
 
     return (
         <ApexCharts
