@@ -69,11 +69,6 @@ export const Calendar = ({ mode }) => {
                 center : "",
                 end : "prev next AddEvent"
             },
-            dayHeaderFormat : {
-                week : "short",
-                month : "2-digit",
-                day : "2-digit"
-            },
             titleFormat : "YYYY.MM"
         },
         1020 : {
@@ -82,11 +77,6 @@ export const Calendar = ({ mode }) => {
                 center : "title",
                 end : "today AddEvent"
             },
-            dayHeaderFormat : {
-                week : "short",
-                month : "2-digit",
-                day : "2-digit"
-            },
             titleFormat : "YYYY.MM"
         },
         1680 : {
@@ -94,11 +84,6 @@ export const Calendar = ({ mode }) => {
                 start : "today AddEvent",
                 center : "title",
                 end : "dayGridMonth dayGridWeek prev next"
-            },
-            dayHeaderFormat : {
-                week : "short",
-                month : "2-digit",
-                day : "2-digit"
             },
             titleFormat : "YYYY-MM"
         }
